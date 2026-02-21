@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Publish Artwork</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            playfair: ['"Playfair Display"', "serif"],
+            inter: ["Inter", "sans-serif"],
+            instrument: ['"Instrument Serif"', "serif"],
+            syne: ["Syne", "sans-serif"],
+            outfit: ["Outfit", "sans-serif"],
+          },
+        },
+      },
+    };
+  </script>
+</head>
+
+<body class="min-h-screen bg-[#FFF7ED] font-outfit"
+  style="background-image: radial-gradient(ellipse 700px 500px at 80% -10%, rgba(249, 115, 22, 0.08) 0%, transparent 10%), radial-gradient(ellipse 500px 400px at -10% 80%, rgba(249, 115, 22, 0.1) 0%, transparent 12%);">
+
+
+  <div class="max-w-2xl px-6 pb-24 mx-auto py-14">
+
+    <!-- Header -->
+    <header class="mb-14">
+      <div class="flex items-center gap-3 mb-3">
+        <span class="block w-7 h-0.5 bg-orange-500 rounded-full"></span>
+        <p class="font-syne text-xs font-bold tracking-[0.18em] uppercase text-orange-500">Image Artwork Gallery</p>
+      </div>
+      <h1 class="text-6xl font-normal leading-none tracking-tight font-instrument text-stone-900">
+        Publish <br>
+        <em class="italic text-orange-500">Artwork</em>
+      </h1>
+      <p class="mt-3 text-sm font-light tracking-wide text-stone-700">Share the creative work to the organization
+        gallery</p>
+    </header>
+
+    <div id="Inputs" class="flex flex-col gap-5">
+
+      <!-- Upload -->
+      <div id="FIle" class="File_Upload">
+        <label class="block font-syne text-[0.65rem] font-bold tracking-[0.16em] uppercase text-orange-900 mb-3">
+          Upload Artwork
+        </label>
+        <label for="FileInput"
+          class="group relative flex flex-col items-center justify-center gap-3 min-h-[160px] rounded-2xl bg-white border-2 border-dashed border-stone-200 cursor-pointer transition-all duration-300 hover:border-orange-400 hover:shadow-[0_0_0_4px_rgba(249,115,22,0.08)] hover:-translate-y-0.5 overflow-hidden">
+          <div
+            class="flex items-center justify-center text-2xl transition-transform duration-300 rounded-full shadow-sm w-14 h-14 bg-gradient-to-br from-orange-50 to-orange-100 group-hover:scale-110 group-hover:-rotate-6">
+            🖼️</div>
+          <div class="text-center">
+            <p class="text-sm font-semibold font-syne text-stone-500"><span class="text-orange-500">Choose file</span>
+              or drag & drop</p>
+            <p class="mt-1 text-xs tracking-wide text-stone-300">PNG · JPG · MP4</p>
+          </div>
+          <input type="file" id="FileInput" class="absolute inset-0 z-10 w-full h-full opacity-0 cursor-pointer" />
+        </label>
+      </div>
+
+      <!-- Title -->
+      <div id="Title" class="flex flex-col gap-2">
+        <label class="font-syne text-[0.65rem] font-bold tracking-[0.16em] uppercase text-orange-900">
+          Title
+        </label>
+        <input type="text" id="titleInput" placeholder="Enter artwork title"
+          class="w-full py-3 text-base transition-colors duration-200 bg-transparent border-0 border-b-2 outline-none border-stone-200 focus:border-orange-500 text-stone-900 placeholder-stone-400 font-outfit" />
+      </div>
+
+      <!-- Preview -->
+      <div id="Preview" class="flex flex-col gap-2">
+        <label class="font-syne text-[0.65rem] font-bold tracking-[0.16em] uppercase text-orange-900">
+          Preview / Overview
+        </label>
+        <textarea id="overview" placeholder="Short preview text" rows="3"
+          class="w-full py-3 text-base leading-relaxed transition-colors duration-200 bg-transparent border-0 border-b-2 outline-none resize-none border-stone-200 focus:border-orange-500 text-stone-900 placeholder-stone-400 font-outfit"></textarea>
+      </div>
+
+      <!-- Full Content -->
+      <div id="FullContent" class="flex flex-col gap-2">
+        <label class="font-syne text-[0.65rem] font-bold tracking-[0.16em] uppercase text-orange-900">
+          Full Content
+        </label>
+        <textarea id="descriptionInput" placeholder="Share the whole content here..." rows="6"
+          class="w-full py-3 text-base leading-relaxed transition-colors duration-200 bg-transparent border-0 border-b-2 outline-none resize-none border-stone-200 focus:border-orange-500 text-stone-900 placeholder-stone-400 font-outfit"></textarea>
+      </div>
+
+      <!-- ── Artists  -->
+      <div id="Artists" class="p-6 bg-white border shadow-sm rounded-3xl md:p-8 border-stone-100">
+
+        <h3
+          class="pb-4 mb-5 text-lg border-b font-instrument md:text-xl text-stone-900 md:mb-6 md:pb-5 border-stone-100">
+          A Creation of the <em class="italic text-orange-500">Following Artist:</em>
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6">
+
+          <div class="flex flex-col gap-2">
+            <label
+              class="font-syne text-[0.58rem] md:text-[0.62rem] font-bold tracking-[0.14em] md:tracking-[0.16em] uppercase text-orange-800 whitespace-nowrap">
+              Graphic Artist
+            </label>
+            <input type="text" id="graphicArtist" placeholder="Enter graphic artist name"
+              class="w-full bg-transparent border-0 border-b-2 border-orange-100 focus:border-orange-500 outline-none py-2.5 text-sm text-stone-900 placeholder-stone-400 font-outfit transition-colors duration-200" />
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <label
+              class="font-syne text-[0.58rem] md:text-[0.62rem] font-bold tracking-[0.14em] md:tracking-[0.16em] uppercase text-orange-800 whitespace-nowrap">
+              Writer
+            </label>
+            <input type="text" id="writer" placeholder="Enter writer name"
+              class="w-full bg-transparent border-0 border-b-2 border-orange-100 focus:border-orange-500 outline-none py-2.5 text-sm text-stone-900 placeholder-stone-400 font-outfit transition-colors duration-200" />
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <label
+              class="font-syne text-[0.58rem] md:text-[0.62rem] font-bold tracking-[0.14em] md:tracking-[0.16em] uppercase text-orange-800 whitespace-nowrap">
+              Videographer
+            </label>
+            <input type="text" id="Videographer" placeholder="Enter Videographer name"
+              class="w-full bg-transparent border-0 border-b-2 border-orange-100 focus:border-orange-500 outline-none py-2.5 text-sm text-stone-900 placeholder-stone-400 font-outfit transition-colors duration-200" />
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <label
+              class="font-syne text-[0.58rem] md:text-[0.62rem] font-bold tracking-[0.14em] md:tracking-[0.16em] uppercase text-orange-800 whitespace-nowrap">
+              Photographer
+            </label>
+            <input type="text" id="Photographer" placeholder="Enter Photographer name"
+              class="w-full bg-transparent border-0 border-b-2 border-orange-100 focus:border-orange-500 outline-none py-2.5 text-sm text-stone-900 placeholder-stone-400 font-outfit transition-colors duration-200" />
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Artwork Category-->
+      <div class="p-8 bg-white border shadow-sm rounded-3xl border-stone-100">
+        <label class="font-syne text-[0.65rem] font-bold tracking-[0.16em] uppercase text-orange-900 block mb-4">
+          Artwork Category *
+        </label>
+        <div class="relative">
+          <select id="category"
+            class="w-full py-3 pr-8 text-base transition-colors duration-200 bg-transparent border-0 border-b-2 outline-none appearance-none cursor-pointer border-stone-200 focus:border-orange-500 text-stone-900 font-outfit">
+            <option value="" disabled selected hidden>Select category</option>
+            <option value="graphic_design">Graphic Design</option>
+            <option value="written_works">Written Works</option>
+            <option value="photo_creation">Photo Creation</option>
+            <option value="video_production">Video Production</option>
+            <option value="team_collaboration">Team Collaboration</option>
+          </select>
+          <span
+            class="absolute text-lg font-bold text-orange-500 -translate-y-1/2 pointer-events-none right-1 top-1/2">↓</span>
+        </div>
+
+        <!-- Team Collaboration Field -->
+        <div id="collabField" class="hidden p-5 mt-6 border border-orange-100 bg-orange-50 rounded-2xl">
+          <label class="font-syne text-[0.62rem] font-bold tracking-[0.16em] uppercase text-orange-800 block mb-3">
+            Collaboration Project Name
+          </label>
+          <input type="text" id="collabName" placeholder=" e.g. Liwanag sa Dilim"
+            class="w-full bg-transparent border-0 border-b-2 border-orange-200 focus:border-orange-500 outline-none py-2.5 text-sm text-stone-900 placeholder-stone-400 font-outfit transition-colors duration-200 mb-4" />
+          <button id="add_collab_button"
+            class="inline-flex items-center gap-2 font-syne text-xs font-bold tracking-widest uppercase text-orange-500 border-2 border-orange-500 rounded-full px-5 py-2.5 bg-transparent hover:bg-orange-500 hover:text-white transition-all duration-200 cursor-pointer hover:-translate-y-0.5 hover:shadow-lg hover:shadow-orange-200">
+            <span>+</span> Add as Category
+          </button>
+        </div>
+      </div>
+
+      <!-- Publish Button -->
+
+      <div class="pt-2">
+        <button type="button" id="publishBtn"
+          class="group w-full flex items-center justify-center gap-3 bg-orange-500 hover:bg-orange-700 text-white font-syne font-bold text-sm tracking-[0.12em] uppercase py-5 px-8 rounded-2xl transition-all duration-300 hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-orange-300 disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none">
+          <span>Publish Artwork</span>
+          <span
+            class="flex items-center justify-center text-sm transition-transform duration-200 rounded-full w-7 h-7 bg-white/15 group-hover:translate-x-1">
+            →
+          </span>
+        </button>
+
+
+      </div>
+
+
+
+    </div>
+  </div>
+
+  <script src="Backend.js"></script>
+</body>
+
+</html>
