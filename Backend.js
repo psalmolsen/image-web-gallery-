@@ -1,58 +1,71 @@
 // ─────────────────────────────────────────────────────────────
 //  Backend.js  –  iMAGE Artwork Gallery
-//  Database : Supabase (post metadata)
+//  Database : Firebase Firestore (post metadata)
 //  Media    : Cloudinary (images & videos)
 // ─────────────────────────────────────────────────────────────
 
-const CONFIG = {
-  supabase: {
-    url: "https://spgsieiobdkqclklchyy.supabase.co",
-    anon: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNwZ3NpZWlvYmRrcWNsa2xjaHl5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1NzY3NjIsImV4cCI6MjA4NzE1Mjc2Mn0.B9UEB7Led34H3owPE4Qg-lo5lBhIQv64TzKuz-oLPLE",
-  },
-  cloudinary: {
-    cloudName: "drfzsz1t6",
-    uploadPreset: "image-gallery",
-  },
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  orderBy,
+  serverTimestamp,
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+// ─────────────────────────────────────────────────────────────
+//  CONFIG
+// ─────────────────────────────────────────────────────────────
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDBbtlkqF_CkQGdcNU10senOniW3cgPmCs",
+  authDomain: "image-gallery-2748a.firebaseapp.com",
+  projectId: "image-gallery-2748a",
+  storageBucket: "image-gallery-2748a.firebasestorage.app",
+  messagingSenderId: "791757901948",
+  appId: "1:791757901948:web:c37632e8577102d95039f9",
+  measurementId: "G-VV38EKG4QK",
+};
+
+const cloudinary = {
+  cloudName: "drfzsz1t6",
+  uploadPreset: "image-gallery",
 };
 
 // ─────────────────────────────────────────────────────────────
-//  SUPABASE HELPERS
+//  INIT FIREBASE
+// ─────────────────────────────────────────────────────────────
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// ─────────────────────────────────────────────────────────────
+//  FIRESTORE HELPERS
 // ─────────────────────────────────────────────────────────────
 
 async function dbInsert(artwork) {
-  const res = await fetch(`${CONFIG.supabase.url}/rest/v1/artworks`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "apikey": CONFIG.supabase.anon,
-      "Authorization": `Bearer ${CONFIG.supabase.anon}`,
-      "Prefer": "return=representation",
-    },
-    body: JSON.stringify(artwork),
+  const docRef = await addDoc(collection(db, "artworks"), {
+    ...artwork,
+    published_at: serverTimestamp(),
   });
-  if (!res.ok) throw new Error(await res.text());
-  return res.json();
+  return docRef;
 }
 
 async function dbFetch(search = "") {
-  const res = await fetch(
-    `${CONFIG.supabase.url}/rest/v1/artworks?order=published_at.desc`,
-    {
-      headers: {
-        "apikey": CONFIG.supabase.anon,
-        "Authorization": `Bearer ${CONFIG.supabase.anon}`,
-      },
-    }
-  );
-  if (!res.ok) throw new Error(await res.text());
-  const rows = await res.json();
+  const q = query(collection(db, "artworks"), orderBy("published_at", "desc"));
+  const snapshot = await getDocs(q);
+  const rows = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   if (!search) return rows;
-  const q = search.toLowerCase();
+  const lower = search.toLowerCase();
   return rows.filter(
     (a) =>
-      a.title?.toLowerCase().includes(q) ||
-      a.overview?.toLowerCase().includes(q) ||
-      Object.values(a.artists || {}).some((v) => v.toLowerCase().includes(q))
+      a.title?.toLowerCase().includes(lower) ||
+      a.overview?.toLowerCase().includes(lower) ||
+      Object.values(a.artists || {}).some((v) =>
+        v.toLowerCase().includes(lower)
+      )
   );
 }
 
@@ -64,12 +77,12 @@ function uploadToCloudinary(file, onProgress) {
   return new Promise((resolve, reject) => {
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", CONFIG.cloudinary.uploadPreset);
+    formData.append("upload_preset", cloudinary.uploadPreset);
 
     const xhr = new XMLHttpRequest();
     xhr.open(
       "POST",
-      `https://api.cloudinary.com/v1_1/${CONFIG.cloudinary.cloudName}/auto/upload`
+      `https://api.cloudinary.com/v1_1/${cloudinary.cloudName}/auto/upload`
     );
 
     xhr.upload.addEventListener("progress", (e) => {
@@ -92,8 +105,6 @@ function uploadToCloudinary(file, onProgress) {
 // ─────────────────────────────────────────────────────────────
 
 if (document.getElementById("publishBtn")) {
-
-  // Show / hide Team Collaboration extra field
   const categorySelect = document.getElementById("category");
   const collabField = document.getElementById("collabField");
 
@@ -104,7 +115,6 @@ if (document.getElementById("publishBtn")) {
     );
   });
 
-  // Add collab as custom category option
   document.getElementById("add_collab_button")?.addEventListener("click", () => {
     const name = document.getElementById("collabName")?.value.trim();
     if (!name) { showToast("Please enter a collaboration name.", "error"); return; }
@@ -127,7 +137,6 @@ if (document.getElementById("publishBtn")) {
     document.getElementById("collabName").value = "";
   });
 
-  // Live file preview inside the upload box
   const fileInput = document.getElementById("FileInput");
   const uploadArea = document.getElementById("FIle")?.querySelector("label[for='FileInput']");
 
@@ -141,7 +150,6 @@ if (document.getElementById("publishBtn")) {
       : `<img src="${url}" class="w-full h-full object-cover rounded-2xl" alt="preview" />`;
   });
 
-  // Publish button
   const publishBtn = document.getElementById("publishBtn");
   const btnLabel = publishBtn.querySelector("span:first-child");
 
@@ -155,7 +163,6 @@ if (document.getElementById("publishBtn")) {
     if (!title) { showToast("Please enter a title.", "error"); return; }
     if (!category) { showToast("Please select a category.", "error"); return; }
 
-    // Collect artists
     const artists = {};
     const fieldMap = [
       ["graphicArtist", "Graphic Artist"],
@@ -196,8 +203,8 @@ if (document.getElementById("publishBtn")) {
 
       await dbInsert({
         title,
-        overview: overview || null,
-        description: description || null,
+        overview,
+        description,
         category,
         collab_name: collabName,
         artists,
@@ -205,9 +212,11 @@ if (document.getElementById("publishBtn")) {
         video_url: videoUrl,
       });
 
-      showToast("Artwork published! 🎉", "success");
-      setTimeout(() => (window.location.href = "dashboard.html"), 1400);
+      showToast("Artwork published!", "success");
 
+      setTimeout(() => {
+        window.location.href = "dashboard.html";
+      }, 1500);
     } catch (err) {
       console.error(err);
       showToast("Something went wrong. Please try again.", "error");
@@ -222,7 +231,6 @@ if (document.getElementById("publishBtn")) {
 // ─────────────────────────────────────────────────────────────
 
 if (document.getElementById("artworkGrid")) {
-
   const grid = document.getElementById("artworkGrid");
   const emptyState = document.getElementById("emptyState");
   const searchInput = document.getElementById("searchInput");
@@ -243,8 +251,10 @@ if (document.getElementById("artworkGrid")) {
     team_collaboration: "bg-orange-100 text-orange-700",
   };
 
-  function timeAgo(iso) {
-    const diff = Date.now() - new Date(iso).getTime();
+  function timeAgo(ts) {
+    if (!ts) return "";
+    const date = ts.toDate ? ts.toDate() : new Date(ts);
+    const diff = Date.now() - date.getTime();
     const mins = Math.floor(diff / 60000);
     if (mins < 1) return "just now";
     if (mins < 60) return `${mins}m`;
@@ -252,14 +262,15 @@ if (document.getElementById("artworkGrid")) {
     if (hrs < 24) return `${hrs}h`;
     const days = Math.floor(hrs / 24);
     if (days < 7) return `${days}d`;
-    return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
   }
 
   function artistLine(artists) {
     if (!artists || !Object.keys(artists).length) return "";
     return Object.entries(artists)
-      .map(([role, name]) =>
-        `<span class="text-stone-500">${role}:</span> <span class="font-medium text-stone-800">${name}</span>`
+      .map(
+        ([role, name]) =>
+          `<span class="text-stone-500">${role}:</span> <span class="font-medium text-stone-800">${name}</span>`
       )
       .join(`<span class="text-stone-300 mx-1">·</span>`);
   }
@@ -379,6 +390,10 @@ if (document.getElementById("artworkGrid")) {
          </div>`
         : "";
 
+    const date = a.published_at?.toDate
+      ? a.published_at.toDate()
+      : new Date(a.published_at);
+
     overlay.innerHTML = `
       <div class="bg-white rounded-3xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col">
         ${mediaBlock}
@@ -405,7 +420,7 @@ if (document.getElementById("artworkGrid")) {
                </div>`
         : ""}
           <p class="text-xs text-stone-400 text-right">
-            ${new Date(a.published_at).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
+            ${date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
           </p>
         </div>
       </div>`;
