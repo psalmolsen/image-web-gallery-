@@ -1,447 +1,167 @@
-// ─────────────────────────────────────────────────────────────
-//  Backend.js  –  iMAGE Artwork Gallery
-//  Database : Firebase Firestore (post metadata)
-//  Media    : Cloudinary (images & videos)
-// ─────────────────────────────────────────────────────────────
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  getDocs,
-  query,
-  orderBy,
-  serverTimestamp,
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-// ─────────────────────────────────────────────────────────────
-//  CONFIG
-// ─────────────────────────────────────────────────────────────
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDBbtlkqF_CkQGdcNU10senOniW3cgPmCs",
-  authDomain: "image-gallery-2748a.firebaseapp.com",
-  projectId: "image-gallery-2748a",
-  storageBucket: "image-gallery-2748a.firebasestorage.app",
-  messagingSenderId: "791757901948",
-  appId: "1:791757901948:web:c37632e8577102d95039f9",
-  measurementId: "G-VV38EKG4QK",
-};
-
-const cloudinary = {
+const cloudinaryConfig = {
   cloudName: "drfzsz1t6",
-  uploadPreset: "image-gallery",
-};
-
-// ─────────────────────────────────────────────────────────────
-//  INIT FIREBASE
-// ─────────────────────────────────────────────────────────────
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// ─────────────────────────────────────────────────────────────
-//  FIRESTORE HELPERS
-// ─────────────────────────────────────────────────────────────
-
-async function dbInsert(artwork) {
-  const docRef = await addDoc(collection(db, "artworks"), {
-    ...artwork,
-    published_at: serverTimestamp(),
-  });
-  return docRef;
+  uploadPreset: "image-gallery"
 }
 
-async function dbFetch(search = "") {
-  const q = query(collection(db, "artworks"), orderBy("published_at", "desc"));
-  const snapshot = await getDocs(q);
-  const rows = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-  if (!search) return rows;
-  const lower = search.toLowerCase();
-  return rows.filter(
-    (a) =>
-      a.title?.toLowerCase().includes(lower) ||
-      a.overview?.toLowerCase().includes(lower) ||
-      Object.values(a.artists || {}).some((v) =>
-        v.toLowerCase().includes(lower)
-      )
-  );
-}
 
-// ─────────────────────────────────────────────────────────────
-//  CLOUDINARY UPLOAD
-// ─────────────────────────────────────────────────────────────
+// Artwork data form (collect values)
+class FormValues {
+  //setters function 
+  setFormValues() {
+    // artwork data  
+    this.file = document.getElementById("FileInput").files
+    this.title = document.getElementById("titleInput").value.trim()
+    this.overview = document.getElementById("overview").value.trim()
+    this.fullcontext = document.getElementById("descriptionInput").value.trim()
 
-function uploadToCloudinary(file, onProgress) {
-  return new Promise((resolve, reject) => {
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", cloudinary.uploadPreset);
+    //artist data 
+    this.graphicartist = document.getElementById("GraphicArtist").value.trim()
+    this.writer = document.getElementById("Writer").value.trim()
+    this.videographer = document.getElementById("Videographer").value.trim()
+    this.photographer = document.getElementById("Photographer").value.trim()
 
-    const xhr = new XMLHttpRequest();
-    xhr.open(
-      "POST",
-      `https://api.cloudinary.com/v1_1/${cloudinary.cloudName}/auto/upload`
-    );
-
-    xhr.upload.addEventListener("progress", (e) => {
-      if (e.lengthComputable && onProgress)
-        onProgress(Math.round((e.loaded / e.total) * 100));
-    });
-
-    xhr.onload = () =>
-      xhr.status === 200
-        ? resolve(JSON.parse(xhr.responseText))
-        : reject(new Error(xhr.responseText));
-
-    xhr.onerror = () => reject(new Error("Network error during upload"));
-    xhr.send(formData);
-  });
-}
-
-// ─────────────────────────────────────────────────────────────
-//  POSTING PAGE
-// ─────────────────────────────────────────────────────────────
-
-if (document.getElementById("publishBtn")) {
-  const categorySelect = document.getElementById("category");
-  const collabField = document.getElementById("collabField");
-
-  categorySelect?.addEventListener("change", () => {
-    collabField.classList.toggle(
-      "hidden",
-      categorySelect.value !== "team_collaboration"
-    );
-  });
-
-  document.getElementById("add_collab_button")?.addEventListener("click", () => {
-    const name = document.getElementById("collabName")?.value.trim();
-    if (!name) { showToast("Please enter a collaboration name.", "error"); return; }
-
-    for (let option of categorySelect.options) {
-      if (option.value === name) {
-        categorySelect.value = name;
-        collabField.classList.add("hidden");
-        document.getElementById("collabName").value = "";
-        return;
-      }
-    }
-
-    const newOption = document.createElement("option");
-    newOption.value = name;
-    newOption.text = name;
-    categorySelect.insertBefore(newOption, categorySelect.options[categorySelect.options.length - 1]);
-    categorySelect.value = name;
-    collabField.classList.add("hidden");
-    document.getElementById("collabName").value = "";
-  });
-
-  const fileInput = document.getElementById("FileInput");
-  const uploadArea = document.getElementById("FIle")?.querySelector("label[for='FileInput']");
-
-  fileInput?.addEventListener("change", () => {
-    const file = fileInput.files[0];
-    if (!file || !uploadArea) return;
-    const url = URL.createObjectURL(file);
-    const isVideo = file.type.startsWith("video/");
-    uploadArea.innerHTML = isVideo
-      ? `<video src="${url}" class="w-full h-full object-cover rounded-2xl" muted loop autoplay playsinline></video>`
-      : `<img src="${url}" class="w-full h-full object-cover rounded-2xl" alt="preview" />`;
-  });
-
-  const publishBtn = document.getElementById("publishBtn");
-  const btnLabel = publishBtn.querySelector("span:first-child");
-
-  publishBtn.addEventListener("click", async () => {
-    const file = fileInput?.files?.[0] || null;
-    const title = document.getElementById("titleInput").value.trim();
-    const overview = document.getElementById("overview").value.trim();
-    const description = document.getElementById("descriptionInput").value.trim();
-    const category = categorySelect.value;
-
-    if (!title) { showToast("Please enter a title.", "error"); return; }
-    if (!category) { showToast("Please select a category.", "error"); return; }
-
-    const artists = {};
-    const fieldMap = [
-      ["graphicArtist", "Graphic Artist"],
-      ["writer", "Writer"],
-      ["Videographer", "Videographer"],
-      ["Photographer", "Photographer"],
-    ];
-    fieldMap.forEach(([id, label]) => {
-      const val = document.getElementById(id)?.value.trim();
-      if (val) artists[label] = val;
-    });
-
-    const collabName =
-      category === "team_collaboration"
-        ? document.getElementById("collabName")?.value.trim() || null
-        : null;
-
-    publishBtn.disabled = true;
-    if (btnLabel) btnLabel.textContent = "Uploading…";
-
-    let imageUrl = null;
-    let videoUrl = null;
-
-    try {
-      if (file) {
-        showToast("Uploading media to Cloudinary…", "info");
-        const result = await uploadToCloudinary(file, (pct) => {
-          if (btnLabel) btnLabel.textContent = `Uploading… ${pct}%`;
-        });
-        if (file.type.startsWith("video/")) {
-          videoUrl = result.secure_url;
-        } else {
-          imageUrl = result.secure_url;
-        }
-      }
-
-      if (btnLabel) btnLabel.textContent = "Saving…";
-
-      await dbInsert({
-        title,
-        overview,
-        description,
-        category,
-        collab_name: collabName,
-        artists,
-        image_url: imageUrl,
-        video_url: videoUrl,
-      });
-
-      showToast("Artwork published!", "success");
-
-      setTimeout(() => {
-        window.location.href = "dashboard.html";
-      }, 1500);
-    } catch (err) {
-      console.error(err);
-      showToast("Something went wrong. Please try again.", "error");
-      publishBtn.disabled = false;
-      if (btnLabel) btnLabel.textContent = "Publish Artwork";
-    }
-  });
-}
-
-// ─────────────────────────────────────────────────────────────
-//  DASHBOARD PAGE
-// ─────────────────────────────────────────────────────────────
-
-if (document.getElementById("artworkGrid")) {
-  const grid = document.getElementById("artworkGrid");
-  const emptyState = document.getElementById("emptyState");
-  const searchInput = document.getElementById("searchInput");
-
-  const CATEGORY_LABELS = {
-    graphic_design: "Graphic Design",
-    written_works: "Written Works",
-    photo_creation: "Photo Creation",
-    video_production: "Video Production",
-    team_collaboration: "Team Collaboration",
-  };
-
-  const CATEGORY_COLORS = {
-    graphic_design: "bg-violet-100 text-violet-700",
-    written_works: "bg-sky-100 text-sky-700",
-    photo_creation: "bg-emerald-100 text-emerald-700",
-    video_production: "bg-rose-100 text-rose-700",
-    team_collaboration: "bg-orange-100 text-orange-700",
-  };
-
-  function timeAgo(ts) {
-    if (!ts) return "";
-    const date = ts.toDate ? ts.toDate() : new Date(ts);
-    const diff = Date.now() - date.getTime();
-    const mins = Math.floor(diff / 60000);
-    if (mins < 1) return "just now";
-    if (mins < 60) return `${mins}m`;
-    const hrs = Math.floor(mins / 60);
-    if (hrs < 24) return `${hrs}h`;
-    const days = Math.floor(hrs / 24);
-    if (days < 7) return `${days}d`;
-    return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    //artwork category
+    this.artcategory = document.getElementById("category").value
   }
+  //setters function 
+  getFormValues() {
+    this.setFormValues()
+    return {
+      file: this.file,
+      title: this.title,
+      overview: this.overview,
+      fullcontext: this.fullcontext,
 
-  function artistLine(artists) {
-    if (!artists || !Object.keys(artists).length) return "";
-    return Object.entries(artists)
-      .map(
-        ([role, name]) =>
-          `<span class="text-stone-500">${role}:</span> <span class="font-medium text-stone-800">${name}</span>`
-      )
-      .join(`<span class="text-stone-300 mx-1">·</span>`);
-  }
+      artists: {
+        graphicartist: this.graphicartist,
+        writer: this.writer,
+        videographer: this.videographer,
+        photographer: this.photographer
+      },
+      category: this.artcategory
 
-  function renderCard(a) {
-    const catLabel = CATEGORY_LABELS[a.category] || a.category;
-    const catColor = CATEGORY_COLORS[a.category] || "bg-stone-100 text-stone-600";
-    const hasArtists = a.artists && Object.keys(a.artists).length > 0;
-
-    const badge = `<span class="absolute top-3 left-3 text-[0.6rem] font-bold tracking-widest uppercase px-2.5 py-1 rounded-full ${catColor} font-syne shadow-sm">${catLabel}</span>`;
-
-    const mediaBlock = a.video_url
-      ? `<div class="relative overflow-hidden bg-stone-900 aspect-[4/3]">
-           <video src="${a.video_url}"
-             class="w-full h-full object-cover opacity-80 transition-opacity duration-300 group-hover:opacity-100"
-             muted loop playsinline
-             onmouseenter="this.play()" onmouseleave="this.pause()"></video>
-           <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-             <div class="w-12 h-12 flex items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
-               <svg class="w-5 h-5 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
-                 <path d="M8 5v14l11-7z"/>
-               </svg>
-             </div>
-           </div>
-           ${badge}
-         </div>`
-      : a.image_url
-        ? `<div class="relative overflow-hidden bg-stone-100 aspect-[4/3]">
-           <img src="${a.image_url}" alt="${a.title}"
-             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-             loading="lazy" />
-           ${badge}
-         </div>`
-        : `<div class="relative flex items-center justify-center aspect-[4/3] bg-gradient-to-br from-orange-50 to-stone-100">
-           <span class="text-5xl">🖼️</span>
-           ${badge}
-         </div>`;
-
-    return `
-      <article data-id="${a.id}"
-        class="artwork-card group flex flex-col bg-white border border-stone-100 rounded-3xl shadow-sm overflow-hidden cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-orange-100">
-        ${mediaBlock}
-        <div class="flex flex-col flex-1 p-5 gap-3">
-          <div class="flex items-start justify-between gap-2">
-            <h2 class="text-lg leading-snug font-instrument text-stone-900 flex-1">${a.title}</h2>
-            <span class="text-xs text-stone-400 font-outfit shrink-0 pt-0.5">${timeAgo(a.published_at)}</span>
-          </div>
-          ${a.overview ? `<p class="text-sm leading-relaxed text-stone-500 line-clamp-2">${a.overview}</p>` : ""}
-          ${hasArtists ? `<p class="text-xs font-outfit leading-relaxed mt-auto pt-3 border-t border-stone-100">${artistLine(a.artists)}</p>` : ""}
-        </div>
-      </article>`;
-  }
-
-  function showSkeletons(n = 6) {
-    grid.innerHTML = Array(n).fill(
-      `<div class="bg-white border border-stone-100 rounded-3xl shadow-sm overflow-hidden animate-pulse">
-         <div class="bg-stone-200 aspect-[4/3]"></div>
-         <div class="p-5 flex flex-col gap-3">
-           <div class="h-4 bg-stone-200 rounded-full w-3/4"></div>
-           <div class="h-3 bg-stone-100 rounded-full w-full"></div>
-           <div class="h-3 bg-stone-100 rounded-full w-2/3"></div>
-         </div>
-       </div>`
-    ).join("");
-  }
-
-  async function renderFeed(query = "") {
-    showSkeletons();
-    try {
-      const artworks = await dbFetch(query);
-      if (artworks.length === 0) {
-        grid.innerHTML = "";
-        emptyState.classList.remove("hidden");
-      } else {
-        emptyState.classList.add("hidden");
-        grid.innerHTML = artworks.map(renderCard).join("");
-      }
-    } catch (err) {
-      console.error(err);
-      grid.innerHTML = `
-        <div class="col-span-3 text-center py-20 text-stone-400">
-          <p class="text-lg font-instrument">Could not load artworks.</p>
-          <p class="text-sm mt-1">Check your internet connection and try again.</p>
-        </div>`;
     }
   }
 
-  renderFeed();
+  // validate function (check if values are empty)  
+  validateForm() {
+    let data = this.getFormValues()
 
-  let searchTimer;
-  searchInput?.addEventListener("input", (e) => {
-    clearTimeout(searchTimer);
-    searchTimer = setTimeout(() => renderFeed(e.target.value), 400);
-  });
+    if (!data.title) {
+      alert("Please enter a title for the artwork.")
+      return false
+    }
 
-  grid.addEventListener("click", async (e) => {
-    const card = e.target.closest(".artwork-card");
-    if (!card) return;
-    const id = card.dataset.id;
-    const all = await dbFetch();
-    const art = all.find((a) => String(a.id) === String(id));
-    if (art) showDetail(art);
-  });
+    if (!data.overview) {
+      alert("Please enter an overview for the artwork.")
+      return false
+    }
 
-  function showDetail(a) {
-    const hasArtists = a.artists && Object.keys(a.artists).length > 0;
-    const overlay = document.createElement("div");
-    overlay.className = "fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm flex items-end md:items-center justify-center p-4";
+    if (!data.fullcontext) {
+      alert("Please enter a full context for the artwork.")
+      return false
+    }
+    if (!data.category) {
+      alert("Please enter a category for the artwork.")
+      return false
+    }
+    return true
+  }
 
-    const mediaBlock = a.video_url
-      ? `<div class="rounded-t-3xl overflow-hidden bg-stone-900 aspect-video">
-           <video src="${a.video_url}" class="w-full h-full object-cover" controls autoplay muted loop playsinline></video>
-         </div>`
-      : a.image_url
-        ? `<div class="rounded-t-3xl overflow-hidden bg-stone-100 aspect-video">
-           <img src="${a.image_url}" alt="${a.title}" class="w-full h-full object-cover" />
-         </div>`
-        : "";
-
-    const date = a.published_at?.toDate
-      ? a.published_at.toDate()
-      : new Date(a.published_at);
-
-    overlay.innerHTML = `
-      <div class="bg-white rounded-3xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col">
-        ${mediaBlock}
-        <div class="p-6 flex flex-col gap-4">
-          <div class="flex items-start justify-between gap-3">
-            <h2 class="text-2xl font-instrument text-stone-900 leading-snug">${a.title}</h2>
-            <button class="close-overlay shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-stone-100 hover:bg-stone-200 text-stone-500 transition-colors">✕</button>
-          </div>
-          ${a.overview ? `<p class="text-sm text-stone-500 leading-relaxed">${a.overview}</p>` : ""}
-          ${a.description
-        ? `<div class="border-t border-stone-100 pt-4">
-                 <p class="text-sm leading-relaxed text-stone-700 whitespace-pre-wrap">${a.description}</p>
-               </div>`
-        : ""}
-          ${hasArtists
-        ? `<div class="border-t border-stone-100 pt-4 flex flex-col gap-2">
-                 <p class="font-syne text-[0.6rem] font-bold tracking-widest uppercase text-orange-800 mb-1">Artists</p>
-                 ${Object.entries(a.artists).map(([role, name]) =>
-          `<div class="flex justify-between text-sm">
-                      <span class="text-stone-500">${role}</span>
-                      <span class="font-medium text-stone-800">${name}</span>
-                    </div>`
-        ).join("")}
-               </div>`
-        : ""}
-          <p class="text-xs text-stone-400 text-right">
-            ${date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
-          </p>
-        </div>
-      </div>`;
-
-    overlay.addEventListener("click", (e) => {
-      if (e.target === overlay || e.target.closest(".close-overlay")) overlay.remove();
-    });
-
-    document.body.appendChild(overlay);
+  //clear textfield after submit
+  clearForm() {
+    document.querySelector("#FileInput").value = null
+    document.querySelector("#descriptionInput").value = null
+    document.querySelector("#overview").value = null
+    document.querySelector("#GraphicArtist").value = null
+    document.querySelector("#Writer").value = null
+    document.querySelector("#Videographer").value = null
+    document.querySelector("#Photographer").value = null
+    document.querySelector("#category").value = null
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-//  SHARED UTILITIES
-// ─────────────────────────────────────────────────────────────
+async function cloudinaryUpload(file) {
+  const dataFile = new FormData()
 
-function showToast(message, type = "info") {
-  const colors = { success: "bg-emerald-500", error: "bg-red-500", info: "bg-orange-500" };
-  const toast = document.createElement("div");
-  toast.className = `fixed bottom-28 left-1/2 -translate-x-1/2 z-[200] px-5 py-3 rounded-2xl text-white text-sm font-outfit font-medium shadow-xl transition-all duration-300 whitespace-nowrap ${colors[type] || colors.info}`;
-  toast.textContent = message;
-  document.body.appendChild(toast);
-  setTimeout(() => toast.remove(), 3500);
+  dataFile.append("file", file)
+  dataFile.append("upload_preset", cloudinaryConfig.uploadPreset)
+
+  const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/auto/upload`, {
+    method: "POST",
+    body: dataFile
+  })
+  const result = await response.json()
+  return result.secure_url
+
 }
+
+
+
+function addCategory() {
+
+
+  document.querySelector("#category").addEventListener("change", function () {
+    if (this.value == "team_collaboration") {
+      document.querySelector("#collabField").classList.remove("hidden")
+    } else {
+      document.querySelector("#collabField").classList.add("hidden")
+    }
+  })
+
+
+
+  document.querySelector("#add_collab_button").addEventListener("click", function () {
+
+    const collabName = document.querySelector("#collabName").value
+
+    if (!collabName) {
+      alert("Please enter a name for the collaboration category.")
+      return
+    }
+
+    const newCategory = document.createElement("option")
+
+
+    newCategory.value = collabName
+    newCategory.textContent = collabName
+
+    document.querySelector("#category").insertBefore(newCategory, document.querySelector("#category option[value='team_collaboration']"))
+
+
+    document.querySelector("#category").value = collabName
+
+
+    document.querySelector("#collabField").classList.add("hidden")
+
+    document.querySelector("#collabName").value = ""
+  })
+}
+
+addCategory()
+
+//publish button
+const publishBtn = document.querySelector("#publishBtn")
+publishBtn.addEventListener("click", async function () {
+
+  const form = new FormValues()
+
+  if (!form.validateForm()) {
+    return false
+  }
+
+  publishBtn.disabled = true;
+  publishBtn.textContent = "Publishing...";
+
+  const data = form.getFormValues()
+  const url = await cloudinaryUpload(data.file[0])
+
+
+
+  //firebase
+
+  form.clearForm()
+});
+
+
+
