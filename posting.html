@@ -75,7 +75,7 @@
         <label class="font-syne text-[0.65rem] font-bold tracking-[0.16em] uppercase text-orange-900">
           Title
         </label>
-        <input type="text" id="titleInput" placeholder="Enter artwork title"
+        <input type="text" id="titleInput" placeholder="Enter artwork title" autocomplete="off"
           class="w-full py-3 text-base transition-colors duration-200 bg-transparent border-0 border-b-2 outline-none border-stone-200 focus:border-orange-500 text-stone-900 placeholder-stone-400 font-outfit" />
       </div>
 
@@ -97,6 +97,24 @@
           class="w-full py-3 text-base leading-relaxed transition-colors duration-200 bg-transparent border-0 border-b-2 outline-none resize-none border-stone-200 focus:border-orange-500 text-stone-900 placeholder-stone-400 font-outfit"></textarea>
       </div>
 
+      <!-- Date -->
+      <!-- Date -->
+      <div class="flex flex-col gap-2">
+        <label class="font-syne text-[0.65rem] font-bold tracking-[0.16em] uppercase text-orange-900">
+          Date Created
+        </label>
+        <div
+          class="flex items-center gap-3 border-b-2 border-stone-200 focus-within:border-orange-500 transition-colors duration-200 py-3">
+          <svg class="w-5 h-5 text-orange-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+          <input type="date" id="Date"
+            class="w-full bg-transparent outline-none text-base text-stone-900 font-outfit cursor-pointer" />
+        </div>
+      </div>
+
+
       <!-- ── Artists  -->
       <div id="Artists" class="p-6 bg-white border shadow-sm rounded-3xl md:p-8 border-stone-100">
 
@@ -112,7 +130,7 @@
               class="font-syne text-[0.58rem] md:text-[0.62rem] font-bold tracking-[0.14em] md:tracking-[0.16em] uppercase text-orange-800 whitespace-nowrap">
               Graphic Artist
             </label>
-            <input type="text" id="GraphicArtist" placeholder="Enter graphic artist name"
+            <input type="text" id="GraphicArtist" placeholder="Enter graphic artist name" autocomplete="off"
               class="w-full bg-transparent border-0 border-b-2 border-orange-100 focus:border-orange-500 outline-none py-2.5 text-sm text-stone-900 placeholder-stone-400 font-outfit transition-colors duration-200" />
           </div>
 
@@ -155,11 +173,8 @@
           <select id="category"
             class="w-full py-3 pr-8 text-base transition-colors duration-200 bg-transparent border-0 border-b-2 outline-none appearance-none cursor-pointer border-stone-200 focus:border-orange-500 text-stone-900 font-outfit">
             <option value="" disabled selected hidden>Select category</option>
-            <option value="graphic_design">Graphic Design</option>
-            <option value="written_works">Written Works</option>
-            <option value="photo_creation">Photo Creation</option>
-            <option value="video_production">Video Production</option>
-            <option value="team_collaboration">Team Collaboration</option>
+            <option value="LiwanagSaDilim">Liwanag Sa Dilim</option>
+            <option value="newCategory">+ Add Category</option>
           </select>
           <span
             class="absolute text-lg font-bold text-orange-500 -translate-y-1/2 pointer-events-none right-1 top-1/2">↓</span>
