@@ -71,6 +71,7 @@ class FormValues {
   //clear textfield after submit
   clearForm() {
     document.querySelector("#FileInput").value = null
+    document.querySelector("#titleInput").value = null
     document.querySelector("#descriptionInput").value = null
     document.querySelector("#overview").value = null
     document.querySelector("#GraphicArtist").value = null
@@ -81,6 +82,7 @@ class FormValues {
   }
 }
 
+//cloudinary upload function
 async function cloudinaryUpload(file) {
   const dataFile = new FormData()
 
@@ -100,7 +102,6 @@ async function cloudinaryUpload(file) {
 
 function addCategory() {
 
-
   document.querySelector("#category").addEventListener("change", function () {
     if (this.value == "team_collaboration") {
       document.querySelector("#collabField").classList.remove("hidden")
@@ -109,35 +110,22 @@ function addCategory() {
     }
   })
 
-
-
   document.querySelector("#add_collab_button").addEventListener("click", function () {
-
     const collabName = document.querySelector("#collabName").value
 
     if (!collabName) {
       alert("Please enter a name for the collaboration category.")
       return
     }
-
     const newCategory = document.createElement("option")
-
-
     newCategory.value = collabName
     newCategory.textContent = collabName
-
     document.querySelector("#category").insertBefore(newCategory, document.querySelector("#category option[value='team_collaboration']"))
-
-
     document.querySelector("#category").value = collabName
-
-
     document.querySelector("#collabField").classList.add("hidden")
-
     document.querySelector("#collabName").value = ""
   })
 }
-
 addCategory()
 
 //publish button
