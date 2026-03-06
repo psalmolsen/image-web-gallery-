@@ -8,14 +8,13 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500;600&display=swap"
-    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@1,700&display=swap" rel="stylesheet" />
   <script>
     tailwind.config = {
       theme: {
         extend: {
           fontFamily: {
+            fraunces: ["Fraunces", "serif"],
             instrument: ['"Instrument Serif"', "serif"],
             syne: ["Syne", "sans-serif"],
             outfit: ["Outfit", "sans-serif"],
@@ -99,8 +98,8 @@
     </div>
 
     <!-- Artwork Grid  -->
-    <div id="artworkGrid" class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-      <!-- Cards will be inserted here by JavaScript -->
+    <div id="artworkGrid" class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 items-start">
+
     </div>
 
   </main>
@@ -149,11 +148,9 @@
     </svg>
   </a>
 
-  <script>
-    // You can remove the dropdown menu toggle script since we removed the dropdown
-  </script>
 
-  <script type="module" src="Backend.js"></script>
+
+  <script type="module" src="dashboard.js"></script>
 </body>
 
 </html>
