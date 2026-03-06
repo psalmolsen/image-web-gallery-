@@ -73,95 +73,52 @@
   <!-- Main Content -->
   <main class="px-4 py-6 pb-24 mx-auto max-w-7xl">
 
-    <!-- Empty State -->
-    <div id="emptyState" class="hidden py-20 text-center bg-white border shadow-sm rounded-3xl border-stone-100">
-      <div class="flex items-center justify-center w-20 h-20 mx-auto mb-4 bg-orange-100 rounded-full">
-        <svg class="w-10 h-10 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
-          </path>
-        </svg>
+
+    <section id="works">
+
+      <!-- Empty State -->
+      <div id="emptyState" class="hidden py-20 text-center bg-white border shadow-sm rounded-3xl border-stone-100">
+        <div class="flex items-center justify-center w-20 h-20 mx-auto mb-4 bg-orange-100 rounded-full">
+          <svg class="w-10 h-10 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+            </path>
+          </svg>
+        </div>
+        <h3 class="mb-2 text-2xl font-normal font-instrument text-stone-900">No artworks yet</h3>
+        <p class="mb-6 text-sm text-stone-500">
+          Start by publishing your first collaboration
+        </p>
+        <a href="posting.html"
+          class="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white font-syne font-bold text-sm tracking-wider uppercase py-3 px-6 rounded-xl transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-orange-200">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+          </svg>
+          <span>Create Artwork</span>
+        </a>
       </div>
-      <h3 class="mb-2 text-2xl font-normal font-instrument text-stone-900">No artworks yet</h3>
-      <p class="mb-6 text-sm text-stone-500">
-        Start by publishing your first collaboration
-      </p>
-      <a href="posting.html"
-        class="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white font-syne font-bold text-sm tracking-wider uppercase py-3 px-6 rounded-xl transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-orange-200">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-        </svg>
-        <span>Create Artwork</span>
-      </a>
-    </div>
 
-    <!-- Artwork Grid  -->
-    <div id="artworkGrid" class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 items-start"></div>
-
-    <!-- Card Template -->
-    <template id="cardTemplate">
-      <article class="bg-white border border-stone-200 rounded-2xl overflow-hidden">
-
-        <!-- Header -->
-        <div class="flex items-center gap-3 px-4 py-3 border-b border-stone-100">
-          <div class="flex items-center justify-center w-9 h-9 rounded-full overflow-hidden shrink-0">
-            <img src="imgs/image_logo.jpg" alt="iMAGE" class="w-full h-full object-cover" />
-          </div>
-          <div class="flex-1 min-w-0">
-            <p class="text-sm font-bold font-syne text-stone-900">image_cvsucarmona</p>
-            <!-- <p class="text-xs text-stone-400">iMAGE · CVSU Carmona</p> -->
-          </div>
-
-          <!-- option -->
-          <button
-            class="flex items-center justify-center w-8 h-8 rounded-full hover:bg-stone-100 transition-colors duration-200 shrink-0">
-            <svg class="w-5 h-5 text-orange-500" fill="currentColor" viewBox="0 0 24 24">
-              <circle cx="12" cy="5" r="2"></circle>
-              <circle cx="12" cy="12" r="2"></circle>
-              <circle cx="12" cy="19" r="2"></circle>
-            </svg>
-        </div>
-        <!-- Image -->
-        <div class="card-image-wrap relative w-full bg-stone-100 hidden">
-          <img class="card-image w-full h-auto block" src="" alt="" onerror="this.parentElement.style.display='none'" />
-          <span
-            class="card-category absolute top-3 right-3 text-xs font-syne font-bold tracking-wider uppercase text-orange-500 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full border border-orange-100 shadow-sm"></span>
-        </div>
+      <!-- Artwork Grid  -->
+      <div id="artworkGrid" class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 items-start"></div>
+    </section>
 
 
-        </button>
 
-        <!-- Title -->
-        <div class="px-4 pt-4 pb-1">
-          <div class="w-8 h-0.5 bg-orange-500 rounded-full mb-3"></div>
-          <h2 class="card-title font-fraunces text-2xl italic font-semibold leading-snug text-stone-600"></h2>
-          <p class="card-date text-xs text-stone-400 mt-1"></p>
-        </div>
 
-        <!-- Overview -->
-        <div class="px-4 pt-1 pb-2">
-          <p class="card-overview text-sm leading-relaxed text-stone-500 font-outfit italic"></p>
-        </div>
+    <!-- About Us Section -->
+    <section id="about" class="py-10 hidden">
+      <h2 class="text-2xl font-instrument text-stone-900">About Us</h2>
+      <p class="text-sm text-stone-500 mt-2">Coming soon...</p>
+    </section>
 
-        <!-- Artists -->
-        <div class="card-artists px-4 pb-2 flex flex-wrap gap-2"></div>
 
-        <!-- Footer -->
-        <div class="px-4 py-3 border-t border-stone-100 mt-2">
-          <a class="card-link group flex items-center gap-2 text-sm font-bold font-syne tracking-wide text-orange-600 hover:text-orange-700 transition-colors duration-200"
-            href="#">
-            <span>See Full Content</span>
-            <svg class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" fill="none"
-              stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-            </svg>
-          </a>
-        </div>
-
-      </article>
-    </template>
 
   </main>
+
+
+
+
+
 
   <!-- Bottom Navigation Bar  -->
   <footer class="fixed bottom-0 left-0 right-0 z-50 bg-white border-t shadow-lg border-stone-200">
@@ -169,7 +126,7 @@
       <div class="flex items-center justify-around py-2">
 
         <!-- Works -->
-        <button
+        <button id="nav-works"
           class="flex flex-col items-center gap-1 px-4 py-2 transition-colors duration-200 hover:bg-orange-50 rounded-xl">
           <div class="flex items-center justify-center w-6 h-6">
             <!-- Icon placeholder - replace with your icon/SVG -->
@@ -183,7 +140,7 @@
         </button>
 
         <!-- About Us -->
-        <button
+        <button id="nav-about"
           class="flex flex-col items-center gap-1 px-4 py-2 transition-colors duration-200 hover:bg-orange-50 rounded-xl">
           <div class="flex items-center justify-center w-6 h-6">
             <!-- Icon placeholder - replace with your icon/SVG -->
@@ -192,7 +149,7 @@
                 d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
           </div>
-          <span class="text-xs font-medium font-outfit text-stone-400">About Us</span>
+          <span class="text-xs font-medium text-stone-400 font-outfit">About Us</span>
         </button>
 
       </div>
@@ -207,7 +164,97 @@
     </svg>
   </a>
 
+  <!-- Card Template -->
+  <template id="cardTemplate">
+    <article class="bg-white border border-stone-200 rounded-2xl overflow-hidden">
 
+      <!-- Header -->
+      <div class="flex items-center gap-3 px-4 py-3 border-b border-stone-100">
+        <div class="flex items-center justify-center w-9 h-9 rounded-full overflow-hidden shrink-0">
+          <img src="imgs/image_logo.jpg" alt="iMAGE" class="w-full h-full object-cover" />
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-bold font-syne text-stone-900">image_cvsucarmona</p>
+          <!-- <p class="text-xs text-stone-400">iMAGE · CVSU Carmona</p> -->
+        </div>
+
+        <div class="relative">
+          <!-- option -->
+          <button
+            class="card-menu flex items-center justify-center w-8 h-8 rounded-full hover:bg-stone-100 transition-colors duration-200 shrink-0">
+            <svg class="w-5 h-5 text-orange-500" fill="currentColor" viewBox="0 0 24 24">
+              <circle cx="12" cy="5" r="2"></circle>
+              <circle cx="12" cy="12" r="2"></circle>
+              <circle cx="12" cy="19" r="2"></circle>
+            </svg>
+          </button>
+          <!-- dropdown -->
+          <div
+            class="card-dropdown hidden absolute right-0 top-10 w-44 bg-white border border-stone-200 rounded-xl shadow-lg z-10 overflow-hidden">
+            <button
+              class="card-edit w-full flex items-center gap-3 px-4 py-3 text-sm text-orange-500 hover:bg-orange-50">
+              <svg class="w-5 h-5 text-orange-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                viewBox="0 0 24 24">
+                <path fill="currentColor"
+                  d="m14.06 9l.94.94L5.92 19H5v-.92zm3.6-6c-.25 0-.51.1-.7.29l-1.83 1.83l3.75 3.75l1.83-1.83c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29m-3.6 3.19L3 17.25V21h3.75L17.81 9.94z"
+                  stroke-width="0.5" stroke="currentColor" />
+              </svg>
+              Edit Artwork
+            </button>
+            <button
+              class="card-delete w-full flex items-center gap-3 px-4 py-3 text-sm text-orange-500 hover:bg-orange-50">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="lucide lucide-trash-icon lucide-trash">
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                <path d="M3 6h18" />
+                <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+              </svg>
+              Move to trash
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Image -->
+      <div class="card-image-wrap relative w-full bg-stone-100 hidden">
+        <img class="card-image w-full h-auto block" src="" alt="" onerror="this.parentElement.style.display='none'" />
+        <span
+          class="card-category absolute top-3 right-3 text-xs font-syne font-bold tracking-wider uppercase text-orange-500 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full border border-orange-100 shadow-sm"></span>
+      </div>
+
+
+
+
+      <!-- Title and date -->
+      <div class="px-4 pt-4 pb-1">
+        <div class="w-8 h-0.5 bg-orange-500 rounded-full mb-3"></div>
+        <h2 class="card-title font-fraunces text-2xl italic font-semibold leading-snug text-stone-600"></h2>
+        <p class="card-date text-xs text-stone-500 mt-1"></p>
+      </div>
+
+      <!-- Overview -->
+      <div class="px-4 pt-1 pb-2">
+        <p class="card-overview text-sm leading-relaxed text-stone-500 font-outfit italic"></p>
+      </div>
+
+      <!-- Artists -->
+      <div class="card-artists px-4 pb-2 flex flex-wrap gap-2"></div>
+
+      <!-- Footer -->
+      <div class="px-4 py-3 border-t border-stone-100 mt-2">
+        <a class="card-link group flex items-center gap-2 text-sm font-bold font-syne tracking-wide text-orange-600 hover:text-orange-700 transition-colors duration-200"
+          href="#">
+          <span>See Full Content</span>
+          <svg class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" fill="none"
+            stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </a>
+      </div>
+
+    </article>
+  </template>
 
   <script type="module" src="dashboard.js"></script>
 </body>

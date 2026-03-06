@@ -188,10 +188,6 @@ publishBtn.addEventListener("click", async function () {
   const data = form.getFormValues()
 
   try {
-    // const url = await cloudinaryUpload(data.file[0])
-    // await firebaseUpload(data, url)
-
-
     let url = null
 
     if (data.file[0]) {
