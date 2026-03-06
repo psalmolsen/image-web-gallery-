@@ -38,7 +38,7 @@
             <span><img src="imgs/image_logo.jpg" alt="iMAGE logo"></span>
           </div>
           <h1 class="text-xl font-bold font-syne text-stone-900">
-            <em class="not-italic text-xl text-orange-600">i</em>MAGE
+            <em class="not-italic text-xl text-orange-500">i</em>MAGE
           </h1>
 
         </div>
@@ -46,10 +46,8 @@
         <!-- menu -->
         <button id="menu_button"
           class="flex items-center justify-center w-10 h-10 transition-colors duration-200 rounded-full hover:bg-stone-100">
-          <svg class="w-6 h-6 text-stone-600" fill="currentColor" viewBox="0 0 24 24">
-            <circle cx="12" cy="5" r="2"></circle>
-            <circle cx="12" cy="12" r="2"></circle>
-            <circle cx="12" cy="19" r="2"></circle>
+          <svg class="w-6 h-6 text-stone-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
 
@@ -98,9 +96,70 @@
     </div>
 
     <!-- Artwork Grid  -->
-    <div id="artworkGrid" class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 items-start">
+    <div id="artworkGrid" class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 items-start"></div>
 
-    </div>
+    <!-- Card Template -->
+    <template id="cardTemplate">
+      <article class="bg-white border border-stone-200 rounded-2xl overflow-hidden">
+
+        <!-- Header -->
+        <div class="flex items-center gap-3 px-4 py-3 border-b border-stone-100">
+          <div class="flex items-center justify-center w-9 h-9 rounded-full overflow-hidden shrink-0">
+            <img src="imgs/image_logo.jpg" alt="iMAGE" class="w-full h-full object-cover" />
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-bold font-syne text-stone-900">image_cvsucarmona</p>
+            <!-- <p class="text-xs text-stone-400">iMAGE · CVSU Carmona</p> -->
+          </div>
+
+          <!-- option -->
+          <button
+            class="flex items-center justify-center w-8 h-8 rounded-full hover:bg-stone-100 transition-colors duration-200 shrink-0">
+            <svg class="w-5 h-5 text-orange-500" fill="currentColor" viewBox="0 0 24 24">
+              <circle cx="12" cy="5" r="2"></circle>
+              <circle cx="12" cy="12" r="2"></circle>
+              <circle cx="12" cy="19" r="2"></circle>
+            </svg>
+        </div>
+        <!-- Image -->
+        <div class="card-image-wrap relative w-full bg-stone-100 hidden">
+          <img class="card-image w-full h-auto block" src="" alt="" onerror="this.parentElement.style.display='none'" />
+          <span
+            class="card-category absolute top-3 right-3 text-xs font-syne font-bold tracking-wider uppercase text-orange-500 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full border border-orange-100 shadow-sm"></span>
+        </div>
+
+
+        </button>
+
+        <!-- Title -->
+        <div class="px-4 pt-4 pb-1">
+          <div class="w-8 h-0.5 bg-orange-500 rounded-full mb-3"></div>
+          <h2 class="card-title font-fraunces text-2xl italic font-semibold leading-snug text-stone-600"></h2>
+          <p class="card-date text-xs text-stone-400 mt-1"></p>
+        </div>
+
+        <!-- Overview -->
+        <div class="px-4 pt-1 pb-2">
+          <p class="card-overview text-sm leading-relaxed text-stone-500 font-outfit italic"></p>
+        </div>
+
+        <!-- Artists -->
+        <div class="card-artists px-4 pb-2 flex flex-wrap gap-2"></div>
+
+        <!-- Footer -->
+        <div class="px-4 py-3 border-t border-stone-100 mt-2">
+          <a class="card-link group flex items-center gap-2 text-sm font-bold font-syne tracking-wide text-orange-600 hover:text-orange-700 transition-colors duration-200"
+            href="#">
+            <span>See Full Content</span>
+            <svg class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" fill="none"
+              stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </a>
+        </div>
+
+      </article>
+    </template>
 
   </main>
 
