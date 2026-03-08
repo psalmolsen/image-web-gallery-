@@ -216,9 +216,25 @@
         </div>
       </div>
 
-      <!-- Image -->
+      <!-- file -->
       <div class="card-image-wrap relative w-full bg-stone-100 hidden">
-        <img class="card-image w-full h-auto block" src="" alt="" onerror="this.parentElement.style.display='none'" />
+        <img class="card-image w-full h-auto block" src="" alt="" />
+        <video class="card-video w-full h-auto hidden" controls playsinline
+          controlsList="nodownload nofullscreen noplaybackrate" disablePictureInPicture></video>
+        <button
+          class="card-prev hidden md:flex absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/35 text-white backdrop-blur-sm border border-white/20 items-center justify-center opacity-0 pointer-events-none">
+          <span aria-hidden="true">&#10094;</span>
+        </button>
+        <button
+          class="card-next hidden md:flex absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/35 text-white backdrop-blur-sm border border-white/20 items-center justify-center opacity-0 pointer-events-none">
+          <span aria-hidden="true">&#10095;</span>
+        </button>
+        <div
+          class="card-image-dots hidden absolute top-3 left-3 flex items-center gap-1.5 bg-black/25 backdrop-blur-sm rounded-full px-2 py-1">
+        </div>
+        <span
+          class="card-image-count hidden absolute bottom-3 left-3 text-[11px] font-syne font-bold tracking-wide text-white bg-black/45 backdrop-blur-sm px-2 py-1 rounded-full border border-white/20">1
+          / 1</span>
         <span
           class="card-category absolute top-3 right-3 text-xs font-syne font-bold tracking-wider uppercase text-orange-500 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full border border-orange-100 shadow-sm"></span>
       </div>

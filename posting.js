@@ -88,7 +88,33 @@ class FormValues {
   }
 }
 
+function fileoverview() {
+  const fileinput = document.querySelector("#FileInput")
+  const dropzonedefault = document.querySelector("#dropzoneDefault")
+  const filepreviewcontainer = document.querySelector("#filePreviewContainer")
 
+
+
+  fileinput.addEventListener("change", function () {
+    Array.from(this.files).forEach(file => {
+      dropzonedefault.classList.add("hidden")
+      filepreviewcontainer.classList.remove("hidden")
+      const card = document.createElement("div")
+      card.className = "flex items-center gap-2 bg-white border border-stone-200 rounded-xl px-4 py-3 text-sm font-outfit text-stone-700 shadow-sm"
+      card.textContent = file.name
+      filepreviewcontainer.appendChild(card)
+
+    });
+
+  })
+
+
+
+
+
+
+}
+fileoverview()
 
 //add new category 
 async function saveCategory(newCategrory) {
@@ -141,11 +167,14 @@ addCategory()
 loadCategory()
 
 //cloudinary upload function
-async function cloudinaryUpload(file) {
+async function cloudinaryUpload(file, title) {
   const dataFile = new FormData()
+  const safeTitle = title ? title.replace(/[^a-zA-Z0-9-_]/g, "-") : "artwork"
+  const uniqueSuffix = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
 
   dataFile.append("file", file)
   dataFile.append("upload_preset", cloudinaryConfig.uploadPreset)
+  dataFile.append("public_id", `artworks/${safeTitle}-${uniqueSuffix}`)
 
   const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/auto/upload`, {
     method: "POST",
@@ -156,8 +185,15 @@ async function cloudinaryUpload(file) {
 
 }
 
+async function cloudinaryUploadMultiple(files, title) {
+  const uploadTasks = files.map((file) => cloudinaryUpload(file, title))
+  return Promise.all(uploadTasks)
+}
+
 //firebase upload
-async function firebaseUpload(data, url) {
+async function firebaseUpload(data, urls) {
+  const cleanUrls = Array.isArray(urls) ? urls.filter(Boolean) : []
+  const primaryUrl = cleanUrls[0] || null
 
   await addDoc(collection(db, "artworks"), {
     title: data.title,
@@ -165,7 +201,8 @@ async function firebaseUpload(data, url) {
     fullcontext: data.fullcontext,
     category: data.category,
     artists: data.artists,
-    image_url: url,
+    image_url: primaryUrl,
+    image_urls: cleanUrls,
     date: data.date
   })
 }
@@ -188,12 +225,12 @@ publishBtn.addEventListener("click", async function () {
   const data = form.getFormValues()
 
   try {
-    let url = null
+    let urls = []
 
-    if (data.file[0]) {
-      url = await cloudinaryUpload(data.file[0])
+    if (data.file && data.file.length) {
+      urls = await cloudinaryUploadMultiple(Array.from(data.file), data.title)
     }
-    await firebaseUpload(data, url)
+    await firebaseUpload(data, urls)
     form.clearForm()
     alert("Artwork published successfully!")
     window.location.href = "Dashboard.html"
@@ -207,4 +244,7 @@ publishBtn.addEventListener("click", async function () {
 });
 
 
+//todo: off browser suggestion on the form
+//todo: make the date be require
 
+//todo: grpahic : multiple artist (not limited to one artist)
