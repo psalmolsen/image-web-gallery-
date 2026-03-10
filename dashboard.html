@@ -38,7 +38,7 @@
             <span><img src="imgs/image_logo.jpg" alt="iMAGE logo"></span>
           </div>
           <h1 class="text-xl font-bold font-syne text-stone-900">
-            <em class="not-italic text-xl text-orange-500">i</em>MAGE
+            <em class="not-italic text-xl text-orange-600">i</em>MAGE
           </h1>
 
         </div>
@@ -46,8 +46,10 @@
         <!-- menu -->
         <button id="menu_button"
           class="flex items-center justify-center w-10 h-10 transition-colors duration-200 rounded-full hover:bg-stone-100">
-          <svg class="w-6 h-6 text-stone-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          <svg class="w-6 h-6 text-stone-600" fill="currentColor" viewBox="0 0 24 24">
+            <circle cx="12" cy="5" r="2"></circle>
+            <circle cx="12" cy="12" r="2"></circle>
+            <circle cx="12" cy="19" r="2"></circle>
           </svg>
         </button>
 
@@ -73,52 +75,34 @@
   <!-- Main Content -->
   <main class="px-4 py-6 pb-24 mx-auto max-w-7xl">
 
-
-    <section id="works">
-
-      <!-- Empty State -->
-      <div id="emptyState" class="hidden py-20 text-center bg-white border shadow-sm rounded-3xl border-stone-100">
-        <div class="flex items-center justify-center w-20 h-20 mx-auto mb-4 bg-orange-100 rounded-full">
-          <svg class="w-10 h-10 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
-            </path>
-          </svg>
-        </div>
-        <h3 class="mb-2 text-2xl font-normal font-instrument text-stone-900">No artworks yet</h3>
-        <p class="mb-6 text-sm text-stone-500">
-          Start by publishing your first collaboration
-        </p>
-        <a href="posting.html"
-          class="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white font-syne font-bold text-sm tracking-wider uppercase py-3 px-6 rounded-xl transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-orange-200">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-          </svg>
-          <span>Create Artwork</span>
-        </a>
+    <!-- Empty State -->
+    <div id="emptyState" class="hidden py-20 text-center bg-white border shadow-sm rounded-3xl border-stone-100">
+      <div class="flex items-center justify-center w-20 h-20 mx-auto mb-4 bg-orange-100 rounded-full">
+        <svg class="w-10 h-10 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+          </path>
+        </svg>
       </div>
+      <h3 class="mb-2 text-2xl font-normal font-instrument text-stone-900">No artworks yet</h3>
+      <p class="mb-6 text-sm text-stone-500">
+        Start by publishing your first collaboration
+      </p>
+      <a href="posting.html"
+        class="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white font-syne font-bold text-sm tracking-wider uppercase py-3 px-6 rounded-xl transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-orange-200">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        <span>Create Artwork</span>
+      </a>
+    </div>
 
-      <!-- Artwork Grid  -->
-      <div id="artworkGrid" class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 items-start"></div>
-    </section>
+    <!-- Artwork Grid  -->
+    <div id="artworkGrid" class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 items-start">
 
-
-
-
-    <!-- About Us Section -->
-    <section id="about" class="py-10 hidden">
-      <h2 class="text-2xl font-instrument text-stone-900">About Us</h2>
-      <p class="text-sm text-stone-500 mt-2">Coming soon...</p>
-    </section>
-
-
+    </div>
 
   </main>
-
-
-
-
-
 
   <!-- Bottom Navigation Bar  -->
   <footer class="fixed bottom-0 left-0 right-0 z-50 bg-white border-t shadow-lg border-stone-200">
@@ -126,7 +110,7 @@
       <div class="flex items-center justify-around py-2">
 
         <!-- Works -->
-        <button id="nav-works"
+        <button
           class="flex flex-col items-center gap-1 px-4 py-2 transition-colors duration-200 hover:bg-orange-50 rounded-xl">
           <div class="flex items-center justify-center w-6 h-6">
             <!-- Icon placeholder - replace with your icon/SVG -->
@@ -140,7 +124,7 @@
         </button>
 
         <!-- About Us -->
-        <button id="nav-about"
+        <button
           class="flex flex-col items-center gap-1 px-4 py-2 transition-colors duration-200 hover:bg-orange-50 rounded-xl">
           <div class="flex items-center justify-center w-6 h-6">
             <!-- Icon placeholder - replace with your icon/SVG -->
@@ -149,7 +133,7 @@
                 d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
           </div>
-          <span class="text-xs font-medium text-stone-400 font-outfit">About Us</span>
+          <span class="text-xs font-medium font-outfit text-stone-400">About Us</span>
         </button>
 
       </div>
@@ -164,10 +148,9 @@
     </svg>
   </a>
 
-  <!-- Card Template -->
-  <template id="cardTemplate">
-    <article class="bg-white border border-stone-200 rounded-2xl overflow-hidden">
 
+<<<<<<< Updated upstream
+=======
       <!-- Header -->
       <div class="flex items-center gap-3 px-4 py-3 border-b border-stone-100">
         <div class="flex items-center justify-center w-9 h-9 rounded-full overflow-hidden shrink-0">
@@ -216,9 +199,25 @@
         </div>
       </div>
 
-      <!-- Image -->
+      <!-- file -->
       <div class="card-image-wrap relative w-full bg-stone-100 hidden">
-        <img class="card-image w-full h-auto block" src="" alt="" onerror="this.parentElement.style.display='none'" />
+        <img class="card-image w-full h-auto block" src="" alt="" />
+        <video class="card-video w-full h-auto hidden" controls playsinline
+          controlsList="nodownload nofullscreen noplaybackrate" disablePictureInPicture></video>
+        <button
+          class="card-prev hidden md:flex absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/35 text-white backdrop-blur-sm border border-white/20 items-center justify-center opacity-0 pointer-events-none">
+          <span aria-hidden="true">&#10094;</span>
+        </button>
+        <button
+          class="card-next hidden md:flex absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/35 text-white backdrop-blur-sm border border-white/20 items-center justify-center opacity-0 pointer-events-none">
+          <span aria-hidden="true">&#10095;</span>
+        </button>
+        <div
+          class="card-image-dots hidden absolute top-3 left-3 flex items-center gap-1.5 bg-black/25 backdrop-blur-sm rounded-full px-2 py-1">
+        </div>
+        <span
+          class="card-image-count hidden absolute bottom-3 left-3 text-[11px] font-syne font-bold tracking-wide text-white bg-black/45 backdrop-blur-sm px-2 py-1 rounded-full border border-white/20">1
+          / 1</span>
         <span
           class="card-category absolute top-3 right-3 text-xs font-syne font-bold tracking-wider uppercase text-orange-500 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full border border-orange-100 shadow-sm"></span>
       </div>
@@ -239,7 +238,7 @@
       </div>
 
       <!-- Artists -->
-      <div class="card-artists px-4 pb-2 flex flex-wrap gap-2"></div>
+      <div class="card-artists px-4 pb-3 grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
 
       <!-- Footer -->
       <div class="px-4 py-3 border-t border-stone-100 mt-2">
@@ -255,6 +254,7 @@
 
     </article>
   </template>
+>>>>>>> Stashed changes
 
   <script type="module" src="dashboard.js"></script>
 </body>

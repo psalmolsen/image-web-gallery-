@@ -7,6 +7,61 @@ const cloudinaryConfig = {
   uploadPreset: "image-gallery"
 }
 
+//add artist on the same team
+function addArtistInput(roleWrapper) {
+  const container = roleWrapper.querySelector('.artist-inputs')
+  const placeholder = roleWrapper.querySelector('input').placeholder
+
+  const lastInput = container.querySelector('.artist-row:last-child input')
+  if (lastInput && lastInput.value.trim() === '') {
+    lastInput.focus()
+    return
+  }
+  // convert current last row's + to ✕
+  const lastRow = container.querySelector('.artist-row:last-child')
+  if (lastRow) {
+    const lastBtn = lastRow.querySelector('.artist-btn')
+    lastBtn.textContent = '✕'
+    lastBtn.classList.remove('bg-orange-100', 'text-orange-500', 'hover:bg-orange-500', 'hover:text-white')
+    lastBtn.classList.add('text-stone-300', 'hover:text-orange-500', 'bg-transparent')
+    lastBtn.addEventListener('click', () => lastRow.remove())
+  }
+
+  // create new row with +
+  const row = document.createElement('div')
+  row.className = 'artist-row flex items-center gap-2 border-b-2 border-orange-100 focus-within:border-orange-500 transition-colors duration-200'
+
+  const input = document.createElement('input')
+  input.type = 'text'
+  input.placeholder = placeholder
+  input.className = 'flex-1 bg-transparent outline-none py-2.5 text-sm text-stone-900 placeholder-stone-400 font-outfit'
+
+  const plusBtn = document.createElement('button')
+  plusBtn.type = 'button'
+  plusBtn.textContent = '+'
+  plusBtn.className = 'artist-btn shrink-0 w-5 h-5 rounded-full bg-orange-100 text-orange-500 text-xs font-bold hover:bg-orange-500 hover:text-white transition-all duration-200 flex items-center justify-center'
+  plusBtn.addEventListener('click', () => addArtistInput(roleWrapper))
+
+  row.appendChild(input)
+  row.appendChild(plusBtn)
+  container.appendChild(row)
+}
+
+function getArtistValues(role) {
+  const wrapper = document.querySelector(`[data-role="${role}"]`)
+  if (!wrapper) return []
+  return Array.from(wrapper.querySelectorAll('input'))
+    .map(i => i.value.trim())
+    .filter(Boolean)
+}
+
+// wire up all initial + buttons
+document.querySelectorAll('[data-role]').forEach(wrapper => {
+  wrapper.querySelector('.artist-btn').addEventListener('click', () => {
+    addArtistInput(wrapper)
+  })
+})
+
 
 // Artwork data form (collect values)
 class FormValues {
@@ -20,10 +75,10 @@ class FormValues {
     this.date = document.getElementById("Date").value
 
     //artist data 
-    this.graphicartist = document.getElementById("GraphicArtist").value.trim()
-    this.writer = document.getElementById("Writer").value.trim()
-    this.videographer = document.getElementById("Videographer").value.trim()
-    this.photographer = document.getElementById("Photographer").value.trim()
+    this.graphicartist = getArtistValues("graphicartist")
+    this.writer = getArtistValues("writer")
+    this.videographer = getArtistValues("videographer")
+    this.photographer = getArtistValues("photographer")
 
     //artwork category
     this.artcategory = document.getElementById("category").value
@@ -52,6 +107,13 @@ class FormValues {
   // validate function (check if values are empty)  
   validateForm() {
     let data = this.getFormValues()
+    const hasArtist = Array.from(document.querySelectorAll('#Artists .artist-inputs input'))
+      .some(input => input.value.trim() !== '')
+
+    if (!hasArtist) {
+      alert("Please enter at least one artist.")
+      return false
+    }
 
     if (!data.title) {
       alert("Please enter a title for the artwork.")
@@ -71,6 +133,10 @@ class FormValues {
       alert("Please enter a category for the artwork.")
       return false
     }
+    if (!data.date) {
+      alert("Please enter a date for the artwork.")
+      return false
+    }
     return true
   }
 
@@ -80,15 +146,52 @@ class FormValues {
     document.querySelector("#titleInput").value = null
     document.querySelector("#descriptionInput").value = null
     document.querySelector("#overview").value = null
-    document.querySelector("#GraphicArtist").value = null
-    document.querySelector("#Writer").value = null
-    document.querySelector("#Videographer").value = null
-    document.querySelector("#Photographer").value = null
     document.querySelector("#category").value = null
+
+    document.querySelectorAll('[data-role]').forEach(wrapper => {
+      const container = wrapper.querySelector('.artist-inputs')
+      // remove all rows except first
+      const rows = container.querySelectorAll('.artist-row')
+      rows.forEach((row, i) => { if (i > 0) row.remove() })
+      // clear first row input and reset its button back to +
+      const firstInput = container.querySelector('input')
+      const firstBtn = container.querySelector('.artist-btn')
+      if (firstInput) firstInput.value = ''
+      if (firstBtn) {
+        firstBtn.textContent = '+'
+        firstBtn.className = 'artist-btn shrink-0 w-5 h-5 rounded-full bg-orange-100 text-orange-500 text-xs font-bold hover:bg-orange-500 hover:text-white transition-all duration-200 flex items-center justify-center'
+      }
+    })
   }
 }
 
+function fileoverview() {
+  const fileinput = document.querySelector("#FileInput")
+  const dropzonedefault = document.querySelector("#dropzoneDefault")
+  const filepreviewcontainer = document.querySelector("#filePreviewContainer")
 
+
+
+  fileinput.addEventListener("change", function () {
+    Array.from(this.files).forEach(file => {
+      dropzonedefault.classList.add("hidden")
+      filepreviewcontainer.classList.remove("hidden")
+      const card = document.createElement("div")
+      card.className = "flex items-center gap-2 bg-white border border-stone-200 rounded-xl px-4 py-3 text-sm font-outfit text-stone-700 shadow-sm"
+      card.textContent = file.name
+      filepreviewcontainer.appendChild(card)
+
+    });
+
+  })
+
+
+
+
+
+
+}
+fileoverview()
 
 //add new category 
 async function saveCategory(newCategrory) {
@@ -126,6 +229,7 @@ function addCategory() {
     await saveCategory(categoryName)
   })
 }
+
 async function loadCategory() {
   const result = await getDocs(collection(db, "categories"))
   result.forEach(doc => {
@@ -141,11 +245,14 @@ addCategory()
 loadCategory()
 
 //cloudinary upload function
-async function cloudinaryUpload(file) {
+async function cloudinaryUpload(file, title) {
   const dataFile = new FormData()
+  const safeTitle = title ? title.replace(/[^a-zA-Z0-9-_]/g, "-") : "artwork"
+  const uniqueSuffix = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
 
   dataFile.append("file", file)
   dataFile.append("upload_preset", cloudinaryConfig.uploadPreset)
+  dataFile.append("public_id", `artworks/${safeTitle}-${uniqueSuffix}`)
 
   const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/auto/upload`, {
     method: "POST",
@@ -156,8 +263,15 @@ async function cloudinaryUpload(file) {
 
 }
 
+async function cloudinaryUploadMultiple(files, title) {
+  const uploadTasks = files.map((file) => cloudinaryUpload(file, title))
+  return Promise.all(uploadTasks)
+}
+
 //firebase upload
-async function firebaseUpload(data, url) {
+async function firebaseUpload(data, urls) {
+  const cleanUrls = Array.isArray(urls) ? urls.filter(Boolean) : []
+  const primaryUrl = cleanUrls[0] || null
 
   await addDoc(collection(db, "artworks"), {
     title: data.title,
@@ -165,7 +279,8 @@ async function firebaseUpload(data, url) {
     fullcontext: data.fullcontext,
     category: data.category,
     artists: data.artists,
-    image_url: url,
+    image_url: primaryUrl,
+    image_urls: cleanUrls,
     date: data.date
   })
 }
@@ -188,12 +303,12 @@ publishBtn.addEventListener("click", async function () {
   const data = form.getFormValues()
 
   try {
-    let url = null
+    let urls = []
 
-    if (data.file[0]) {
-      url = await cloudinaryUpload(data.file[0])
+    if (data.file && data.file.length) {
+      urls = await cloudinaryUploadMultiple(Array.from(data.file), data.title)
     }
-    await firebaseUpload(data, url)
+    await firebaseUpload(data, urls)
     form.clearForm()
     alert("Artwork published successfully!")
     window.location.href = "Dashboard.html"
@@ -207,4 +322,7 @@ publishBtn.addEventListener("click", async function () {
 });
 
 
+//todo: off browser suggestion on the form
+//todo: make the date be require
 
+//todo: grpahic : multiple artist (not limited to one artist)
