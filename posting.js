@@ -107,13 +107,6 @@ class FormValues {
   // validate function (check if values are empty)  
   validateForm() {
     let data = this.getFormValues()
-    const hasArtist = Array.from(document.querySelectorAll('#Artists .artist-inputs input'))
-      .some(input => input.value.trim() !== '')
-
-    if (!hasArtist) {
-      alert("Please enter at least one artist.")
-      return false
-    }
 
     if (!data.title) {
       alert("Please enter a title for the artwork.")
@@ -135,6 +128,10 @@ class FormValues {
     }
     if (!data.date) {
       alert("Please enter a date for the artwork.")
+      return false
+    }
+    if ((!data.artists.graphicartist.length && !data.artists.writer.length && !data.artists.videographer.length && !data.artists.photographer.length)) {
+      alert("Please enter at least one artist.")
       return false
     }
     return true
@@ -323,6 +320,3 @@ publishBtn.addEventListener("click", async function () {
 
 
 //todo: off browser suggestion on the form
-//todo: make the date be require
-
-//todo: grpahic : multiple artist (not limited to one artist)

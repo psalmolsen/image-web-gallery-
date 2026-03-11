@@ -40,7 +40,6 @@
           <h1 class="text-xl font-bold font-syne text-stone-900">
             <em class="not-italic text-xl text-orange-600">i</em>MAGE
           </h1>
-
         </div>
 
         <!-- menu -->
@@ -52,7 +51,6 @@
             <circle cx="12" cy="19" r="2"></circle>
           </svg>
         </button>
-
       </div>
     </div>
   </header>
@@ -97,23 +95,20 @@
       </a>
     </div>
 
-    <!-- Artwork Grid  -->
-    <div id="artworkGrid" class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 items-start">
-
-    </div>
+    <!-- Artwork layout -->
+    <div id="artworkGrid" class="columns-1 md:columns-2 lg:columns-3 gap-6 [&>*]:break-inside-avoid [&>*]:mb-6">
 
   </main>
 
-  <!-- Bottom Navigation Bar  -->
+  <!-- Bottom Navigation Bar -->
   <footer class="fixed bottom-0 left-0 right-0 z-50 bg-white border-t shadow-lg border-stone-200">
     <div class="px-4 mx-auto max-w-7xl">
       <div class="flex items-center justify-around py-2">
 
         <!-- Works -->
-        <button
+        <button id="nav-works"
           class="flex flex-col items-center gap-1 px-4 py-2 transition-colors duration-200 hover:bg-orange-50 rounded-xl">
           <div class="flex items-center justify-center w-6 h-6">
-            <!-- Icon placeholder - replace with your icon/SVG -->
             <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
@@ -124,10 +119,9 @@
         </button>
 
         <!-- About Us -->
-        <button
+        <button id="nav-about"
           class="flex flex-col items-center gap-1 px-4 py-2 transition-colors duration-200 hover:bg-orange-50 rounded-xl">
           <div class="flex items-center justify-center w-6 h-6">
-            <!-- Icon placeholder - replace with your icon/SVG -->
             <svg class="w-6 h-6 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -140,7 +134,7 @@
     </div>
   </footer>
 
-  <!--+ New Artwork -->
+  <!-- + New Artwork -->
   <a href="posting.html"
     class="fixed z-40 flex items-center justify-center text-white transition-all duration-300 bg-orange-600 rounded-full shadow-xl bottom-20 right-6 w-14 h-14 hover:bg-orange-700 hover:shadow-2xl hover:scale-110 hover:-translate-y-1">
     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -148,17 +142,17 @@
     </svg>
   </a>
 
+  <!-- Card Template -->
+  <template id="cardTemplate">
+    <article class="bg-white border border-stone-200 rounded-2xl overflow-hidden">
 
-<<<<<<< Updated upstream
-=======
-      <!-- Header -->
+      <!-- Card Header -->
       <div class="flex items-center gap-3 px-4 py-3 border-b border-stone-100">
         <div class="flex items-center justify-center w-9 h-9 rounded-full overflow-hidden shrink-0">
           <img src="imgs/image_logo.jpg" alt="iMAGE" class="w-full h-full object-cover" />
         </div>
         <div class="flex-1 min-w-0">
           <p class="text-sm font-bold font-syne text-stone-900">image_cvsucarmona</p>
-          <!-- <p class="text-xs text-stone-400">iMAGE · CVSU Carmona</p> -->
         </div>
 
         <div class="relative">
@@ -193,13 +187,13 @@
                 <path d="M3 6h18" />
                 <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
               </svg>
-              Move to trash
+              Delete
             </button>
           </div>
         </div>
       </div>
 
-      <!-- file -->
+      <!-- Media -->
       <div class="card-image-wrap relative w-full bg-stone-100 hidden">
         <img class="card-image w-full h-auto block" src="" alt="" />
         <video class="card-video w-full h-auto hidden" controls playsinline
@@ -222,9 +216,6 @@
           class="card-category absolute top-3 right-3 text-xs font-syne font-bold tracking-wider uppercase text-orange-500 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full border border-orange-100 shadow-sm"></span>
       </div>
 
-
-
-
       <!-- Title and date -->
       <div class="px-4 pt-4 pb-1">
         <div class="w-8 h-0.5 bg-orange-500 rounded-full mb-3"></div>
@@ -241,7 +232,7 @@
       <div class="card-artists px-4 pb-3 grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
 
       <!-- Footer -->
-      <div class="px-4 py-3 border-t border-stone-100 mt-2">
+      <div class="pl-4 pr-6 py-3 border-t border-stone-100 mt-2 flex item-center justify-between">
         <a class="card-link group flex items-center gap-2 text-sm font-bold font-syne tracking-wide text-orange-600 hover:text-orange-700 transition-colors duration-200"
           href="#">
           <span>See Full Content</span>
@@ -250,11 +241,55 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6" />
           </svg>
         </a>
-      </div>
+        <div>
+          <button
+            class="card-share flex items-center gap-1.5 text-sm font-medium text-orange-600 hover:text-orange-700 transition-colors duration-200">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              class="lucide lucide-send-icon lucide-send">
+              <path
+                d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z" />
+              <path d="m21.854 2.147-10.94 10.939" />
+            </svg>
+            <span>share</span>
+          </button>
+        </div>
+
+        <div class="relative">
+          <!-- share dropdown -->
+          <div
+            class="share-card-dropdown hidden absolute right-0 top-10 w-44 bg-white border border-stone-200 rounded-xl shadow-lg z-10 overflow-hidden">
+            <button
+              class="image-code w-full flex items-center gap-3 px-4 py-3 text-sm text-orange-500 hover:bg-orange-50">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="lucide lucide-scan-qr-code">
+                <path d="M17 12v4a1 1 0 0 1-1 1h-4" />
+                <path d="M17 3h2a2 2 0 0 1 2 2v2" />
+                <path d="M17 8V7" />
+                <path d="M21 17v2a2 2 0 0 1-2 2h-2" />
+                <path d="M3 7V5a2 2 0 0 1 2-2h2" />
+                <path d="M7 17h.01" />
+                <path d="M7 21H5a2 2 0 0 1-2-2v-2" />
+                <rect x="7" y="7" width="5" height="5" rx="1" />
+              </svg>
+              Image code
+            </button>
+            <button
+              class="copy-link w-full flex items-center gap-3 px-4 py-3 text-sm text-orange-500 hover:bg-orange-50">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="lucide lucide-link">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+              </svg>
+              Copy link
+            </button>
+          </div>
+        </div>
 
     </article>
   </template>
->>>>>>> Stashed changes
 
   <script type="module" src="dashboard.js"></script>
 </body>

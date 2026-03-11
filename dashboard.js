@@ -1,63 +1,13 @@
-// import { db } from "./firebase.js"
-// import { collection, getDocs } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js"
-
-// async function loadArtworks() {
-//     const result = await getDocs(collection(db, "artworks"))
-//     result.forEach(doc => {
-//         const artworkData = doc.data()
-
-//         document.getElementById("artworkGrid").innerHTML +=
-//             `<div>
-//                 <h2>${artworkData.title}</h2>
-//                 <p>${artworkData.description}</p>
-//                 <img src="${artworkData.image_url}" alt="${artworkData.title}" />
-//             </div>`
-
-//     })
-// }
-
-// loadArtworks()
-
-
 import { db } from "./firebase.js"
-import { collection, getDocs } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js"
+import { collection, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js"
 
-function renderImage(url, title) {
-    if (!url) return ""
-    return `
-        <div class="w-full bg-stone-100">
-            <img 
-                src="${url}" 
-                alt="${title}" 
-                class="w-full h-auto block"
-                onerror="this.parentElement.style.display='none'"
-            />
-        </div>
-    `
-}
+// grabs the card template from the HTML to be cloned later for each artwork
+const cardTemplate = document.querySelector('#cardTemplate')
 
-<<<<<<< Updated upstream
-function renderArtists(artists) {
-    if (!artists) return ""
-    const roles = [
-        { label: "Graphic Artist", value: artists.graphicartist },
-        { label: "Writer", value: artists.writer },
-        { label: "Videographer", value: artists.videographer },
-        { label: "Photographer", value: artists.photographer },
-    ].filter(a => a.value)
 
-    if (roles.length === 0) return ""
+// ─── Helpers ───────
 
-    return `
-        <div class="px-4 pb-2 flex flex-wrap gap-2">
-            ${roles.map(a => `
-                <span class="text-xs bg-orange-50 text-orange-700 border border-orange-100 rounded-full px-3 py-1 font-outfit">
-                    <span class="font-semibold">${a.label}:</span> ${a.value}
-                </span>
-            `).join("")}
-        </div>
-    `
-=======
+// converts raw date string (e.g. "2026-03-10") to readable format (e.g. "Mar 10, 2026")
 function formatDate(dateStr) {
     if (!dateStr) return ""
     return new Date(dateStr).toLocaleDateString('en-US', {
@@ -67,9 +17,15 @@ function formatDate(dateStr) {
     })
 }
 
+// checks if a URL is a video file so we know whether to show <img> or <video>
+function isVideoUrl(url) {
+    return /\.(mp4|webm|ogg|mov)(\?|$)/i.test(url)
+}
 
-// ─── Media Block (handles both images and videos) ───────────────────────────
 
+// ─── Media Block (handles both images and videos) ────────────────────────────
+
+// sets up the media area of a card — shows images or videos, handles prev/next buttons, dots, counter, and swipe on mobile
 function setupMedia(card, imageUrls, title) {
     const totalItems = imageUrls.length
     if (totalItems === 0) return
@@ -88,17 +44,18 @@ function setupMedia(card, imageUrls, title) {
 
     imageWrap.classList.remove('hidden')
 
-    // Render the media item at a given index (image or video)
+    // shows the correct image or video at the given position, and updates the counter + dots
     function renderMedia(index) {
         const url = imageUrls[index]
 
         imageCount.textContent = `${index + 1} / ${totalItems}`
 
-        // update dots
+        // highlights the active dot and dims the rest
         Array.from(dotsWrap.children).forEach((dot, i) => {
             dot.className = `h-1.5 w-1.5 rounded-full ${i === index ? 'bg-white/95' : 'bg-white/45'}`
         })
 
+        // shows video or image depending on the file type
         if (isVideoUrl(url)) {
             imageEl.classList.add('hidden')
             videoEl.classList.remove('hidden')
@@ -111,14 +68,14 @@ function setupMedia(card, imageUrls, title) {
         }
     }
 
-    // Only show navigation and dots when there is more than 1 item
+    // navigation and swipe only needed when there is more than 1 file
     if (totalItems > 1) {
         imageCount.classList.remove('hidden')
         dotsWrap.classList.remove('hidden')
         prevBtn.classList.remove('opacity-0', 'pointer-events-none')
         nextBtn.classList.remove('opacity-0', 'pointer-events-none')
 
-        // Build dots
+        // creates one dot per media item
         dotsWrap.innerHTML = ""
         for (let i = 0; i < totalItems; i++) {
             const dot = document.createElement('span')
@@ -126,10 +83,12 @@ function setupMedia(card, imageUrls, title) {
             dotsWrap.appendChild(dot)
         }
 
+        // returns whichever element (image or video) is currently being displayed
         function getActiveEl() {
             return isVideoUrl(imageUrls[currentIndex]) ? videoEl : imageEl
         }
 
+        // slides out the current item and slides in the next one with animation
         function animateToIndex(nextIndex, direction) {
             if (isAnimating || nextIndex === currentIndex) return
             isAnimating = true
@@ -150,16 +109,20 @@ function setupMedia(card, imageUrls, title) {
             }
         }
 
+        // moves to the next or previous item (loops around when reaching the end)
         function goNext() { animateToIndex((currentIndex + 1) % totalItems, 'next') }
         function goPrev() { animateToIndex((currentIndex - 1 + totalItems) % totalItems, 'prev') }
 
+        // wires up the prev/next buttons
         nextBtn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); goNext() })
         prevBtn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); goPrev() })
 
+        // detects swipe start position on mobile
         imageWrap.addEventListener('touchstart', (e) => {
             touchStartX = e.changedTouches[0].clientX
         }, { passive: true })
 
+        // detects swipe direction — swipe left = next, swipe right = prev
         imageWrap.addEventListener('touchend', (e) => {
             if (touchStartX === null) return
             const delta = e.changedTouches[0].clientX - touchStartX
@@ -168,19 +131,21 @@ function setupMedia(card, imageUrls, title) {
         }, { passive: true })
     }
 
+    // always show the first item on load
     renderMedia(0)
 }
 
 
-// ─── Artist Credits ──────────────────────────────────────────────────────────
+// ─── Artist Credits ───────────────────────────────────────────────────────────
 
-// Normalizes artist value to an array — handles legacy string data from Firestore
+// normalizes artist data to always be an array — handles old Firestore data that was saved as a plain string
 function toArray(value) {
     if (Array.isArray(value)) return value
     if (value && value.trim() !== '') return [value]
     return []
 }
 
+// builds the orange artist pills at the bottom of each card, skipping any role with no names
 function setupArtists(card, artists) {
     const container = card.querySelector('.card-artists')
 
@@ -213,118 +178,85 @@ function setupArtists(card, artists) {
         pill.appendChild(namesDiv)
         container.appendChild(pill)
     })
->>>>>>> Stashed changes
 }
 
-function createCardHTML(artworkData, docId) {
-    const imageSection = renderImage(artworkData.image_url, artworkData.title)
-    const artistsSection = renderArtists(artworkData.artists)
 
-    return `
-        <article class="bg-white border border-stone-200 rounded-2xl overflow-hidden">
+// ─── Card Builder ───────────
 
-            <!-- Post Header -->
-            <div class="flex items-center gap-3 px-4 py-3 border-b border-stone-100">
-                <div class="flex items-center justify-center w-9 h-9 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 shrink-0">
-                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                    </svg>
-                </div>
-                <div class="flex-1 min-w-0">
-                    <p class="text-xs text-stone-400">${artworkData.date || ""}</p>
-                </div>
-                <span class="text-xs font-syne font-bold tracking-wider uppercase text-orange-500 bg-orange-50 px-3 py-1 rounded-full border border-orange-100 shrink-0">
-                    ${artworkData.category || ""}
-                </span>
-            </div>
+// clones the HTML template and fills it with artwork data, then returns the finished card
+function createCard(artWorkData, docId) {
+    const card = cardTemplate.content.cloneNode(true)
 
-            <!-- Full Image -->
-            ${imageSection}
+    const formatted = formatDate(artWorkData.date)
 
-            <!-- Title — strong emphasis -->
-            <div class="px-4 pt-4 pb-1">
-                <div class="w-8 h-0.5 bg-orange-500 rounded-full mb-3"></div>
-                <h2 class="font-fraunces text-2xl italic font-semibold leading-snug text-stone-600">
-                    ${artworkData.title}
-                </h2>
-            </div>
+    card.querySelector('.card-title').textContent = artWorkData.title
+    card.querySelector('.card-date').textContent = formatted
+    card.querySelector('.card-overview').textContent = artWorkData.overview
+    card.querySelector('.card-category').textContent = artWorkData.category
+    card.querySelector(".card-link").href = `card.html?id=${docId}`
 
-            <!-- Overview -->
-            <div class="px-4 pt-1 pb-2">
-                <p class="text-sm leading-relaxed text-stone-500 font-outfit italic">
-                    ${artworkData.overview || ""}
-                </p>
-            </div>
+    // normalizes image_url to always be an array before passing to setupMedia
+    const imageUrls = artWorkData.image_url
+        ? (Array.isArray(artWorkData.image_url) ? artWorkData.image_url : [artWorkData.image_url])
+        : []
+    setupMedia(card, imageUrls, artWorkData.title)
 
-<<<<<<< Updated upstream
-            <!-- Artists -->
-            ${artistsSection}
-=======
-    // Set up artist credits
     setupArtists(card, artWorkData.artists)
->>>>>>> Stashed changes
 
-            <!-- Footer -->
-            <div class="px-4 py-3 border-t border-stone-100 mt-2">
-                <a href="card.html?id=${docId}"
-                   class="group flex items-center gap-2 text-sm font-bold font-syne tracking-wide text-orange-600 hover:text-orange-700 transition-colors duration-200">
-                    <span>See Full Content</span>
-                    <svg class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
-                    </svg>
-                </a>
-            </div>
-
-        </article>
-    `
+    cardMenu(card, docId)
+    return card
 }
 
+
+// ─── Load Artworks ────────────────────────────────────────────────────────────
+
+// fetches all artworks from Firestore and adds them to the grid, shows empty state if none exist
 async function loadArtworks() {
-    const grid = document.getElementById("artworkGrid")
-    const emptyState = document.getElementById("emptyState")
+    const grid = document.querySelector('#artworkGrid')
+    const emptyState = document.querySelector('#emptyState')
 
     const result = await getDocs(collection(db, "artworks"))
 
     if (result.empty) {
-        emptyState.classList.remove("hidden")
+        emptyState.classList.remove('hidden')
         return
     }
-
     result.forEach(doc => {
-        const artworkData = doc.data()
-        grid.innerHTML += createCardHTML(artworkData, doc.id)
+        grid.appendChild(createCard(doc.data(), doc.id))
     })
 }
 
 loadArtworks()
 
-<<<<<<< Updated upstream
-=======
 
-// ─── Card Menu (edit / delete) ───────────────────────────────────────────────
+// ─── Card Menu (edit / delete) ────────────────────────────────────────────────
 
+// placeholder for edit — to be implemented later
 function editData(docId) {
-    // todo: implement edit functionality
     console.log("edit:", docId)
 }
 
+// wires up the three-dot menu on each card — toggles dropdown, handles edit and delete
 function cardMenu(card, docId) {
     const cardMenuBtn = card.querySelector('.card-menu')
     const dropdown = card.querySelector('.card-dropdown')
     const editBtn = card.querySelector('.card-edit')
     const deleteBtn = card.querySelector('.card-delete')
 
+    // toggles the dropdown open/closed when the three-dot button is clicked
     cardMenuBtn.addEventListener('click', (e) => {
         e.stopPropagation()
         dropdown.classList.toggle('hidden')
     })
 
+    // closes dropdown and triggers edit
     editBtn.addEventListener('click', (e) => {
         e.stopPropagation()
         dropdown.classList.add('hidden')
         editData(docId)
     })
 
+    // asks for confirmation then deletes from Firestore and removes the card from the DOM
     deleteBtn.addEventListener('click', async (e) => {
         e.stopPropagation()
         if (!window.confirm("Are you sure you want to delete this artwork?")) return
@@ -332,14 +264,66 @@ function cardMenu(card, docId) {
         card.remove()
     })
 
+    // closes the dropdown when clicking anywhere else on the page
     document.addEventListener('click', () => {
         dropdown.classList.add('hidden')
     })
 }
 
+function cardshare(card, docId) {
+    const cardShareBtn = card.querySelector('.card-share')
+    const sharedropdown = card.querySelector('.share-card-dropdown')
+    const imagecode = card.querySelector('.image-code')
+    const copylink = card.querySelector('.copy-link')
 
-// ─── Search Filter ───────────────────────────────────────────────────────────
+    const shareUrl = `${window.location.origin}/card.html?id=${docId}`
 
+    // toggles the dropdown open/closed when the share button is clicked
+    cardShareBtn.addEventListener('click', (e) => {
+        e.stopPropagation()
+        sharedropdown.classList.toggle('hidden')
+    })
+
+    // share via native share sheet (mobile) or fallback
+    imagecode.addEventListener('click', async (e) => {
+        e.stopPropagation()
+        sharedropdown.classList.add('hidden')
+
+        if (navigator.share) {
+            try {
+                await navigator.share({ title: document.title, url: shareUrl })
+            } catch (err) {
+                if (err.name !== 'AbortError') console.error(err)
+            }
+        }
+    })
+
+    // copies the link to clipboard
+    copylink.addEventListener('click', async (e) => {
+        e.stopPropagation()
+        sharedropdown.classList.add('hidden')
+
+        try {
+            await navigator.clipboard.writeText(shareUrl)
+            const span = copylink.querySelector('span') || copylink
+            const original = span.textContent
+            span.textContent = 'Copied!'
+            setTimeout(() => span.textContent = original, 2000)
+        } catch (err) {
+            console.error(err)
+        }
+    })
+
+    // closes the dropdown when clicking anywhere else on the page
+    document.addEventListener('click', () => {
+        sharedropdown.classList.add('hidden')
+    })
+}
+
+
+// ─── Search Filter ────────────────────────────────────────────────────────────
+
+// hides/shows cards in real time based on whether the title or overview matches the search input
 document.querySelector('#searchInput').addEventListener('input', function () {
     const query = this.value.toLowerCase()
     document.querySelectorAll('#artworkGrid article').forEach(card => {
@@ -350,14 +334,16 @@ document.querySelector('#searchInput').addEventListener('input', function () {
 })
 
 
-// ─── Footer Navigation ───────────────────────────────────────────────────────
+// ─── Footer Navigation ────────────────────────────────────────────────────────
 
+// controls switching between Works and About Us sections, and updates which nav button is active (orange vs grey)
 function footer() {
     const worksSection = document.querySelector('#works')
     const aboutSection = document.querySelector('#about')
     const navWorks = document.querySelector('#nav-works')
     const navAbout = document.querySelector('#nav-about')
 
+    // shows one section and hides the other, and updates button colors accordingly
     function showSection(show, hide, activeBtn, inactiveBtn) {
         show.classList.remove('hidden')
         hide.classList.add('hidden')
@@ -372,12 +358,13 @@ function footer() {
     navWorks.addEventListener('click', () => showSection(worksSection, aboutSection, navWorks, navAbout))
     navAbout.addEventListener('click', () => showSection(aboutSection, worksSection, navAbout, navWorks))
 
+    // sets Works as the default active section on page load
     showSection(worksSection, aboutSection, navWorks, navAbout)
 }
 
 footer()
 
-//todo: make card be eye pleasing even if tehy are not the same size
-//todo:(on desktop view) dont just make the upper card be allgined . use pointerest for inspo for card allginement even different sizes 
-//todo: make the name of cloudinary data be same as its title so that when manually delete i can be easily done
->>>>>>> Stashed changes
+
+
+//todo: make the name of cloudinary data be same as its title so that when manually delete it can be easily done
+// todo: loading the frame or its structure
