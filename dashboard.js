@@ -17,25 +17,34 @@ async function init() {
 
     await loadArtworks()
 }
-
 init()
 
 
 // ─── Load Artworks ────────────────────────────────────────────────────────────
 // Fetches all artwork documents from Firestore and renders a card for each one.
 
-async function loadArtworks() {
-    const grid = document.querySelector('#layout')
-    const emptyState = document.querySelector('#emptyState')
-    const result = await getDocs(collection(db, "artworks"))
+let allArtworks = [];
+const layout = document.querySelector('#layout')
+const emptyState = document.querySelector('#emptyState')
 
+async function loadArtworks() {
+    const result = await getDocs(collection(db, "artworks"))
     if (result.empty) {
+        layout.innerHTML = ''
         emptyState.classList.remove('hidden')
         return
     }
-
     result.forEach(doc => {
-        grid.appendChild(createCard(doc.data(), doc.id))
+        allArtworks.push({ ...doc.data(), id: doc.id })
+    })
+    renderCards(allArtworks)
+}
+
+function renderCards(artworks) {
+    emptyState.classList.add('hidden')
+    layout.innerHTML = ''
+    artworks.forEach(artwork => {
+        layout.appendChild(createCard(artwork, artwork.id))
     })
 }
 
@@ -70,11 +79,11 @@ function closeShareSheet() {
 }
 
 // Close on overlay tap or cancel button.
-shareSheetOverlay.addEventListener('click', closeShareSheet)
-shareSheetClose.addEventListener('click', closeShareSheet)
+shareSheetOverlay?.addEventListener('click', closeShareSheet)
+shareSheetClose?.addEventListener('click', closeShareSheet)
 
 // Copy the link and show brief "Copied!" feedback.
-shareSheetCopy.addEventListener('click', async () => {
+shareSheetCopy?.addEventListener('click', async () => {
     try {
         await navigator.clipboard.writeText(activeShareUrl)
         const span = shareSheetCopy.querySelector('span')
@@ -89,7 +98,7 @@ shareSheetCopy.addEventListener('click', async () => {
 })
 
 // Use the native share API if available.
-shareSheetImageCode.addEventListener('click', async () => {
+shareSheetImageCode?.addEventListener('click', async () => {
     if (navigator.share) {
         try {
             await navigator.share({ title: document.title, url: activeShareUrl })
@@ -109,17 +118,30 @@ document.addEventListener('click', () => {
 })
 
 
-// ─── Search Filter ────────────────────────────────────────────────────────────
-// Filters visible cards in real time based on title or overview text.
+// Search Filter 
+// Filters artworks by title or artist name and renders the results
 
-document.querySelector('#searchInput').addEventListener('input', function () {
-    const query = this.value.toLowerCase()
-    document.querySelectorAll('#layout article').forEach(card => {
-        const title = card.querySelector('.card-title')?.textContent.toLowerCase() ?? ''
-        const overview = card.querySelector('.card-overview')?.textContent.toLowerCase() ?? ''
-        card.style.display = (title.includes(query) || overview.includes(query)) ? '' : 'none'
+function filterArtworks(query) {
+    const filtered = allArtworks.filter(artwork => {
+        return artwork.title.toLowerCase().includes(query) || Object.values(artwork.artists).flat().join(' ').toLowerCase().includes(query)
     })
+    if (filtered.length === 0) {
+        layout.innerHTML = ''
+        emptyState.classList.remove('hidden')
+    } else {
+        renderCards(filtered)
+    }
+}
+
+document.querySelector('#searchInput').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') {
+        const query = this.value.toLowerCase()
+        filterArtworks(query)
+    }
+
+
 })
+
 
 
 // ─── Footer Navigation ────────────────────────────────────────────────────────
@@ -150,6 +172,6 @@ footer()
 //todo: make the name of cloudinary data be same as its title so that when manually delete it can be easily done
 // todo: loading the frame or its structure
 //todo: image qr code
-//todo: search
-//todo: make the name exactly one line only
-//todo: make the name less bold than its category (writter : more bold; name: less bold)                                                                                    
+
+//todo: deploy it but not searchable on puiblic so that we can test it with real link for sharing
+//todo: pagination
