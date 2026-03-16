@@ -1,13 +1,13 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
   <title>Artwork Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com" rel="preconnect" />
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
   <link
     href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@1,700&family=Playfair+Display:ital,wght@1,700&family=EB+Garamond:wght@600&display=swap"
     rel="stylesheet" />
@@ -39,7 +39,7 @@
         <div class="flex items-center gap-3">
           <div
             class="flex items-center justify-center flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-orange-600">
-            <span><img src="imgs/image_logo.jpg" alt="iMAGE logo"></span>
+            <span><img alt="iMAGE logo" src="imgs/image_logo.jpg" /></span>
           </div>
           <h1 class="text-xl font-bold text-stone-900">
             <em
@@ -47,10 +47,10 @@
               class="font-mage font-bold tracking-[0.06em] inline-block text-[1.45rem] translate-y-[0.5px]">MAGE</span>
           </h1>
         </div>
-
         <!-- menu -->
-        <button id="menu_button"
-          class="flex items-center justify-center w-10 h-10 transition-colors duration-200 rounded-full hover:bg-stone-100">
+        <button
+          class="flex items-center justify-center w-10 h-10 transition-colors duration-200 rounded-full hover:bg-stone-100"
+          id="menu_button">
           <svg class="w-6 h-6 text-stone-600" fill="currentColor" viewBox="0 0 24 24">
             <circle cx="12" cy="5" r="2"></circle>
             <circle cx="12" cy="12" r="2"></circle>
@@ -67,11 +67,12 @@
       <div class="relative">
         <svg class="absolute w-5 h-5 -translate-y-1/2 left-3 top-1/2 text-stone-400" fill="none" stroke="currentColor"
           viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round"
+            stroke-width="2"></path>
         </svg>
-        <input type="text" id="searchInput" placeholder="Search Artworks"
-          class="w-full pl-10 pr-4 py-2.5 bg-stone-100 border-0 rounded-xl text-sm text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all duration-200" />
+        <input
+          class="w-full pl-10 pr-4 py-2.5 bg-stone-100 border-0 rounded-xl text-sm text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all duration-200"
+          id="searchInput" placeholder="Search Artworks" type="text" />
       </div>
     </div>
   </div>
@@ -80,29 +81,28 @@
   <main class="px-4 py-6 pb-24 mx-auto max-w-7xl">
 
     <!-- Empty State -->
-    <div id="emptyState" class="hidden py-20 text-center bg-white border shadow-sm rounded-3xl border-stone-100">
+    <div class="hidden py-20 text-center bg-white border shadow-sm rounded-3xl border-stone-100" id="emptyState">
       <div class="flex items-center justify-center w-20 h-20 mx-auto mb-4 bg-orange-100 rounded-full">
         <svg class="w-10 h-10 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+          <path
+            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+            stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
           </path>
         </svg>
       </div>
       <h3 class="mb-2 text-2xl font-normal font-instrument text-stone-900">No artworks yet</h3>
-      <p class="mb-6 text-sm text-stone-500">
-        Start by publishing your first collaboration
-      </p>
-      <a href="posting.html"
-        class="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white font-syne font-bold text-sm tracking-wider uppercase py-3 px-6 rounded-xl transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-orange-200">
+      <p class="mb-6 text-sm text-stone-500">Start by publishing your first collaboration</p>
+      <a class="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white font-syne font-bold text-sm tracking-wider uppercase py-3 px-6 rounded-xl transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-orange-200"
+        href="posting.html">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+          <path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
         </svg>
         <span>Create Artwork</span>
       </a>
     </div>
 
-    <!-- Artwork layout -->
-    <div id="artworkGrid" class="columns-1 md:columns-2 lg:columns-3 gap-6 [&>*]:break-inside-avoid [&>*]:mb-6">
+    <!-- Artwork Grid -->
+    <div class="columns-1 md:columns-2 lg:columns-3 gap-6 [&>*]:break-inside-avoid [&>*]:mb-6" id="layout"></div>
 
   </main>
 
@@ -110,233 +110,88 @@
   <footer class="fixed bottom-0 left-0 right-0 z-50 bg-white border-t shadow-lg border-stone-200">
     <div class="px-4 mx-auto max-w-7xl">
       <div class="flex items-center justify-around py-2">
-
         <!-- Works -->
-        <button id="nav-works"
-          class="flex flex-col items-center gap-1 px-4 py-2 transition-colors duration-200 hover:bg-orange-50 rounded-xl">
+        <button
+          class="flex flex-col items-center gap-1 px-4 py-2 transition-colors duration-200 hover:bg-orange-50 rounded-xl"
+          id="nav-works">
           <div class="flex items-center justify-center w-6 h-6">
             <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+              <path
+                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
               </path>
             </svg>
           </div>
           <span class="text-xs font-medium text-orange-600 font-outfit">Works</span>
         </button>
-
         <!-- About Us -->
-        <button id="nav-about"
-          class="flex flex-col items-center gap-1 px-4 py-2 transition-colors duration-200 hover:bg-orange-50 rounded-xl">
+        <button
+          class="flex flex-col items-center gap-1 px-4 py-2 transition-colors duration-200 hover:bg-orange-50 rounded-xl"
+          id="nav-about">
           <div class="flex items-center justify-center w-6 h-6">
             <svg class="w-6 h-6 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width="2"></path>
             </svg>
           </div>
           <span class="text-xs font-medium font-outfit text-stone-400">About Us</span>
         </button>
-
       </div>
     </div>
   </footer>
 
   <!-- + New Artwork -->
-  <a href="posting.html"
-    class="fixed z-40 flex items-center justify-center text-white transition-all duration-300 bg-orange-600 rounded-full shadow-xl bottom-20 right-6 w-14 h-14 hover:bg-orange-700 hover:shadow-2xl hover:scale-110 hover:-translate-y-1">
+  <a class="fixed z-40 flex items-center justify-center text-white transition-all duration-300 bg-orange-600 rounded-full shadow-xl bottom-20 right-6 w-14 h-14 hover:bg-orange-700 hover:shadow-2xl hover:scale-110 hover:-translate-y-1"
+    href="posting.html">
     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path>
+      <path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
     </svg>
   </a>
 
-  <!-- Card Template -->
-  <template id="cardTemplate">
-    <article class="bg-white border border-stone-200 rounded-2xl">
+  <!-- Share Bottom Sheet overlay -->
+  <div class="fixed inset-0 bg-black/40 z-[60] opacity-0 pointer-events-none transition-opacity duration-300"
+    id="shareSheetOverlay"></div>
 
-      <!-- Card Header -->
-      <div class="flex items-center gap-3 px-4 py-3 border-b border-stone-100">
-        <div class="flex items-center justify-center w-9 h-9 rounded-full overflow-hidden shrink-0">
-          <img src="imgs/image_logo.jpg" alt="iMAGE" class="w-full h-full object-cover" />
-        </div>
-        <div class="flex-1 min-w-0">
-          <p class="text-sm font-bold font-syne text-stone-900">image_cvsucarmona</p>
-        </div>
-
-        <div class="relative">
-          <!-- option -->
-          <button
-            class="card-menu flex items-center justify-center w-8 h-8 rounded-full hover:bg-stone-100 transition-colors duration-200 shrink-0">
-            <svg class="w-5 h-5 text-orange-500" fill="currentColor" viewBox="0 0 24 24">
-              <circle cx="12" cy="5" r="2"></circle>
-              <circle cx="12" cy="12" r="2"></circle>
-              <circle cx="12" cy="19" r="2"></circle>
-            </svg>
-          </button>
-          <!-- dropdown -->
-          <div
-            class="card-dropdown hidden absolute right-0 top-10 w-44 bg-white border border-stone-200 rounded-xl shadow-lg z-10 overflow-hidden">
-            <button
-              class="card-edit w-full flex items-center gap-3 px-4 py-3 text-sm text-orange-500 hover:bg-orange-50">
-              <svg class="w-5 h-5 text-orange-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                viewBox="0 0 24 24">
-                <path fill="currentColor"
-                  d="m14.06 9l.94.94L5.92 19H5v-.92zm3.6-6c-.25 0-.51.1-.7.29l-1.83 1.83l3.75 3.75l1.83-1.83c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29m-3.6 3.19L3 17.25V21h3.75L17.81 9.94z"
-                  stroke-width="0.5" stroke="currentColor" />
-              </svg>
-              Edit Artwork
-            </button>
-            <button
-              class="card-delete w-full flex items-center gap-3 px-4 py-3 text-sm text-orange-500 hover:bg-orange-50">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                class="lucide lucide-trash-icon lucide-trash">
-                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
-                <path d="M3 6h18" />
-                <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-              </svg>
-              Delete
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Media -->
-      <div class="card-image-wrap relative w-full bg-stone-100 hidden rounded-t-2xl overflow-hidden">
-        <img class="card-image w-full h-auto block" src="" alt="" />
-        <video class="card-video w-full h-auto hidden" controls playsinline
-          controlsList="nodownload nofullscreen noplaybackrate" disablePictureInPicture></video>
-        <button
-          class="card-prev hidden md:flex absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/35 text-white backdrop-blur-sm border border-white/20 items-center justify-center opacity-0 pointer-events-none">
-          <span aria-hidden="true">&#10094;</span>
-        </button>
-        <button
-          class="card-next hidden md:flex absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/35 text-white backdrop-blur-sm border border-white/20 items-center justify-center opacity-0 pointer-events-none">
-          <span aria-hidden="true">&#10095;</span>
-        </button>
-        <div
-          class="card-image-dots hidden absolute top-3 left-3 flex items-center gap-1.5 bg-black/25 backdrop-blur-sm rounded-full px-2 py-1">
-        </div>
-        <span
-          class="card-image-count hidden absolute bottom-3 left-3 text-[11px] font-syne font-bold tracking-wide text-white bg-black/45 backdrop-blur-sm px-2 py-1 rounded-full border border-white/20">1
-          / 1</span>
-        <span
-          class="card-category absolute top-3 right-3 text-xs font-syne font-bold tracking-wider uppercase text-orange-500 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full border border-orange-100 shadow-sm"></span>
-      </div>
-
-      <!-- Title and date -->
-      <div class="px-4 pt-4 pb-1">
-        <div class="w-8 h-0.5 bg-orange-500 rounded-full mb-3"></div>
-        <h2 class="card-title font-fraunces text-2xl italic font-semibold leading-snug text-stone-600"></h2>
-        <p class="card-date text-xs text-stone-500 mt-1"></p>
-      </div>
-
-      <!-- Overview -->
-      <div class="px-4 pt-1 pb-2">
-        <p class="card-overview text-sm leading-relaxed text-stone-500 font-outfit italic"></p>
-      </div>
-
-      <!-- Artists -->
-      <div class="card-artists px-4 pb-3 grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
-
-      <!-- Footer -->
-      <div class="pl-4 pr-6 py-3 border-t border-stone-100 mt-2 flex item-center justify-between">
-        <a class="card-link group flex items-center gap-2 text-sm font-bold font-syne tracking-wide text-orange-600 hover:text-orange-700 transition-colors duration-200"
-          href="#">
-          <span>See Full Content</span>
-          <svg class="w-4 h-4 transition-transform duration-150 group-hover:translate-x-1" fill="none"
-            stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-          </svg>
-        </a>
-
-        <!-- share -->
-        <div class="relative">
-          <button
-            class="card-share flex item-center gap-1.5 text-sm font-medium text-orange-600 hover:text-orange-700 transition-colors duration-200">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-              class="lucide lucide-send-icon lucide-send">
-              <path
-                d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z" />
-              <path d="m21.854 2.147-10.94 10.939" />
-            </svg>
-            <span>share</span>
-          </button>
-          <!-- dropdown -->
-          <div
-            class="share-dropdown hidden absolute right-0 top-10 w-44 bg-white border border-stone-200 rounded-xl shadow-sm z-10 overflow-hidden transition-all duration-200 ease-out will-change-transform">
-            <button
-              class="image-code w-full flex items-center gap-3 px-4 py-3 text-sm text-orange-500 hover:bg-orange-50">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                class="lucide lucide-scan-barcode-icon lucide-scan-barcode">
-                <path d="M3 7V5a2 2 0 0 1 2-2h2" />
-                <path d="M17 3h2a2 2 0 0 1 2 2v2" />
-                <path d="M21 17v2a2 2 0 0 1-2 2h-2" />
-                <path d="M7 21H5a2 2 0 0 1-2-2v-2" />
-                <path d="M8 7v10" />
-                <path d="M12 7v10" />
-                <path d="M17 7v10" />
-              </svg>
-              image code
-            </button>
-            <button
-              class="copy-link w-full flex items-center gap-3 px-4 py-3 text-sm text-orange-500 hover:bg-orange-50">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                class="lucide lucide-copy-icon lucide-copy">
-                <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
-                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
-              </svg>
-              <span>copy link</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </article>
-  </template>
-
-  <!-- Share Bottom Sheet (mobile) -->
-  <!-- overlay: starts transparent, fades in -->
-  <div id="shareSheetOverlay"
-    class="fixed inset-0 bg-black/40 z-[60] opacity-0 pointer-events-none transition-opacity duration-300"></div>
-
-  <!-- sheet: starts translated down, slides up -->
-  <div id="shareSheet"
-    class="fixed left-0 right-0 bottom-0 bg-white rounded-t-3xl shadow-2xl z-[61] translate-y-full transition-transform duration-300 ease-out will-change-transform">
+  <!-- Share Bottom Sheet
+  <div
+    class="fixed left-0 right-0 bottom-0 bg-white rounded-t-3xl shadow-2xl z-[61] translate-y-full transition-transform duration-300 ease-out will-change-transform"
+    id="shareSheet">
     <div class="px-5 pt-4 pb-2">
       <div class="mx-auto h-1.5 w-12 rounded-full bg-stone-200"></div>
       <h3 class="mt-4 text-base font-bold font-syne text-stone-900">Share this artwork</h3>
     </div>
     <div class="px-5 pb-4 flex flex-col gap-2">
-      <button id="shareSheetCopy"
-        class="w-full flex items-center gap-3 px-4 py-3 text-sm text-orange-600 hover:bg-orange-50 rounded-xl transition-colors duration-150">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
-          <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+      <button
+        class="w-full flex items-center gap-3 px-4 py-3 text-sm text-orange-600 hover:bg-orange-50 rounded-xl transition-colors duration-150"
+        id="shareSheetCopy">
+        <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+          stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+          <rect height="14" rx="2" ry="2" width="14" x="8" y="8"></rect>
+          <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
         </svg>
         <span>Copy link</span>
       </button>
-      <button id="shareSheetImageCode"
-        class="w-full flex items-center gap-3 px-4 py-3 text-sm text-orange-600 hover:bg-orange-50 rounded-xl transition-colors duration-150">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 7V5a2 2 0 0 1 2-2h2" />
-          <path d="M17 3h2a2 2 0 0 1 2 2v2" />
-          <path d="M21 17v2a2 2 0 0 1-2 2h-2" />
-          <path d="M7 21H5a2 2 0 0 1-2-2v-2" />
-          <path d="M8 7v10" />
-          <path d="M12 7v10" />
-          <path d="M17 7v10" />
+      <button
+        class="w-full flex items-center gap-3 px-4 py-3 text-sm text-orange-600 hover:bg-orange-50 rounded-xl transition-colors duration-150"
+        id="shareSheetImageCode">
+        <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+          stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
+          <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
+          <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
+          <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
+          <path d="M8 7v10"></path>
+          <path d="M12 7v10"></path>
+          <path d="M17 7v10"></path>
         </svg>
         <span>Image code</span>
       </button>
-      <button id="shareSheetClose"
-        class="w-full text-sm text-stone-500 py-2 hover:text-orange-500 transition-colors duration-150">Cancel</button>
+      <button class="w-full text-sm text-stone-500 py-2 hover:text-orange-500 transition-colors duration-150"
+        id="shareSheetClose">Cancel</button>
     </div>
-  </div>
+  </div> -->
 
-  <script type="module" src="dashboard.js"></script>
+  <script src="dashboard.js" type="module"></script>
 </body>
 
 </html>
