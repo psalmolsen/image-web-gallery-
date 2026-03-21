@@ -172,6 +172,8 @@ footer()
 //todo: make the name of cloudinary data be same as its title so that when manually delete it can be easily done
 // todo: loading the frame or its structure
 //todo: image qr code
+//todo: after delete it is not automatically refreshing
 
 //todo: deploy it but not searchable on puiblic so that we can test it with real link for sharing
 //todo: pagination
+//todo: secure the site (no pop up ads etc.)

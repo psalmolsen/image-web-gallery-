@@ -4,12 +4,12 @@
 <head>
   <meta charset="utf-8" />
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-  <title>Artwork Dashboard</title>
+  <title>iMAGE — The Gallery Archive</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com" rel="preconnect" />
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
   <link
-    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@1,700&family=Playfair+Display:ital,wght@1,700&family=EB+Garamond:wght@600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,700&family=Playfair+Display:ital,wght@1,700&family=EB+Garamond:ital,wght@1,600&family=Outfit:wght@300;400;500;600;700&family=Syne:wght@400;700&display=swap"
     rel="stylesheet" />
   <script>
     tailwind.config = {
@@ -27,168 +27,223 @@
       },
     };
   </script>
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    ::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #0c0c0c;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #3a3532;
+      border-radius: 2px;
+    }
+
+    .mob-only {
+      display: flex;
+    }
+
+    .dsk-only {
+      display: none;
+    }
+
+    @media (min-width: 768px) {
+      .mob-only {
+        display: none !important;
+      }
+
+      .dsk-only {
+        display: flex !important;
+      }
+
+      main {
+        padding-bottom: 40px !important;
+      }
+
+      .fab {
+        bottom: 28px !important;
+      }
+    }
+  </style>
 </head>
 
-<body class="min-h-screen bg-[#FFF7ED] font-outfit"
-  style="background-image: radial-gradient(ellipse 700px 500px at 80% -10%, rgba(249,115,22,0.08) 0%, transparent 70%), radial-gradient(ellipse 500px 400px at -10% 80%, rgba(249,115,22,0.06) 0%, transparent 70%);">
+<body class="min-h-screen font-outfit bg-[#0c0c0c] text-stone-200">
 
-  <!-- Header -->
-  <header class="sticky top-0 z-50 bg-white border-b shadow-sm border-stone-200">
-    <div class="px-4 py-3 mx-auto max-w-7xl">
-      <div class="flex items-center justify-between">
-        <a href="dashboard.html" class="flex items-center gap-3">
-          <div
-            class="flex items-center justify-center flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-orange-600">
-            <span><img alt="iMAGE logo" src="imgs/image_logo.jpg" /></span>
-          </div>
-          <h1>
-            <span class="text-orange-600 font-fraunces text-xl">i</span><span
-              class="text-stone-900 font-fraunces tracking-[0.06em] text-xl">MAGE</span>
-          </h1>
-        </a>
-        <!-- menu -->
+  <!-- ══ HEADER ══ -->
+  <header class="sticky top-0 z-50 border-b border-[#1f1f1f] bg-[#0c0c0c]/[0.93] backdrop-blur-[14px]">
+    <div class="flex items-center justify-between gap-4 px-5 mx-auto max-w-7xl h-[52px]">
+
+      <!-- Logo -->
+      <a href="dashboard.html" class="flex items-center gap-2.5 flex-shrink-0">
+        <div
+          class="flex items-center justify-center flex-shrink-0 w-9 h-9 rounded-full overflow-hidden bg-gradient-to-br from-orange-400 to-orange-600">
+          <img alt="iMAGE logo" src="imgs/image_logo.jpg" class="w-full h-full object-cover"
+            onerror="this.style.display='none'" />
+        </div>
+        <h1 class="font-fraunces text-xl tracking-[0.06em] text-stone-200">
+          <em class="text-orange-500 italic">i</em>MAGE
+        </h1>
+      </a>
+
+      <!-- Desktop center nav -->
+      <nav class="dsk-only items-center gap-1">
+        <button id="nav-works"
+          class="px-4 py-1.5 font-syne text-[11px] font-bold tracking-widest uppercase border-b-2 border-orange-500 text-orange-500 transition-colors duration-200 bg-transparent border-l-0 border-r-0 border-t-0 cursor-pointer">
+          WORKS
+        </button>
+        <button id="nav-about"
+          class="px-4 py-1.5 font-syne text-[11px] font-bold tracking-widest uppercase border-b-2 border-transparent text-stone-500 transition-colors duration-200 bg-transparent border-l-0 border-r-0 border-t-0 cursor-pointer">
+          ABOUT
+        </button>
+      </nav>
+
+      <!-- Right controls -->
+      <div class="flex items-center gap-2">
+        <!-- Search (desktop) -->
+        <div class="dsk-only relative">
+          <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 pointer-events-none text-stone-500"
+            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round"
+              stroke-width="2" />
+          </svg>
+          <input id="searchInput" type="text" placeholder="Search artworks"
+            class="font-outfit text-xs outline-none transition-all duration-300 bg-[#141414] border border-[#252525] rounded-[9px] py-1.5 pl-[30px] pr-3 text-stone-200 w-[180px] focus:w-[230px] focus:border-orange-500" />
+        </div>
+        <!-- Grid icon -->
         <button
-          class="flex items-center justify-center w-10 h-10 transition-colors duration-200 rounded-full hover:bg-stone-100"
-          id="menu_button">
-          <svg class="w-6 h-6 text-stone-600" fill="currentColor" viewBox="0 0 24 24">
-            <circle cx="12" cy="5" r="2"></circle>
-            <circle cx="12" cy="12" r="2"></circle>
-            <circle cx="12" cy="19" r="2"></circle>
+          class="dsk-only items-center justify-center w-8 h-8 rounded-lg transition-colors duration-200 bg-[#141414] border border-[#252525]"
+          title="Grid view">
+          <svg class="w-[13px] h-[13px] text-stone-500" fill="currentColor" viewBox="0 0 16 16">
+            <rect x="1" y="1" width="6" height="6" rx="1.2" />
+            <rect x="9" y="1" width="6" height="6" rx="1.2" />
+            <rect x="1" y="9" width="6" height="6" rx="1.2" />
+            <rect x="9" y="9" width="6" height="6" rx="1.2" />
+          </svg>
+        </button>
+        <!-- List icon -->
+        <button
+          class="dsk-only items-center justify-center w-8 h-8 rounded-lg transition-colors duration-200 bg-[#141414] border border-[#252525]"
+          title="List view">
+          <svg class="w-[13px] h-[13px] text-stone-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" stroke-width="2" />
+          </svg>
+        </button>
+        <!-- Mobile three-dot menu -->
+        <button id="menu_button"
+          class="mob-only items-center justify-center w-8 h-8 rounded-lg bg-[#141414] border border-[#252525]">
+          <svg class="w-[15px] h-[15px] text-stone-500" fill="currentColor" viewBox="0 0 24 24">
+            <circle cx="12" cy="5" r="2" />
+            <circle cx="12" cy="12" r="2" />
+            <circle cx="12" cy="19" r="2" />
           </svg>
         </button>
       </div>
+
     </div>
   </header>
 
-  <!-- Search Bar -->
-  <div class="bg-white border-b border-stone-200">
-    <div class="px-4 py-3 mx-auto max-w-7xl">
-      <div class="relative">
-        <svg class="absolute w-5 h-5 -translate-y-1/2 left-3 top-1/2 text-stone-400" fill="none" stroke="currentColor"
-          viewBox="0 0 24 24">
+  <!-- ══ MAIN ══ -->
+  <main class="px-5 py-7 pb-28 mx-auto max-w-7xl">
+
+    <!-- Mobile search -->
+    <div class="mob-only mb-5">
+      <div class="relative w-full">
+        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-stone-500" fill="none"
+          stroke="currentColor" viewBox="0 0 24 24">
           <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round"
-            stroke-width="2"></path>
+            stroke-width="2" />
         </svg>
-        <input
-          class="w-full pl-10 pr-4 py-2.5 bg-stone-100 border-0 rounded-xl text-sm text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all duration-200"
-          id="searchInput" placeholder="Search Artworks" type="text" />
+        <input id="searchInputMob" type="text" placeholder="Search artworks"
+          class="w-full font-outfit text-sm outline-none bg-[#141414] border border-[#252525] rounded-[10px] py-[9px] pl-[34px] pr-3 text-stone-200" />
       </div>
     </div>
-  </div>
 
-  <!-- Main Content -->
-  <main class="px-4 py-6 pb-24 mx-auto max-w-7xl">
+    <!-- Collection banner -->
+    <div
+      class="flex flex-wrap items-start justify-between gap-4 p-7 mb-6 rounded-[18px] bg-[#141414] border border-[#1f1f1f]">
+      <div>
+        <p class="font-syne text-[10px] font-bold tracking-[0.18em] uppercase mb-2.5 text-stone-500">iMAGE · CVSU
+          CARMONA</p>
+        <h2 class="font-cursive text-5xl leading-[1.1] font-bold text-stone-200">
+          The <em class="text-orange-500 italic">Gallery</em><br />Archive
+        </h2>
+      </div>
+      <div class="text-right">
+        <p class="font-fraunces font-light leading-none text-orange-500 text-[clamp(28px,4vw,42px)]" id="artworkCount">—
+        </p>
+        <p class="font-outfit text-[11px] mt-1.5 leading-relaxed text-stone-500">
+          artworks published<br />across 3 collections
+        </p>
+      </div>
+    </div>
 
     <!-- Empty State -->
-    <div class="hidden py-20 text-center bg-white border shadow-sm rounded-3xl border-stone-100" id="emptyState">
-      <div class="flex items-center justify-center w-20 h-20 mx-auto mb-4 bg-orange-100 rounded-full">
-        <svg class="w-10 h-10 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div class="hidden py-20 text-center rounded-2xl bg-[#141414] border border-[#1f1f1f]" id="emptyState">
+      <div class="flex items-center justify-center w-16 h-16 mx-auto mb-4 rounded-full bg-[#1e1e1e]">
+        <svg class="w-8 h-8 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-            stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-          </path>
+            stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" />
         </svg>
       </div>
-      <h3 class="mb-2 text-2xl font-normal font-instrument text-stone-900">No artworks yet</h3>
+      <h3 class="mb-2 text-xl font-mage italic text-stone-200">No artworks yet</h3>
       <p class="mb-6 text-sm text-stone-500">Start by publishing your first collaboration</p>
-      <a class="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white font-syne font-bold text-sm tracking-wider uppercase py-3 px-6 rounded-xl transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-orange-200"
-        href="posting.html">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+      <a href="posting.html"
+        class="inline-flex items-center gap-2 font-syne font-bold text-xs tracking-widest uppercase py-3 px-6 rounded-xl transition-all duration-200 hover:-translate-y-0.5 bg-orange-500 text-white shadow-[0_4px_20px_rgba(249,115,22,0.28)]">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" />
         </svg>
-        <span>Create Artwork</span>
+        Create Artwork
       </a>
     </div>
 
-    <!-- Artwork Grid -->
-    <div class="columns-1 md:columns-2 lg:columns-3 gap-6 [&>*]:break-inside-avoid [&>*]:mb-6" id="layout"></div>
+    <!-- layout -->
+    <div class="columns-1 md:columns-2 lg:columns-3 gap-5 [&>*]:break-inside-avoid [&>*]:mb-5" id="layout"></div>
 
   </main>
 
-  <!-- Bottom Navigation Bar -->
-  <footer class="fixed bottom-0 left-0 right-0 z-50 bg-white border-t shadow-lg border-stone-200">
-    <div class="px-4 mx-auto max-w-7xl">
-      <div class="flex items-center justify-around py-2">
-        <!-- Works -->
-        <button
-          class="flex flex-col items-center gap-1 px-4 py-2 transition-colors duration-200 hover:bg-orange-50 rounded-xl"
-          id="nav-works">
-          <div class="flex items-center justify-center w-6 h-6">
-            <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-              </path>
-            </svg>
-          </div>
-          <span class="text-xs font-medium text-orange-600 font-outfit">Works</span>
-        </button>
-        <!-- About Us -->
-        <button
-          class="flex flex-col items-center gap-1 px-4 py-2 transition-colors duration-200 hover:bg-orange-50 rounded-xl"
-          id="nav-about">
-          <div class="flex items-center justify-center w-6 h-6">
-            <svg class="w-6 h-6 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round"
-                stroke-linejoin="round" stroke-width="2"></path>
-            </svg>
-          </div>
-          <span class="text-xs font-medium font-outfit text-stone-400">About Us</span>
-        </button>
-      </div>
+  <!-- ══ BOTTOM NAV (mobile) ══ -->
+  <footer
+    class="mob-only fixed bottom-0 left-0 right-0 z-50 border-t border-[#1f1f1f] bg-[#0c0c0c]/[0.95] backdrop-blur-[12px]">
+    <div class="flex items-center justify-around px-4 mx-auto max-w-7xl h-[58px]">
+      <button id="nav-works"
+        class="flex flex-col items-center gap-1 px-5 py-2 rounded-xl transition-colors duration-200 bg-transparent border-none cursor-pointer">
+        <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+            stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" />
+        </svg>
+        <span class="font-syne text-[10px] font-bold tracking-widest uppercase text-orange-500">WORKS</span>
+      </button>
+      <button id="nav-about"
+        class="flex flex-col items-center gap-1 px-5 py-2 rounded-xl transition-colors duration-200 bg-transparent border-none cursor-pointer">
+        <svg class="w-5 h-5 text-[#4a4a4a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round"
+            stroke-linejoin="round" stroke-width="1.8" />
+        </svg>
+        <span class="font-syne text-[10px] font-bold tracking-widest uppercase text-[#4a4a4a]">ABOUT</span>
+      </button>
     </div>
   </footer>
 
-  <!-- + New Artwork -->
-  <a class="fixed z-40 flex items-center justify-center text-white transition-all duration-300 bg-orange-600 rounded-full shadow-xl bottom-20 right-6 w-14 h-14 hover:bg-orange-700 hover:shadow-2xl hover:scale-110 hover:-translate-y-1"
-    href="posting.html">
-    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+  <!-- ══ FAB ══ -->
+  <a href="posting.html"
+    class="fab fixed z-40 flex items-center justify-center rounded-full transition-all duration-300 bg-gradient-to-br from-orange-400 to-orange-600 shadow-[0_4px_20px_rgba(249,115,22,0.4)]"
+    style="bottom:74px;right:20px;width:50px;height:50px;">
+    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" />
     </svg>
   </a>
 
-  <!-- Share Bottom Sheet overlay -->
+  <!-- Share Bottom Sheet overlay (used by dashboard.js) -->
   <div class="fixed inset-0 bg-black/40 z-[60] opacity-0 pointer-events-none transition-opacity duration-300"
     id="shareSheetOverlay"></div>
-
-  <!-- Share Bottom Sheet
-  <div
-    class="fixed left-0 right-0 bottom-0 bg-white rounded-t-3xl shadow-2xl z-[61] translate-y-full transition-transform duration-300 ease-out will-change-transform"
-    id="shareSheet">
-    <div class="px-5 pt-4 pb-2">
-      <div class="mx-auto h-1.5 w-12 rounded-full bg-stone-200"></div>
-      <h3 class="mt-4 text-base font-bold font-syne text-stone-900">Share this artwork</h3>
-    </div>
-    <div class="px-5 pb-4 flex flex-col gap-2">
-      <button
-        class="w-full flex items-center gap-3 px-4 py-3 text-sm text-orange-600 hover:bg-orange-50 rounded-xl transition-colors duration-150"
-        id="shareSheetCopy">
-        <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-          stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-          <rect height="14" rx="2" ry="2" width="14" x="8" y="8"></rect>
-          <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
-        </svg>
-        <span>Copy link</span>
-      </button>
-      <button
-        class="w-full flex items-center gap-3 px-4 py-3 text-sm text-orange-600 hover:bg-orange-50 rounded-xl transition-colors duration-150"
-        id="shareSheetImageCode">
-        <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-          stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
-          <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
-          <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
-          <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
-          <path d="M8 7v10"></path>
-          <path d="M12 7v10"></path>
-          <path d="M17 7v10"></path>
-        </svg>
-        <span>Image code</span>
-      </button>
-      <button class="w-full text-sm text-stone-500 py-2 hover:text-orange-500 transition-colors duration-150"
-        id="shareSheetClose">Cancel</button>
-    </div>
-  </div> -->
 
   <script src="dashboard.js" type="module"></script>
 </body>

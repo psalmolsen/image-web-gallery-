@@ -164,6 +164,24 @@ export function createCard(artWorkData, docId) {
     card.querySelector('.card-title').textContent = artWorkData.title
     card.querySelector('.card-date').textContent = formatDate(artWorkData.date)
     card.querySelector('.card-overview').textContent = artWorkData.overview
+
+    // "... more / less" inline toggle like Instagram
+    const overviewEl = card.querySelector('.card-overview')
+    const toggleBtn = card.querySelector('.card-overview-toggle')
+    setTimeout(() => {
+        if (overviewEl.scrollHeight > overviewEl.clientHeight) {
+            toggleBtn.classList.remove('hidden')
+            let expanded = false
+            toggleBtn.addEventListener('click', () => {
+                expanded = !expanded
+                overviewEl.style.webkitLineClamp = expanded ? 'unset' : '3'
+                overviewEl.style.lineClamp = expanded ? 'unset' : '3'
+                overviewEl.style.overflow = expanded ? 'visible' : 'hidden'
+                overviewEl.style.display = expanded ? 'inline' : '-webkit-box'
+                toggleBtn.textContent = expanded ? ' less' : '... more'
+            })
+        }
+    }, 100)
     card.querySelector('.card-category').textContent = artWorkData.category
     card.querySelector('.card-link').href = `card.html?id=${docId}`
 
@@ -314,4 +332,3 @@ export function closeAllDropdowns() {
         activeCardDropdown = null
     }
 }
-
