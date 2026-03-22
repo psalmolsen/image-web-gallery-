@@ -1,10 +1,6 @@
 import { db } from "./firebase.js"
 import { deleteDoc, doc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js"
 
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-// Small utility functions used across the card logic.
-
 function formatDate(dateStr) {
     if (!dateStr) return ""
     return new Date(dateStr).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
@@ -19,10 +15,6 @@ function toArray(value) {
     if (value && value.trim() !== '') return [value]
     return []
 }
-
-
-// ─── Media Block ──────────────────────────────────────────────────────────────
-// Renders the image/video area and handles carousel navigation and swipe.
 
 function setupMedia(card, imageUrls, title) {
     const totalItems = imageUrls.length
@@ -42,7 +34,6 @@ function setupMedia(card, imageUrls, title) {
 
     imageWrap.classList.remove('hidden')
 
-    // Swap the visible media and update counter/dots.
     function renderMedia(index) {
         const url = imageUrls[index]
         imageCount.textContent = `${index + 1} / ${totalItems}`
@@ -61,7 +52,6 @@ function setupMedia(card, imageUrls, title) {
         }
     }
 
-    // Only show nav controls if there's more than one item.
     if (totalItems > 1) {
         imageCount.classList.remove('hidden')
         dotsWrap.classList.remove('hidden')
@@ -79,7 +69,6 @@ function setupMedia(card, imageUrls, title) {
             return isVideoUrl(imageUrls[currentIndex]) ? videoEl : imageEl
         }
 
-        // Slide out the current item and slide in the next.
         function animateToIndex(nextIndex, direction) {
             if (isAnimating || nextIndex === currentIndex) return
             isAnimating = true
@@ -104,7 +93,6 @@ function setupMedia(card, imageUrls, title) {
         nextBtn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); goNext() })
         prevBtn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); goPrev() })
 
-        // Swipe left/right on touch devices.
         imageWrap.addEventListener('touchstart', (e) => {
             touchStartX = e.changedTouches[0].clientX
         }, { passive: true })
@@ -120,10 +108,6 @@ function setupMedia(card, imageUrls, title) {
     renderMedia(0)
 }
 
-
-// ─── Artist Credits ───────────────────────────────────────────────────────────
-// Builds and inserts the artist role pills into the card.
-
 function setupArtists(card, artists) {
     const container = card.querySelector('.card-artists')
     const roles = [
@@ -137,15 +121,18 @@ function setupArtists(card, artists) {
         const pill = document.createElement('div')
         pill.className = 'px-4 py-1 flex flex-col gap-1'
         const label = document.createElement('span')
-        label.className = 'text-xs font-bold font-syne text-orange-700 uppercase tracking-wider'
+        label.className = 'text-xs font-bold font-syne text-[#6b6460] uppercase tracking-wider'
         label.textContent = role.label + ':'
         const namesDiv = document.createElement('div')
         namesDiv.className = 'flex flex-col gap-0.5'
         role.value.forEach(name => {
-            const p = document.createElement('p')
-            p.className = 'text-sm font-normal text-orange-700 font-outfit pl-2 truncate'
-            p.textContent = name
-            namesDiv.appendChild(p)
+            const btn = document.createElement('button')
+            btn.type = 'button'
+            btn.className = 'text-sm font-normal text-[#e8874a] font-outfit pl-2 truncate cursor-pointer hover:underline underline-offset-4 decoration-[#e8874a]'
+            btn.setAttribute('title', `View artworks by ${name}`)
+            btn.setAttribute('data-artist', name)
+            btn.textContent = name
+            namesDiv.appendChild(btn)
         })
         pill.appendChild(label)
         pill.appendChild(namesDiv)
@@ -153,37 +140,51 @@ function setupArtists(card, artists) {
     })
 }
 
-
-// ─── Card Builder ─────────────────────────────────────────────────────────────
-// Clones the template and fills it with artwork data. Returns a ready DOM node.
-
 export function createCard(artWorkData, docId) {
     const cardTemplate = document.querySelector('#cardTemplate')
     const card = cardTemplate.content.cloneNode(true)
 
     card.querySelector('.card-title').textContent = artWorkData.title
     card.querySelector('.card-date').textContent = formatDate(artWorkData.date)
-    card.querySelector('.card-overview').textContent = artWorkData.overview
-
-    // "... more / less" inline toggle like Instagram
-    const overviewEl = card.querySelector('.card-overview')
-    const toggleBtn = card.querySelector('.card-overview-toggle')
-    setTimeout(() => {
-        if (overviewEl.scrollHeight > overviewEl.clientHeight) {
-            toggleBtn.classList.remove('hidden')
-            let expanded = false
-            toggleBtn.addEventListener('click', () => {
-                expanded = !expanded
-                overviewEl.style.webkitLineClamp = expanded ? 'unset' : '3'
-                overviewEl.style.lineClamp = expanded ? 'unset' : '3'
-                overviewEl.style.overflow = expanded ? 'visible' : 'hidden'
-                overviewEl.style.display = expanded ? 'inline' : '-webkit-box'
-                toggleBtn.textContent = expanded ? ' less' : '... more'
-            })
-        }
-    }, 100)
     card.querySelector('.card-category').textContent = artWorkData.category
     card.querySelector('.card-link').href = `card.html?id=${docId}`
+
+    // ── Overview toggle ──────────────────────────────────────────────────────
+    const overviewEl = card.querySelector('.card-overview')
+    const toggleBtn = card.querySelector('.card-overview-toggle')
+    overviewEl.textContent = artWorkData.overview || ''
+
+    function applyClamp(isExpanded) {
+        if (isExpanded) {
+            overviewEl.style.display = 'block'
+            overviewEl.style.overflow = 'visible'
+            overviewEl.style.webkitLineClamp = 'unset'
+            toggleBtn.textContent = 'less'
+        } else {
+            overviewEl.style.display = '-webkit-box'
+            overviewEl.style.webkitBoxOrient = 'vertical'
+            overviewEl.style.webkitLineClamp = '3'
+            overviewEl.style.overflow = 'hidden'
+            toggleBtn.textContent = '... more'
+        }
+    }
+
+    function initOverviewToggle() {
+        let expanded = false
+        applyClamp(false)
+        const isOverflow = overviewEl.scrollHeight > overviewEl.clientHeight + 1
+        if (isOverflow) {
+            toggleBtn.classList.remove('hidden')
+            toggleBtn.addEventListener('click', (e) => {
+                e.stopPropagation()
+                expanded = !expanded
+                applyClamp(expanded)
+            })
+        } else {
+            toggleBtn.classList.add('hidden')
+        }
+    }
+    // ────────────────────────────────────────────────────────────────────────
 
     const imageUrls = artWorkData.image_url
         ? (Array.isArray(artWorkData.image_url) ? artWorkData.image_url : [artWorkData.image_url])
@@ -193,16 +194,8 @@ export function createCard(artWorkData, docId) {
     setupArtists(card, artWorkData.artists)
     cardMenu(card, docId)
     cardShare(card, docId)
-    return card
-}
 
-
-// ─── Card Menu ────────────────────────────────────────────────────────────────
-// Handles the three-dot dropdown: edit and delete actions.
-
-function editData(docId) {
-    // TODO: implement edit flow
-    console.log("edit:", docId)
+    return { card, init: initOverviewToggle }
 }
 
 let activeCardDropdown = null
@@ -213,7 +206,6 @@ function cardMenu(card, docId) {
     const editBtn = card.querySelector('.card-edit')
     const deleteBtn = card.querySelector('.card-delete')
 
-    // Toggle this dropdown; close any other open one first.
     cardMenuBtn.addEventListener('click', (e) => {
         e.stopPropagation()
         if (activeCardDropdown && activeCardDropdown !== dropdown) {
@@ -227,11 +219,9 @@ function cardMenu(card, docId) {
         e.stopPropagation()
         dropdown.classList.add('hidden')
         activeCardDropdown = null
-        editData(docId)
+        console.log("edit:", docId)
     })
 
-    // Confirm, delete from Firestore, then remove the card from the DOM.
-    // Note: this only deletes the Firestore record — Cloudinary files must be removed manually.
     deleteBtn.addEventListener('click', async (e) => {
         e.stopPropagation()
         if (!window.confirm("Are you sure you want to delete this artwork?")) return
@@ -239,10 +229,6 @@ function cardMenu(card, docId) {
         card.closest('article')?.remove()
     })
 }
-
-
-// ─── Card Share ───────────────────────────────────────────────────────────────
-// Handles the share button: dropdown on desktop, bottom sheet on mobile.
 
 let activeShareDropdown = null
 
@@ -268,7 +254,6 @@ function cardShare(card, docId) {
 
     const shareUrl = `${window.location.origin}/card.html?id=${docId}`
 
-    // Mobile opens the bottom sheet; desktop toggles the dropdown.
     cardShareBtn.addEventListener('click', (e) => {
         e.stopPropagation()
         if (window.innerWidth < 768) {
@@ -287,7 +272,6 @@ function cardShare(card, docId) {
         }
     })
 
-    // Use the native share API if available (mainly mobile).
     imagecode.addEventListener('click', async (e) => {
         e.stopPropagation()
         sharedropdown.classList.add('hidden')
@@ -301,7 +285,6 @@ function cardShare(card, docId) {
         }
     })
 
-    // Copy the link and show brief "Copied!" feedback.
     copylink.addEventListener('click', async (e) => {
         e.stopPropagation()
         sharedropdown.classList.add('hidden')
@@ -317,10 +300,6 @@ function cardShare(card, docId) {
         }
     })
 }
-
-
-// ─── Close All Dropdowns ──────────────────────────────────────────────────────
-// Called by the global click handler in dashboard.js to close any open menus.
 
 export function closeAllDropdowns() {
     if (activeShareDropdown) {

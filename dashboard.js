@@ -2,11 +2,6 @@ import { db } from "./firebase.js"
 import { collection, getDocs } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js"
 import { createCard, closeAllDropdowns } from "./card.js"
 
-
-// ─── Init ─────────────────────────────────────────────────────────────────────
-// Fetches the card template from card.html, injects it into the DOM,
-// then loads artworks. Order matters — template must exist before cards are built.
-
 async function init() {
     const res = await fetch('card.html')
     const html = await res.text()
@@ -14,16 +9,11 @@ async function init() {
     const cardDoc = parser.parseFromString(html, 'text/html')
     const template = cardDoc.querySelector('#cardTemplate')
     document.body.appendChild(document.adoptNode(template))
-
     await loadArtworks()
 }
 init()
 
-
-// ─── Load Artworks ────────────────────────────────────────────────────────────
-// Fetches all artwork documents from Firestore and renders a card for each one.
-
-let allArtworks = [];
+let allArtworks = []
 const layout = document.querySelector('#layout')
 const emptyState = document.querySelector('#emptyState')
 
@@ -40,17 +30,16 @@ async function loadArtworks() {
     renderCards(allArtworks)
 }
 
+// ── THIS IS THE KEY CHANGE ──
 function renderCards(artworks) {
     emptyState.classList.add('hidden')
     layout.innerHTML = ''
     artworks.forEach(artwork => {
-        layout.appendChild(createCard(artwork, artwork.id))
+        const { card, init } = createCard(artwork, artwork.id)
+        layout.appendChild(card)  // append first
+        init()                    // THEN measure — scrollHeight works now
     })
 }
-
-
-// ─── Mobile Share Bottom Sheet ────────────────────────────────────────────────
-// Slide-up panel for sharing on mobile. Exposed on window so card.js can trigger it.
 
 const shareSheetOverlay = document.querySelector('#shareSheetOverlay')
 const shareSheet = document.querySelector('#shareSheet')
@@ -78,11 +67,9 @@ function closeShareSheet() {
     setTimeout(() => shareSheetOverlay.classList.add('pointer-events-none'), 300)
 }
 
-// Close on overlay tap or cancel button.
 shareSheetOverlay?.addEventListener('click', closeShareSheet)
 shareSheetClose?.addEventListener('click', closeShareSheet)
 
-// Copy the link and show brief "Copied!" feedback.
 shareSheetCopy?.addEventListener('click', async () => {
     try {
         await navigator.clipboard.writeText(activeShareUrl)
@@ -97,7 +84,6 @@ shareSheetCopy?.addEventListener('click', async () => {
     }
 })
 
-// Use the native share API if available.
 shareSheetImageCode?.addEventListener('click', async () => {
     if (navigator.share) {
         try {
@@ -109,21 +95,14 @@ shareSheetImageCode?.addEventListener('click', async () => {
     closeShareSheet()
 })
 
-
-// ─── Global Click Handler ─────────────────────────────────────────────────────
-// Closes any open card menu or share dropdown when clicking outside.
-
 document.addEventListener('click', () => {
     closeAllDropdowns()
 })
 
-
-// Search Filter 
-// Filters artworks by title or artist name and renders the results
-
 function filterArtworks(query) {
     const filtered = allArtworks.filter(artwork => {
-        return artwork.title.toLowerCase().includes(query) || Object.values(artwork.artists).flat().join(' ').toLowerCase().includes(query)
+        return artwork.title.toLowerCase().includes(query) ||
+            Object.values(artwork.artists).flat().join(' ').toLowerCase().includes(query)
     })
     if (filtered.length === 0) {
         layout.innerHTML = ''
@@ -138,14 +117,7 @@ document.querySelector('#searchInput').addEventListener('keydown', function (e) 
         const query = this.value.toLowerCase()
         filterArtworks(query)
     }
-
-
 })
-
-
-
-// ─── Footer Navigation ────────────────────────────────────────────────────────
-// Toggles the active state between the Works and About Us nav buttons.
 
 function footer() {
     const navWorks = document.querySelector('#nav-works')
@@ -166,14 +138,12 @@ function footer() {
 
 footer()
 
-
-
-
 //todo: make the name of cloudinary data be same as its title so that when manually delete it can be easily done
 // todo: loading the frame or its structure
 //todo: image qr code
 //todo: after delete it is not automatically refreshing
-
-//todo: deploy it but not searchable on puiblic so that we can test it with real link for sharing
+//todo: deploy it but not searchable on public so that we can test it with real link for sharing
 //todo: pagination
 //todo: secure the site (no pop up ads etc.)
+//todo: dont remove the spaces on the categories
+//todo: the galer archive (put a disclamair like this : All images/ videos uploaded are owned by iMAGE. Cropping or taking out the watermark is strictly prohibited. You are free to tag, grab and/ or download all pictures uploaded by the organization.)
