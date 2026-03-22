@@ -140,7 +140,7 @@ function setupArtists(card, artists) {
     })
 }
 
-export function createCard(artWorkData, docId) {
+export function createCard(artWorkData, docId, onDelete) {
     const cardTemplate = document.querySelector('#cardTemplate')
     const card = cardTemplate.content.cloneNode(true)
 
@@ -192,7 +192,7 @@ export function createCard(artWorkData, docId) {
 
     setupMedia(card, imageUrls, artWorkData.title)
     setupArtists(card, artWorkData.artists)
-    cardMenu(card, docId)
+    cardMenu(card, docId, onDelete)
     cardShare(card, docId)
 
     return { card, init: initOverviewToggle }
@@ -200,11 +200,12 @@ export function createCard(artWorkData, docId) {
 
 let activeCardDropdown = null
 
-function cardMenu(card, docId) {
+function cardMenu(card, docId, onDelete) {
     const cardMenuBtn = card.querySelector('.card-menu')
     const dropdown = card.querySelector('.card-dropdown')
     const editBtn = card.querySelector('.card-edit')
     const deleteBtn = card.querySelector('.card-delete')
+    const articleElement = card.querySelector('article')  // Get article reference early
 
     cardMenuBtn.addEventListener('click', (e) => {
         e.stopPropagation()
@@ -225,9 +226,20 @@ function cardMenu(card, docId) {
     deleteBtn.addEventListener('click', async (e) => {
         e.stopPropagation()
         if (!window.confirm("Are you sure you want to delete this artwork?")) return
-        await deleteDoc(doc(db, "artworks", docId))
-        card.closest('article')?.remove()
+
+        // Find the actual article element in the DOM
+        const actualArticle = deleteBtn.closest('article')
+        actualArticle?.remove()
+
+        try {
+            await deleteDoc(doc(db, "artworks", docId))
+            if (typeof onDelete === 'function') onDelete(docId)
+        } catch (error) {
+            console.error('Delete failed:', error)
+            alert('Failed to delete artwork. Please refresh and try again.')
+        }
     })
+
 }
 
 let activeShareDropdown = null

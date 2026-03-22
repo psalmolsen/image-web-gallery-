@@ -30,12 +30,19 @@ async function loadArtworks() {
     renderCards(allArtworks)
 }
 
+//delete artworks
+function onDelete(deletedId) {
+    allArtworks = allArtworks.filter(a => a.id !== deletedId)
+    renderCards(allArtworks)
+}
+
+
 // ── THIS IS THE KEY CHANGE ──
 function renderCards(artworks) {
     emptyState.classList.add('hidden')
     layout.innerHTML = ''
     artworks.forEach(artwork => {
-        const { card, init } = createCard(artwork, artwork.id)
+        const { card, init } = createCard(artwork, artwork.id, onDelete)
         layout.appendChild(card)  // append first
         init()                    // THEN measure — scrollHeight works now
     })
@@ -138,8 +145,8 @@ function footer() {
 
 footer()
 
-//todo: make the name of cloudinary data be same as its title so that when manually delete it can be easily done
-// todo: loading the frame or its structure
+
+
 //todo: image qr code
 //todo: after delete it is not automatically refreshing
 //todo: deploy it but not searchable on public so that we can test it with real link for sharing
