@@ -148,7 +148,6 @@ footer()
 
 
 //todo: image qr code
-//todo: after delete it is not automatically refreshing
 //todo: deploy it but not searchable on public so that we can test it with real link for sharing
 //todo: pagination
 //todo: secure the site (no pop up ads etc.)

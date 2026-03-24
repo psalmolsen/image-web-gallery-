@@ -1,5 +1,10 @@
 import { db } from "./firebase.js"
-import { collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js"
+import { collection, addDoc, getDocs, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js"
+
+
+
+
+
 
 //clodunary config
 const cloudinaryConfig = {
@@ -266,20 +271,47 @@ async function cloudinaryUploadMultiple(files, title) {
 }
 
 //firebase upload
-async function firebaseUpload(data, urls) {
+async function firebaseUpload(data, urls, editingArtworkId) {
   const cleanUrls = Array.isArray(urls) ? urls.filter(Boolean) : []
   const primaryUrl = cleanUrls[0] || null
 
-  await addDoc(collection(db, "artworks"), {
-    title: data.title,
-    overview: data.overview,
-    fullcontext: data.fullcontext,
-    category: data.category,
-    artists: data.artists,
-    image_url: primaryUrl,
-    image_urls: cleanUrls,
-    date: data.date
-  })
+  if (editingArtworkId) {
+    const docRef = doc(db, "artworks", editingArtworkId)
+
+    let finalImageUrl = primaryUrl
+    let finalImageUrls = cleanUrls
+
+    if (cleanUrls.length === 0) {
+      // No new files uploaded, get old URLs
+      const existingDoc = await getDoc(docRef)
+      const existingData = existingDoc.data()
+      finalImageUrl = existingData.image_url
+      finalImageUrls = existingData.image_urls
+    }
+
+    await updateDoc(docRef, {
+      title: data.title,
+      overview: data.overview,
+      fullcontext: data.fullcontext,
+      category: data.category,
+      artists: data.artists,
+      image_url: finalImageUrl,
+      image_urls: finalImageUrls,
+      date: data.date
+    })
+  }
+  else {
+    await addDoc(collection(db, "artworks"), {
+      title: data.title,
+      overview: data.overview,
+      fullcontext: data.fullcontext,
+      category: data.category,
+      artists: data.artists,
+      image_url: primaryUrl,
+      image_urls: cleanUrls,
+      date: data.date
+    })
+  }
 }
 
 
@@ -305,7 +337,7 @@ publishBtn.addEventListener("click", async function () {
     if (data.file && data.file.length) {
       urls = await cloudinaryUploadMultiple(Array.from(data.file), data.title)
     }
-    await firebaseUpload(data, urls)
+    await firebaseUpload(data, urls, editingArtworkId)
     form.clearForm()
     alert("Artwork published successfully!")
     window.location.href = "Dashboard.html"
@@ -317,6 +349,44 @@ publishBtn.addEventListener("click", async function () {
 
   }
 });
+
+
+
+//edit 
+const urlParams = new URLSearchParams(window.location.search)
+const editingArtworkId = urlParams.get('id')
+const docRef = doc(db, "artworks", editingArtworkId)
+const docSnap = await getDoc(docRef)
+
+if (docSnap.exists()) {
+  const data = docSnap.data()
+
+  //pre-fill value 
+  document.getElementById('titleInput').value = data.title;
+  document.getElementById('overview').value = data.overview;
+  document.getElementById('descriptionInput').value = data.fullcontext;
+  document.getElementById('Date').value = data.date;
+  document.getElementById('category').value = data.category;
+
+  Object.entries(data.artists).forEach(([role, names]) => {
+    const wrapper = document.querySelector(`[data-role="${role}"]`)
+
+    if (names.length > 0) {
+      names.forEach((name) => {
+        addArtistInput(wrapper)
+        wrapper.lastElementChild.querySelector('input').value = name
+      }
+      )
+    }
+
+
+  })
+
+
+}
+
+
+
 
 
 //todo: off browser suggestion on the form

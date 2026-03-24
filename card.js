@@ -220,7 +220,7 @@ function cardMenu(card, docId, onDelete) {
         e.stopPropagation()
         dropdown.classList.add('hidden')
         activeCardDropdown = null
-        console.log("edit:", docId)
+        window.location.href = `posting.html?id=${docId}`
     })
 
     deleteBtn.addEventListener('click', async (e) => {
