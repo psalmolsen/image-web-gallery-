@@ -91,6 +91,8 @@ shareSheetCopy?.addEventListener('click', async () => {
     }
 })
 
+
+
 shareSheetImageCode?.addEventListener('click', async () => {
     if (navigator.share) {
         try {
@@ -147,9 +149,9 @@ footer()
 
 
 
+
 //todo: image qr code
 //todo: deploy it but not searchable on public so that we can test it with real link for sharing
 //todo: pagination
 //todo: secure the site (no pop up ads etc.)
-//todo: dont remove the spaces on the categories
 //todo: the galer archive (put a disclamair like this : All images/ videos uploaded are owned by iMAGE. Cropping or taking out the watermark is strictly prohibited. You are free to tag, grab and/ or download all pictures uploaded by the organization.)

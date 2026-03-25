@@ -186,8 +186,8 @@ export function createCard(artWorkData, docId, onDelete) {
     }
     // ────────────────────────────────────────────────────────────────────────
 
-    const imageUrls = artWorkData.image_url
-        ? (Array.isArray(artWorkData.image_url) ? artWorkData.image_url : [artWorkData.image_url])
+    const imageUrls = artWorkData.image_urls
+        ? (Array.isArray(artWorkData.image_urls) ? artWorkData.image_urls : [artWorkData.image_urls])
         : []
 
     setupMedia(card, imageUrls, artWorkData.title)
