@@ -283,6 +283,58 @@
     </div>
   </div>
 
+  <!-- Full Content Modal overlay -->
+  <div class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[70] opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4"
+    id="fullSheetOverlay">
+    
+    <!-- Modal Card -->
+    <div
+      class="bg-[#141414] border border-[#2a2a2a] rounded-2xl shadow-2xl w-full max-w-2xl max-h-[85vh] overflow-y-auto scale-95 opacity-0 transition-all duration-300"
+      id="fullSheet" style="transition-timing-function: cubic-bezier(0.32, 0.72, 0, 1);">
+      
+      <!-- Close button (top right) -->
+      <button class="absolute top-4 right-4 w-8 h-8 rounded-full bg-[#1e1e1e] border border-[#2a2a2a] flex items-center justify-center text-[#6b6460] hover:text-[#e2d9cf] transition-colors z-10" id="fullSheetClose">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+        </svg>
+      </button>
+
+      <!-- Content container -->
+      <div class="p-6 flex flex-col gap-4">
+        
+        <!-- Media area -->
+        <div class="w-full aspect-video rounded-xl overflow-hidden bg-[#1e1e1e] hidden" id="fullSheetMedia">
+          <img class="w-full h-full object-contain hidden" id="fullSheetImage" />
+          <video class="w-full h-full object-contain hidden" id="fullSheetVideo" controls></video>
+        </div>
+
+        <!-- Category + Date -->
+        <div class="flex items-center gap-3 flex-wrap">
+          <span class="text-[9px] font-syne font-bold tracking-widest uppercase text-[#e8874a] bg-[#e8874a]/15 border border-[#e8874a]/25 rounded-full px-3 py-1" id="fullSheetCategory"></span>
+          <span class="text-xs font-outfit text-[#6b6460]" id="fullSheetDate"></span>
+        </div>
+
+        <!-- Title -->
+        <h2 class="font-fraunces text-2xl italic font-semibold text-[#e2d9cf]" id="fullSheetTitle"></h2>
+
+        <!-- Divider -->
+        <div class="w-full h-[1.5px] bg-[#e8874a]/35 rounded-full"></div>
+
+        <!-- Full Content -->
+        <div id="fullSheetFullContentWrap">
+          <p class="text-[10px] font-syne font-bold tracking-widest uppercase text-[#6b6460] mb-2">FULL CONTENT</p>
+          <p class="text-sm font-outfit text-[#9a8f8a] leading-relaxed" id="fullSheetFullContent"></p>
+        </div>
+
+        <!-- Artists -->
+        <div>
+          <p class="text-[10px] font-syne font-bold tracking-widest uppercase text-[#6b6460] mb-3">ARTISTS</p>
+          <div class="grid grid-cols-2 gap-2" id="fullSheetArtists"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="dashboard.js" type="module"></script>
 </body>
 

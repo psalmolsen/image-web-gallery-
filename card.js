@@ -128,7 +128,7 @@ function setupArtists(card, artists) {
         role.value.forEach(name => {
             const btn = document.createElement('button')
             btn.type = 'button'
-            btn.className = 'text-sm font-normal text-[#e8874a] font-outfit pl-2 truncate cursor-pointer hover:underline underline-offset-4 decoration-[#e8874a]'
+            btn.className = 'text-sm font-normal text-[#e8874a] font-outfit pl-2 text-left truncate cursor-pointer hover:underline underline-offset-4 decoration-[#e8874a]'
             btn.setAttribute('title', `View artworks by ${name}`)
             btn.setAttribute('data-artist', name)
             btn.textContent = name
@@ -194,6 +194,13 @@ export function createCard(artWorkData, docId, onDelete) {
     setupArtists(card, artWorkData.artists)
     cardMenu(card, docId, onDelete)
     cardShare(card, docId)
+
+    // Intercept card link to open full sheet
+    const cardLink = card.querySelector('.card-link')
+    cardLink.addEventListener('click', (e) => {
+        e.preventDefault()
+        openFullSheet(artWorkData)
+    })
 
     return { card, init: initOverviewToggle }
 }
@@ -323,3 +330,101 @@ export function closeAllDropdowns() {
         activeCardDropdown = null
     }
 }
+
+export function openFullSheet(artworkData) {
+    const overlay = document.getElementById('fullSheetOverlay')
+    const sheet = document.getElementById('fullSheet')
+    
+    // Populate title, category, date
+    document.getElementById('fullSheetTitle').textContent = artworkData.title || ''
+    document.getElementById('fullSheetCategory').textContent = artworkData.category || ''
+    document.getElementById('fullSheetDate').textContent = formatDate(artworkData.date)
+    
+    // Full content
+    const fullContentWrap = document.getElementById('fullSheetFullContentWrap')
+    const fullContentEl = document.getElementById('fullSheetFullContent')
+    if (artworkData.fullcontext && artworkData.fullcontext.trim()) {
+        fullContentEl.textContent = artworkData.fullcontext
+        fullContentWrap.classList.remove('hidden')
+    } else {
+        fullContentWrap.classList.add('hidden')
+    }
+    
+    // Media
+    const mediaWrap = document.getElementById('fullSheetMedia')
+    const imgEl = document.getElementById('fullSheetImage')
+    const vidEl = document.getElementById('fullSheetVideo')
+    const imageUrls = artworkData.image_urls ? (Array.isArray(artworkData.image_urls) ? artworkData.image_urls : [artworkData.image_urls]) : []
+    
+    if (imageUrls.length > 0) {
+        const firstUrl = imageUrls[0]
+        if (isVideoUrl(firstUrl)) {
+            imgEl.classList.add('hidden')
+            vidEl.classList.remove('hidden')
+            vidEl.src = firstUrl
+        } else {
+            vidEl.classList.add('hidden')
+            imgEl.classList.remove('hidden')
+            imgEl.src = firstUrl
+            imgEl.alt = artworkData.title || ''
+        }
+        mediaWrap.classList.remove('hidden')
+    } else {
+        mediaWrap.classList.add('hidden')
+    }
+    
+    // Artists
+    const artistsContainer = document.getElementById('fullSheetArtists')
+    artistsContainer.innerHTML = ''
+    const roles = [
+        { label: 'Graphic Artist', key: 'graphicartist' },
+        { label: 'Writer', key: 'writer' },
+        { label: 'Videographer', key: 'videographer' },
+        { label: 'Photographer', key: 'photographer' }
+    ]
+    roles.forEach(role => {
+        const artists = toArray(artworkData.artists?.[role.key])
+        if (artists.length > 0) {
+            const card = document.createElement('div')
+            card.className = 'bg-[#1e1e1e] border border-[#2a2a2a] rounded-xl px-3 py-2'
+            card.innerHTML = `
+                <p class="text-[9px] font-syne font-bold uppercase text-[#6b6460] mb-1">${role.label}</p>
+                ${artists.map(name => `<p class="text-sm font-outfit text-[#e8874a]">${name}</p>`).join('')}
+            `
+            artistsContainer.appendChild(card)
+        }
+    })
+    
+    // Open modal with scale animation
+    overlay.classList.remove('pointer-events-none')
+    requestAnimationFrame(() => {
+        overlay.classList.remove('opacity-0')
+        overlay.classList.add('opacity-100')
+        sheet.classList.remove('scale-95', 'opacity-0')
+        sheet.classList.add('scale-100', 'opacity-100')
+    })
+}
+
+function closeFullSheet() {
+    const overlay = document.getElementById('fullSheetOverlay')
+    const sheet = document.getElementById('fullSheet')
+    
+    overlay.classList.remove('opacity-100')
+    overlay.classList.add('opacity-0')
+    sheet.classList.remove('scale-100', 'opacity-100')
+    sheet.classList.add('scale-95', 'opacity-0')
+    
+    setTimeout(() => {
+        overlay.classList.add('pointer-events-none')
+    }, 300)
+}
+
+// ESC key to close
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        const sheet = document.getElementById('fullSheet')
+        if (sheet && sheet.classList.contains('scale-100')) {
+            closeFullSheet()
+        }
+    }
+})

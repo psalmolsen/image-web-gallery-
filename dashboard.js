@@ -1,6 +1,6 @@
 import { db } from "./firebase.js"
 import { collection, getDocs } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js"
-import { createCard, closeAllDropdowns } from "./card.js"
+import { createCard, closeAllDropdowns, openFullSheet } from "./card.js"
 
 async function init() {
     const res = await fetch('card.html')
@@ -103,6 +103,29 @@ shareSheetImageCode?.addEventListener('click', async () => {
     }
     closeShareSheet()
 })
+
+// Full sheet close handlers
+const fullSheetOverlay = document.getElementById('fullSheetOverlay')
+const fullSheetClose = document.getElementById('fullSheetClose')
+
+function closeFullSheet() {
+    const overlay = document.getElementById('fullSheetOverlay')
+    const sheet = document.getElementById('fullSheet')
+    
+    overlay.classList.remove('opacity-100')
+    overlay.classList.add('opacity-0')
+    sheet.classList.remove('scale-100', 'opacity-100')
+    sheet.classList.add('scale-95', 'opacity-0')
+    
+    setTimeout(() => {
+        overlay.classList.add('pointer-events-none')
+    }, 300)
+}
+
+fullSheetOverlay?.addEventListener('click', (e) => {
+    if (e.target === fullSheetOverlay) closeFullSheet()
+})
+fullSheetClose?.addEventListener('click', closeFullSheet)
 
 document.addEventListener('click', () => {
     closeAllDropdowns()
