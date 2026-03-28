@@ -1,5 +1,5 @@
 import { db } from "./firebase.js"
-import { collection, getDocs } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js"
+import { collection, getDocs, query, orderBy, limit, startAfter } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js"
 import { createCard, closeAllDropdowns, openFullSheet } from "./card.js"
 
 async function init() {
@@ -9,26 +9,20 @@ async function init() {
     const cardDoc = parser.parseFromString(html, 'text/html')
     const template = cardDoc.querySelector('#cardTemplate')
     document.body.appendChild(document.adoptNode(template))
-    await loadArtworks()
+
 }
 init()
 
+
+let lastVisible = null
+let isLoading = false
+let hasMore = true
 let allArtworks = []
 const layout = document.querySelector('#layout')
 const emptyState = document.querySelector('#emptyState')
 
-async function loadArtworks() {
-    const result = await getDocs(collection(db, "artworks"))
-    if (result.empty) {
-        layout.innerHTML = ''
-        emptyState.classList.remove('hidden')
-        return
-    }
-    result.forEach(doc => {
-        allArtworks.push({ ...doc.data(), id: doc.id })
-    })
-    renderCards(allArtworks)
-}
+
+
 
 //delete artworks
 function onDelete(deletedId) {
@@ -37,14 +31,14 @@ function onDelete(deletedId) {
 }
 
 
-// ── THIS IS THE KEY CHANGE ──
+
 function renderCards(artworks) {
     emptyState.classList.add('hidden')
     layout.innerHTML = ''
     artworks.forEach(artwork => {
         const { card, init } = createCard(artwork, artwork.id, onDelete)
-        layout.appendChild(card)  // append first
-        init()                    // THEN measure — scrollHeight works now
+        layout.appendChild(card)
+        init()
     })
 }
 
@@ -111,12 +105,12 @@ const fullSheetClose = document.getElementById('fullSheetClose')
 function closeFullSheet() {
     const overlay = document.getElementById('fullSheetOverlay')
     const sheet = document.getElementById('fullSheet')
-    
+
     overlay.classList.remove('opacity-100')
     overlay.classList.add('opacity-0')
     sheet.classList.remove('scale-100', 'opacity-100')
     sheet.classList.add('scale-95', 'opacity-0')
-    
+
     setTimeout(() => {
         overlay.classList.add('pointer-events-none')
     }, 300)
@@ -151,6 +145,58 @@ document.querySelector('#searchInput').addEventListener('keydown', function (e) 
     }
 })
 
+async function loadMoreArtworks() {
+    // let lastVisible = null
+    // let isLoading = false
+    // let hasMore = true
+    // let allArtworks = []
+
+    if (isLoading || !hasMore) return
+    isLoading = true
+    try {
+        const artworksRef = collection(db, "artworks")
+        let artworkQuery
+
+        if (lastVisible) {
+            artworkQuery = query(artworksRef, orderBy("date", "desc"), startAfter(lastVisible), limit(6))
+
+        } else {
+            artworkQuery = query(artworksRef, orderBy("date", "desc"), limit(6))
+        }
+        const result = await getDocs(artworkQuery)
+        if (result.empty) {
+            hasMore = false
+            isLoading = false
+            if (allArtworks.length === 0) {
+                layout.innerHTML = ''
+                emptyState.classList.remove('hidden')
+            }
+            return
+        }
+        result.docs.forEach(doc => {
+            const artworkData = doc.data()
+            allArtworks.push({ ...artworkData, id: doc.id })
+        })
+        lastVisible = result.docs[result.docs.length - 1]
+        if (result.docs.length < 6) {
+            hasMore = false
+        }
+        renderCards(allArtworks)
+        isLoading = false
+    }
+    catch (error) {
+        console.error(error)
+        isLoading = false
+    }
+}
+loadMoreArtworks()
+window.addEventListener('scroll', () => {
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 1000) {
+        loadMoreArtworks()
+    }
+})
+
+
 function footer() {
     const navWorks = document.querySelector('#nav-works')
     const navAbout = document.querySelector('#nav-about')
@@ -178,3 +224,4 @@ footer()
 //todo: pagination
 //todo: secure the site (no pop up ads etc.)
 //todo: the galer archive (put a disclamair like this : All images/ videos uploaded are owned by iMAGE. Cropping or taking out the watermark is strictly prohibited. You are free to tag, grab and/ or download all pictures uploaded by the organization.)
+//todo: after posting multiple file in one card, it glitch on the early times using th ecourusellei
