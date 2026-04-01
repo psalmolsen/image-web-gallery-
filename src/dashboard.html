@@ -121,14 +121,14 @@
 
       <!-- Right controls -->
       <div class="flex items-center gap-2">
-        <!-- Search (desktop) -->
+        <!-- Search  -->
         <div class="dsk-only relative items-center">
           <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 pointer-events-none text-stone-500"
             fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round"
               stroke-width="2" />
           </svg>
-          <input id="searchInput" type="search" placeholder="Search artworks"
+          <input id="searchInput" type="search" placeholder="Search"
             class="font-outfit text-xs outline-none transition-all duration-300 bg-[#141414] border border-[#252525] rounded-l-[9px] py-1.5 pl-[30px] pr-3 text-stone-200 w-[180px] focus:w-[230px] focus:border-orange-500" />
           <button id="searchBtn"
             class="bg-orange-500 hover:bg-orange-600 transition-colors duration-200 px-2.5 py-1.5 rounded-r-[9px] border border-orange-500 flex items-center justify-center">
@@ -234,7 +234,7 @@
     </div>
 
     <!-- layout -->
-    <div class="columns-1 md:columns-2 lg:columns-3 gap-5 [&>*]:break-inside-avoid [&>*]:mb-5" id="layout"></div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="layout"></div>
 
   </main>
 

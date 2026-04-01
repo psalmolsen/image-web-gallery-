@@ -34,6 +34,14 @@ function setupMedia(card, imageUrls, title) {
 
     imageWrap.classList.remove('hidden')
 
+    // Preload all images upfront
+    imageUrls.forEach(url => {
+        if (!isVideoUrl(url)) {
+            const preloadImg = new Image()
+            preloadImg.src = url
+        }
+    })
+
     function renderMedia(index) {
         const url = imageUrls[index]
         imageCount.textContent = `${index + 1} / ${totalItems}`
@@ -334,12 +342,12 @@ export function closeAllDropdowns() {
 export function openFullSheet(artworkData) {
     const overlay = document.getElementById('fullSheetOverlay')
     const sheet = document.getElementById('fullSheet')
-    
+
     // Populate title, category, date
     document.getElementById('fullSheetTitle').textContent = artworkData.title || ''
     document.getElementById('fullSheetCategory').textContent = artworkData.category || ''
     document.getElementById('fullSheetDate').textContent = formatDate(artworkData.date)
-    
+
     // Full content
     const fullContentWrap = document.getElementById('fullSheetFullContentWrap')
     const fullContentEl = document.getElementById('fullSheetFullContent')
@@ -349,13 +357,13 @@ export function openFullSheet(artworkData) {
     } else {
         fullContentWrap.classList.add('hidden')
     }
-    
+
     // Media
     const mediaWrap = document.getElementById('fullSheetMedia')
     const imgEl = document.getElementById('fullSheetImage')
     const vidEl = document.getElementById('fullSheetVideo')
     const imageUrls = artworkData.image_urls ? (Array.isArray(artworkData.image_urls) ? artworkData.image_urls : [artworkData.image_urls]) : []
-    
+
     if (imageUrls.length > 0) {
         const firstUrl = imageUrls[0]
         if (isVideoUrl(firstUrl)) {
@@ -372,7 +380,7 @@ export function openFullSheet(artworkData) {
     } else {
         mediaWrap.classList.add('hidden')
     }
-    
+
     // Artists
     const artistsContainer = document.getElementById('fullSheetArtists')
     artistsContainer.innerHTML = ''
@@ -394,7 +402,7 @@ export function openFullSheet(artworkData) {
             artistsContainer.appendChild(card)
         }
     })
-    
+
     // Open modal with scale animation
     overlay.classList.remove('pointer-events-none')
     requestAnimationFrame(() => {
@@ -408,12 +416,12 @@ export function openFullSheet(artworkData) {
 function closeFullSheet() {
     const overlay = document.getElementById('fullSheetOverlay')
     const sheet = document.getElementById('fullSheet')
-    
+
     overlay.classList.remove('opacity-100')
     overlay.classList.add('opacity-0')
     sheet.classList.remove('scale-100', 'opacity-100')
     sheet.classList.add('scale-95', 'opacity-0')
-    
+
     setTimeout(() => {
         overlay.classList.add('pointer-events-none')
     }, 300)
