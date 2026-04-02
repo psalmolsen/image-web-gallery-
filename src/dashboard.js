@@ -90,6 +90,75 @@ window.openShareSheet = function (url) {
     })
 }
 
+// ── Category filtering ──────────────────────────────────────────────────────
+window.filterByCategory = function (category) {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+    isSearching = true
+    const filtered = allArtworks.filter(artwork => {
+        return artwork.category === category
+    })
+
+    // Update banner
+    const bannerContent = document.querySelector('#bannerContent')
+    const categoryBanner = document.querySelector('#categoryBanner')
+    const artistBanner = document.querySelector('#artistBanner')
+    const categoryName = document.querySelector('#categoryName')
+    const artworkCount = document.querySelector('#artworkCount')
+
+    // Hide default content and artist banner, show category banner
+    bannerContent.classList.add('hidden')
+    artistBanner.classList.add('hidden')
+    categoryBanner.classList.remove('hidden')
+
+    // Update category name and count
+    categoryName.textContent = category
+    artworkCount.textContent = filtered.length
+
+    if (filtered.length === 0) {
+        layout.innerHTML = ''
+        emptyState.classList.remove('hidden')
+    } else {
+        renderCards(filtered)
+    }
+}
+
+// ── Artist filtering ────────────────────────────────────────────────────────
+window.filterByArtist = function (artistName) {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+    isSearching = true
+    const filtered = allArtworks.filter(artwork => {
+        // Check if artist name exists in any role
+        return Object.values(artwork.artists).flat().includes(artistName)
+    })
+
+    // Update banner
+    const bannerContent = document.querySelector('#bannerContent')
+    const categoryBanner = document.querySelector('#categoryBanner')
+    const artistBanner = document.querySelector('#artistBanner')
+    const artistNameEl = document.querySelector('#artistName')
+    const artistNameText = document.querySelector('#artistNameText')
+    const artistCount = document.querySelector('#artistCount')
+
+    // Hide default content and category banner, show artist banner
+    bannerContent.classList.add('hidden')
+    categoryBanner.classList.add('hidden')
+    artistBanner.classList.remove('hidden')
+
+    // Update artist name and count
+    artistNameEl.textContent = artistName
+    artistNameText.textContent = artistName
+    artistCount.textContent = filtered.length
+
+    if (filtered.length === 0) {
+        layout.innerHTML = ''
+        emptyState.classList.remove('hidden')
+    } else {
+        renderCards(filtered)
+    }
+}
+
+
+
 function closeShareSheet() {
     shareSheetOverlay.classList.remove('opacity-100')
     shareSheetOverlay.classList.add('opacity-0')
@@ -132,6 +201,7 @@ document.addEventListener('click', () => {
     closeAllDropdowns()
 })
 
+//search
 function filterArtworks(query) {
     isSearching = true
     const filtered = allArtworks.filter(artwork => {

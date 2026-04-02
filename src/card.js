@@ -169,6 +169,12 @@ function setupArtists(card, artists) {
             btn.setAttribute('title', `View artworks by ${name}`)
             btn.setAttribute('data-artist', name)
             btn.innerHTML = `<span class="text-[#e8874a]/60 shrink-0 mt-0.5">•</span><span>${name}</span>`
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation()
+                if (typeof window.filterByArtist === 'function') {
+                    window.filterByArtist(name)
+                }
+            })
             namesDiv.appendChild(btn)
         })
         pill.appendChild(label)
@@ -183,7 +189,18 @@ export function createCard(artWorkData, docId, onDelete) {
 
     card.querySelector('.card-title').textContent = artWorkData.title
     card.querySelector('.card-date').textContent = formatDate(artWorkData.date)
-    card.querySelector('.card-category').textContent = artWorkData.category
+
+    const categoryBtn = card.querySelector('.card-category')
+    categoryBtn.textContent = artWorkData.category
+    categoryBtn.addEventListener('click', (e) => {
+        e.stopPropagation()
+        if (typeof window.filterByCategory === 'function') {
+            window.filterByCategory(artWorkData.category)
+        }
+    })
+
+
+
     card.querySelector('.card-link').href = `card.html?id=${docId}`
 
     // ── Overview toggle ──────────────────────────────────────────────────────

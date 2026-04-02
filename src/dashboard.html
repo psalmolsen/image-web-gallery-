@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com" rel="preconnect" />
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
   <link
-    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,700&family=Playfair+Display:ital,wght@1,700&family=EB+Garamond:ital,wght@1,600&family=Outfit:wght@300;400;500;600;700&family=Syne:wght@400;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,700&family=Playfair+Display:ital,wght@1,700&family=EB+Garamond:ital,wght@1,600&family=Outfit:wght@300;400;500;600;700&family=Syne:wght@400;700&family=Inter:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
     rel="stylesheet" />
   <script>
     tailwind.config = {
@@ -22,6 +22,9 @@
             outfit: ["Outfit", "sans-serif"],
             cursive: ["Playfair Display", "serif"],
             mage: ["EB Garamond", "serif"],
+            inter: ["Inter", "sans-serif"],
+            dmsans: ["DM Sans", "sans-serif"],
+            jakarta: ["Plus Jakarta Sans", "sans-serif"],
           },
         },
       },
@@ -92,7 +95,7 @@
 
 <body class="min-h-screen font-outfit bg-[#0c0c0c] text-stone-200">
 
-  <!-- ══ HEADER ══ -->
+  <!-- HEADER -->
   <header class="sticky top-0 z-50 border-b border-[#1f1f1f] bg-[#0c0c0c]/[0.93] backdrop-blur-[14px]">
     <div class="flex items-center justify-between gap-4 px-5 mx-auto max-w-7xl h-[52px]">
 
@@ -171,7 +174,7 @@
     </div>
   </header>
 
-  <!-- ══ MAIN ══ -->
+  <!-- MAIN -->
   <main class="px-5 py-7 pb-28 mx-auto max-w-7xl">
 
     <!-- Mobile search -->
@@ -194,22 +197,74 @@
       </div>
     </div>
 
-    <!-- Collection banner -->
-    <div
-      class="flex flex-wrap items-start justify-between gap-4 p-7 mb-6 rounded-[18px] bg-[#141414] border border-[#1f1f1f]">
-      <div>
-        <p class="font-syne text-[10px] font-bold tracking-[0.18em] uppercase mb-2.5 text-stone-500">iMAGE · CVSU
-          CARMONA</p>
-        <h2 class="font-cursive text-5xl leading-[1.1] font-bold text-stone-200">
-          The <em class="text-orange-500 italic">Gallery</em><br />Archive
-        </h2>
-      </div>
-      <div class="text-right">
-        <p class="font-fraunces font-light leading-none text-orange-500 text-[clamp(28px,4vw,42px)]" id="artworkCount">—
-        </p>
-        <p class="font-outfit text-[11px] mt-1.5 leading-relaxed text-stone-500">
-          artworks published<br />across 3 collections
-        </p>
+    <!-- label banner -->
+    <div class="p-7 mb-6 rounded-[18px] bg-[#141414] border border-[#1f1f1f]">
+      <p class="font-syne text-[10px] font-bold tracking-[0.18em] uppercase mb-5 text-stone-500">Individual Multimedia
+        Arts Guild Enthusiasts
+      </p>
+
+      <div class="flex items-start gap-4">
+        <div class="min-w-0 flex-1">
+
+
+          <!-- Default content  -->
+          <div id="bannerContent">
+
+            <!-- todo: put this ont he "abouit us" -->
+            <!-- <p class="font-outfit text-base leading-relaxed text-stone-300 mb-3 text-justify">
+              iMAGE is a Non-Academic Student Organization at Cavite State University – Carmona Campus.
+            </p> -->
+            <p class="font-outfit text-xs leading-relaxed text-stone-300 text-justify">
+              All images/videos uploaded are owned by iMAGE. Cropping or removing the watermark is strictly prohibited.
+              You are free to tag, grab, and/or share all pictures uploaded by the organization.
+            </p>
+          </div>
+
+
+          <!-- banner for category - hidden by default -->
+          <div id="categoryBanner" class="hidden">
+            <div class="flex items-start gap-4">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="lucide lucide-images text-orange-500 shrink-0">
+                <path d="m22 11-1.296-1.296a2.4 2.4 0 0 0-3.408 0L11 16" />
+                <path d="M4 8a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2" />
+                <circle cx="13" cy="7" r="1" fill="currentColor" />
+                <rect x="8" y="2" width="14" height="14" rx="2" />
+              </svg>
+              <div>
+                <h3 class="font-cursive text-2xl font-bold leading-tight mb-1">
+                  <span class="text-white italic">Collection:</span>
+                  <span class="text-orange-500 italic" id="categoryName"></span>
+                </h3>
+                <p class="font-outfit text-base text-stone-200"><span id="artworkCount">0</span> artworks published in
+                  this collection</p>
+              </div>
+            </div>
+          </div>
+          <!-- banner for artist - hidden by default -->
+          <div id="artistBanner" class="hidden">
+            <div class="flex items-start gap-4">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="lucide lucide-user text-orange-500 shrink-0">
+                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+              <div>
+                <h3 class="font-cursive text-2xl font-bold leading-tight mb-1">
+                  <span class="text-white italic">Artist:</span>
+                  <span class="text-orange-500 italic" id="artistName"></span>
+                </h3>
+                <p class="font-outfit text-base text-stone-200"><span id="artistCount">0</span> artworks contributed by
+                  <span class="text-orange-500" id="artistNameText"></span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
       </div>
     </div>
 
@@ -242,7 +297,7 @@
 
   </main>
 
-  <!-- ══ BOTTOM NAV (mobile) ══ -->
+  <!-- BOTTOM NAV (mobile) -->
   <footer
     class="mob-only fixed bottom-0 left-0 right-0 z-50 border-t border-[#1f1f1f] bg-[#0c0c0c]/[0.95] backdrop-blur-[12px]">
     <div class="flex items-center justify-around px-4 mx-auto max-w-7xl h-[58px]">
@@ -266,7 +321,7 @@
     </div>
   </footer>
 
-  <!-- ══ FAB ══ -->
+  <!-- FAB -->
   <a href="posting.html"
     class="fab fixed z-40 flex items-center justify-center rounded-full transition-all duration-300 bg-orange-500 bottom-[74px] right-[20px] w-[50px] h-[50px]">
     <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
