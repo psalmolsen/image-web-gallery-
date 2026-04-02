@@ -35,10 +35,28 @@ function onDelete(deletedId) {
 
 function renderCards(artworks) {
     emptyState.classList.add('hidden')
-    layout.innerHTML = ''
-    artworks.forEach(artwork => {
+    
+    // Clear all columns
+    const cols = [document.getElementById('col-0'), document.getElementById('col-1'), document.getElementById('col-2')]
+    cols.forEach(col => col.innerHTML = '')
+    
+    // Get number of visible columns based on screen width
+    function getColumnCount() {
+        if (window.innerWidth >= 1024) return 3 // lg breakpoint
+        if (window.innerWidth >= 768) return 2  // md breakpoint
+        return 1
+    }
+    
+    const columnCount = getColumnCount()
+    
+    artworks.forEach((artwork, index) => {
         const { card, init } = createCard(artwork, artwork.id, onDelete)
-        layout.appendChild(card)
+        
+        // Round-robin: distribute cards in order (0, 1, 2, 0, 1, 2...)
+        const columnIndex = index % columnCount
+        
+        // Append to column
+        cols[columnIndex].appendChild(card)
         init()
     })
 }
@@ -242,6 +260,15 @@ window.addEventListener('scroll', () => {
     }
 })
 
+// Re-layout on window resize
+let resizeTimeout
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout)
+    resizeTimeout = setTimeout(() => {
+        if (!isSearching) renderCards(allArtworks)
+    }, 250)
+})
+
 
 function footer() {
     const navWorks = document.querySelector('#nav-works')
@@ -270,5 +297,4 @@ footer()
 //todo: pagination
 //todo: secure the site (no pop up ads etc.)
 //todo: the galer archive (put a disclamair like this : All images/ videos uploaded are owned by iMAGE. Cropping or taking out the watermark is strictly prohibited. You are free to tag, grab and/ or download all pictures uploaded by the organization.)
-//todo: after posting multiple file in one card, it glitch on the early times using th ecourusellei
 //todo: after development, uncheck the firebase development rules so that the database is secure and not all info fecthcing to the web

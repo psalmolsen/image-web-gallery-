@@ -195,6 +195,9 @@ function fileoverview() {
 }
 fileoverview()
 
+
+
+
 //add new category 
 async function saveCategory(newCategrory) {
   await addDoc(collection(db, "categories"), {
@@ -358,6 +361,25 @@ const editingArtworkId = urlParams.get('id')
 const docRef = doc(db, "artworks", editingArtworkId)
 const docSnap = await getDoc(docRef)
 
+//show exisiting file in pills
+function showExistingFiles(urls) {
+  if (!urls || urls.length === 0) return
+
+  const dropzonedefault = document.querySelector("#dropzoneDefault")
+  const filepreviewcontainer = document.querySelector("#filePreviewContainer")
+
+  dropzonedefault.classList.add("hidden")
+  filepreviewcontainer.classList.remove("hidden")
+
+  urls.forEach((url, index) => {
+    const fileName = url.split('/').pop().split('?')[0]
+    const card = document.createElement("div")
+    card.className = "flex items-center gap-2 bg-white border border-stone-200 rounded-xl px-4 py-3 text-sm font-outfit text-stone-700 shadow-sm"
+    card.textContent = fileName
+    filepreviewcontainer.appendChild(card)
+  })
+}
+
 if (docSnap.exists()) {
   const data = docSnap.data()
 
@@ -378,12 +400,14 @@ if (docSnap.exists()) {
       }
       )
     }
-
-
   })
-
-
+  showExistingFiles(data.image_urls)
 }
+
+
+
+
+
 
 
 

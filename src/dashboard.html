@@ -233,8 +233,12 @@
       </a>
     </div>
 
-    <!-- layout -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="layout"></div>
+    <!-- layout  (mansory hoirizontal-->
+    <div class="flex flex-col md:flex-row gap-5" id="layout">
+      <div class="flex-1 flex flex-col gap-5" id="col-0"></div>
+      <div class="hidden md:flex flex-1 flex-col gap-5" id="col-1"></div>
+      <div class="hidden lg:flex flex-1 flex-col gap-5" id="col-2"></div>
+    </div>
 
   </main>
 
