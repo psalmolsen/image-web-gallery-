@@ -1,15 +1,26 @@
 import { db } from "./firebase.js"
 import { collection, getDocs, query, orderBy, limit, startAfter } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js"
-import { createCard, closeAllDropdowns, openFullSheet } from "./card.js"
+import { createCard, closeAllDropdowns } from "./card.js"
+import { openFullSheet } from "./modals.js"
 
 async function init() {
-    const res = await fetch('card.html')
-    const html = await res.text()
-    const parser = new DOMParser()
-    const cardDoc = parser.parseFromString(html, 'text/html')
-    const template = cardDoc.querySelector('#cardTemplate')
-    document.body.appendChild(document.adoptNode(template))
+    // Load card template
+    const cardRes = await fetch('card.html')
+    const cardHtml = await cardRes.text()
+    const cardParser = new DOMParser()
+    const cardDoc = cardParser.parseFromString(cardHtml, 'text/html')
+    const cardTemplate = cardDoc.querySelector('#cardTemplate')
+    document.body.appendChild(document.adoptNode(cardTemplate))
 
+    // Load modals
+    const modalsRes = await fetch('modals.html')
+    const modalsHtml = await modalsRes.text()
+    const modalsParser = new DOMParser()
+    const modalsDoc = modalsParser.parseFromString(modalsHtml, 'text/html')
+    const modalsContent = modalsDoc.body.children
+    Array.from(modalsContent).forEach(el => {
+        document.body.appendChild(document.adoptNode(el))
+    })
 }
 init()
 
@@ -35,26 +46,26 @@ function onDelete(deletedId) {
 
 function renderCards(artworks) {
     emptyState.classList.add('hidden')
-    
+
     // Clear all columns
     const cols = [document.getElementById('col-0'), document.getElementById('col-1'), document.getElementById('col-2')]
     cols.forEach(col => col.innerHTML = '')
-    
+
     // Get number of visible columns based on screen width
     function getColumnCount() {
-        if (window.innerWidth >= 1024) return 3 // lg breakpoint
-        if (window.innerWidth >= 768) return 2  // md breakpoint
+        if (window.innerWidth >= 1024) return 3 // large breakpoint
+        if (window.innerWidth >= 768) return 2  // medium breakpoint
         return 1
     }
-    
+
     const columnCount = getColumnCount()
-    
+
     artworks.forEach((artwork, index) => {
         const { card, init } = createCard(artwork, artwork.id, onDelete)
-        
+
         // Round-robin: distribute cards in order (0, 1, 2, 0, 1, 2...)
         const columnIndex = index % columnCount
-        
+
         // Append to column
         cols[columnIndex].appendChild(card)
         init()
@@ -116,29 +127,6 @@ shareSheetImageCode?.addEventListener('click', async () => {
     }
     closeShareSheet()
 })
-
-// Full sheet close handlers
-const fullSheetOverlay = document.getElementById('fullSheetOverlay')
-const fullSheetClose = document.getElementById('fullSheetClose')
-
-function closeFullSheet() {
-    const overlay = document.getElementById('fullSheetOverlay')
-    const sheet = document.getElementById('fullSheet')
-
-    overlay.classList.remove('opacity-100')
-    overlay.classList.add('opacity-0')
-    sheet.classList.remove('scale-100', 'opacity-100')
-    sheet.classList.add('scale-95', 'opacity-0')
-
-    setTimeout(() => {
-        overlay.classList.add('pointer-events-none')
-    }, 300)
-}
-
-fullSheetOverlay?.addEventListener('click', (e) => {
-    if (e.target === fullSheetOverlay) closeFullSheet()
-})
-fullSheetClose?.addEventListener('click', closeFullSheet)
 
 document.addEventListener('click', () => {
     closeAllDropdowns()
