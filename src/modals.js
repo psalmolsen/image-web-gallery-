@@ -85,7 +85,14 @@ export function openFullSheet(artworkData) {
             card.className = 'bg-[#1e1e1e] border border-[#2a2a2a] rounded-xl px-3 py-2'
             card.innerHTML = `
                 <p class="text-[9px] font-syne font-bold uppercase text-[#6b6460] mb-1">${role.label}</p>
-                ${artists.map(name => `<p class="text-sm font-outfit text-[#e8874a]">${name}</p>`).join('')}
+                <div class="flex flex-col gap-1">
+                    ${artists.map(name => `
+                        <div class="flex items-start gap-1.5">
+                            <span class="text-[#e8874a]/60 shrink-0 mt-0.5">•</span>
+                            <span class="text-sm font-outfit text-[#e8874a] break-words">${name}</span>
+                        </div>
+                    `).join('')}
+                </div>
             `
             artistsContainer.appendChild(card)
         }

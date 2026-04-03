@@ -352,7 +352,5 @@ footer()
 
 //todo: image qr code
 //todo: deploy it but not searchable on public so that we can test it with real link for sharing
-//todo: pagination
 //todo: secure the site (no pop up ads etc.)
-//todo: the galer archive (put a disclamair like this : All images/ videos uploaded are owned by iMAGE. Cropping or taking out the watermark is strictly prohibited. You are free to tag, grab and/ or download all pictures uploaded by the organization.)
 //todo: after development, uncheck the firebase development rules so that the database is secure and not all info fecthcing to the web
