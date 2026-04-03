@@ -319,7 +319,7 @@ function cardShare(card, docId) {
     const imagecode = card.querySelector('.image-code')
     const copylink = card.querySelector('.copy-link')
 
-    const shareUrl = `${window.location.origin}/card.html?id=${docId}`
+    const shareUrl = `${window.location.origin}/src/Dashboard.html?artwork=${docId}`
 
     cardShareBtn.addEventListener('click', (e) => {
         e.stopPropagation()
@@ -354,14 +354,13 @@ function cardShare(card, docId) {
 
     copylink.addEventListener('click', async (e) => {
         e.stopPropagation()
-        sharedropdown.classList.add('hidden')
+        closeDropdown(sharedropdown)
         activeShareDropdown = null
         try {
             await navigator.clipboard.writeText(shareUrl)
-            const span = copylink.querySelector('span') || copylink
-            const original = span.textContent
-            span.textContent = 'Copied!'
-            setTimeout(() => span.textContent = original, 2000)
+            if (typeof window.showCopyToast === 'function') {
+                window.showCopyToast()
+            }
         } catch (err) {
             console.error(err)
         }

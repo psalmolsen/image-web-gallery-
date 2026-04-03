@@ -33,6 +33,23 @@ let isSearching = false
 const layout = document.querySelector('#layout')
 const emptyState = document.querySelector('#emptyState')
 
+// Toast notification function
+function showCopyToast() {
+    const toast = document.getElementById('copyToast')
+    if (!toast) return
+    
+    toast.classList.remove('opacity-0', 'pointer-events-none')
+    toast.classList.add('opacity-100')
+    
+    setTimeout(() => {
+        toast.classList.add('opacity-0', 'pointer-events-none')
+        toast.classList.remove('opacity-100')
+    }, 3000)
+}
+
+// Make it globally available for card.js
+window.showCopyToast = showCopyToast
+
 
 
 
@@ -173,10 +190,7 @@ shareSheetClose?.addEventListener('click', closeShareSheet)
 shareSheetCopy?.addEventListener('click', async () => {
     try {
         await navigator.clipboard.writeText(activeShareUrl)
-        const span = shareSheetCopy.querySelector('span')
-        const original = span.textContent
-        span.textContent = 'Copied!'
-        setTimeout(() => span.textContent = original, 2000)
+        showCopyToast()
     } catch (err) {
         console.error(err)
     } finally {
@@ -311,6 +325,24 @@ async function loadMoreArtworks() {
     }
 }
 loadMoreArtworks()
+
+// Check if there's an artwork parameter in URL and open full content modal
+const urlParams = new URLSearchParams(window.location.search)
+const artworkId = urlParams.get('artwork')
+if (artworkId) {
+    // Wait for artworks to load, then find and open the specific artwork
+    const checkAndOpen = setInterval(() => {
+        const artwork = allArtworks.find(a => a.id === artworkId)
+        if (artwork) {
+            clearInterval(checkAndOpen)
+            openFullSheet(artwork)
+        }
+    }, 100)
+    
+    // Stop checking after 10 seconds if artwork not found
+    setTimeout(() => clearInterval(checkAndOpen), 10000)
+}
+
 window.addEventListener('scroll', () => {
     if (isSearching) return
     if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 1000) {
