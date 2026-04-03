@@ -1,6 +1,4 @@
-// ═══════════════════════════════════════════════════════════════════════════
-// HELPER FUNCTIONS
-// ═══════════════════════════════════════════════════════════════════════════
+// Helper functions
 
 function formatDate(dateStr) {
     if (!dateStr) return ""
@@ -17,9 +15,7 @@ function toArray(value) {
     return []
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-// FULL CONTENT MODAL
-// ═══════════════════════════════════════════════════════════════════════════
+// Full content modal
 
 export function openFullSheet(artworkData) {
     const overlay = document.getElementById('fullSheetOverlay')
@@ -122,9 +118,7 @@ export function closeFullSheet() {
     }, 300)
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-// MEDIA VIEWER MODAL
-// ═══════════════════════════════════════════════════════════════════════════
+// Media viewer modal
 
 let mediaViewerState = {
     urls: [],
@@ -258,9 +252,7 @@ function navigateMedia(direction) {
     showMediaInViewer(newIndex)
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-// EVENT LISTENERS
-// ═══════════════════════════════════════════════════════════════════════════
+// Event listeners
 
 // Setup event listeners after DOM is ready
 setTimeout(() => {

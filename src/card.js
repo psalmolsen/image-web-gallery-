@@ -2,9 +2,7 @@ import { db } from "./firebase.js"
 import { deleteDoc, doc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js"
 import { openFullSheet, openMediaViewer } from "./modals.js"
 
-// ═══════════════════════════════════════════════════════════════════════════
-// HELPER FUNCTIONS
-// ═══════════════════════════════════════════════════════════════════════════
+// Helper functions
 
 function formatDate(dateStr) {
     if (!dateStr) return ""
@@ -21,9 +19,7 @@ function toArray(value) {
     return []
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-// CARD CAROUSEL
-// ═══════════════════════════════════════════════════════════════════════════
+// Card carousel
 
 function setupMedia(card, imageUrls, title) {
     const totalItems = imageUrls.length
@@ -141,9 +137,7 @@ function setupMedia(card, imageUrls, title) {
     renderMedia(0)
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-// CARD CREATION & MENU
-// ═══════════════════════════════════════════════════════════════════════════
+// Card creation and menu
 
 function setupArtists(card, artists) {
     const container = card.querySelector('.card-artists')
@@ -203,7 +197,7 @@ export function createCard(artWorkData, docId, onDelete) {
 
     card.querySelector('.card-link').href = `card.html?id=${docId}`
 
-    // ── Overview toggle ──────────────────────────────────────────────────────
+    // Overview toggle
     const overviewEl = card.querySelector('.card-overview')
     const toggleBtn = card.querySelector('.card-overview-toggle')
     overviewEl.textContent = artWorkData.overview || ''
@@ -238,7 +232,7 @@ export function createCard(artWorkData, docId, onDelete) {
             toggleBtn.classList.add('hidden')
         }
     }
-    // ────────────────────────────────────────────────────────────────────────
+
 
     const imageUrls = artWorkData.image_urls
         ? (Array.isArray(artWorkData.image_urls) ? artWorkData.image_urls : [artWorkData.image_urls])

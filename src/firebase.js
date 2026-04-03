@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-//firebase config
+// Firebase config
 const firebaseConfig = {
     apiKey: "AIzaSyDBbtlkqF_CkQGdcNU10senOniW3cgPmCs",
     authDomain: "image-gallery-2748a.firebaseapp.com",
@@ -12,7 +12,7 @@ const firebaseConfig = {
     measurementId: "G-VV38EKG4QK"
 };
 
-//initialized firebase  
+// Initialized firebase  
 const app = initializeApp(firebaseConfig)
 const db = getFirestore(app)
 

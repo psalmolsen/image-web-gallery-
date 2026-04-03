@@ -90,7 +90,7 @@ window.openShareSheet = function (url) {
     })
 }
 
-// ── Category filtering ──────────────────────────────────────────────────────
+// Category filtering
 window.filterByCategory = function (category) {
     window.scrollTo({ top: 0, behavior: 'smooth' })
     isSearching = true
@@ -122,7 +122,7 @@ window.filterByCategory = function (category) {
     }
 }
 
-// ── Artist filtering ────────────────────────────────────────────────────────
+// Artist filtering
 window.filterByArtist = function (artistName) {
     window.scrollTo({ top: 0, behavior: 'smooth' })
     isSearching = true

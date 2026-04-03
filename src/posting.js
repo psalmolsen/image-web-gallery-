@@ -6,13 +6,13 @@ import { collection, addDoc, getDocs, doc, getDoc, updateDoc } from "https://www
 
 
 
-//clodunary config
+// Cloudinary config
 const cloudinaryConfig = {
   cloudName: "drfzsz1t6",
   uploadPreset: "image-gallery"
 }
 
-//add artist on the same team
+// Add artist on the same team
 function addArtistInput(roleWrapper) {
   const container = roleWrapper.querySelector('.artist-inputs')
   const placeholder = roleWrapper.querySelector('input').placeholder
@@ -70,7 +70,7 @@ document.querySelectorAll('[data-role]').forEach(wrapper => {
 
 // Artwork data form (collect values)
 class FormValues {
-  //setters function 
+  // Setters function 
   setFormValues() {
     // artwork data  
     this.file = document.getElementById("FileInput").files
@@ -88,7 +88,7 @@ class FormValues {
     //artwork category
     this.artcategory = document.getElementById("category").value
   }
-  //setters function 
+  // Getters function 
   getFormValues() {
     this.setFormValues()
     return {
@@ -109,7 +109,7 @@ class FormValues {
     }
   }
 
-  // validate function (check if values are empty)  
+  // Validate function (check if values are empty)  
   validateForm() {
     let data = this.getFormValues()
 
@@ -142,7 +142,7 @@ class FormValues {
     return true
   }
 
-  //clear textfield after submit
+  // Clear textfield after submit
   clearForm() {
     document.querySelector("#FileInput").value = null
     document.querySelector("#titleInput").value = null
@@ -198,7 +198,7 @@ fileoverview()
 
 
 
-//add new category 
+// Add new category 
 async function saveCategory(newCategrory) {
   await addDoc(collection(db, "categories"), {
     name: newCategrory
@@ -249,7 +249,7 @@ async function loadCategory() {
 addCategory()
 loadCategory()
 
-//cloudinary upload function
+// Cloudinary upload function
 async function cloudinaryUpload(file, title) {
   const dataFile = new FormData()
   const safeTitle = title ? title.replace(/[^a-zA-Z0-9-_]/g, "-") : "artwork"
@@ -273,7 +273,7 @@ async function cloudinaryUploadMultiple(files, title) {
   return Promise.all(uploadTasks)
 }
 
-//firebase upload
+// Firebase upload
 async function firebaseUpload(data, urls, editingArtworkId) {
   const cleanUrls = Array.isArray(urls) ? urls.filter(Boolean) : []
   const primaryUrl = cleanUrls[0] || null
@@ -318,7 +318,7 @@ async function firebaseUpload(data, urls, editingArtworkId) {
 }
 
 
-//publish button
+// Publish button
 const publishBtn = document.querySelector("#publishBtn")
 publishBtn.addEventListener("click", async function () {
 
@@ -355,13 +355,13 @@ publishBtn.addEventListener("click", async function () {
 
 
 
-//edit 
+// Edit 
 const urlParams = new URLSearchParams(window.location.search)
 const editingArtworkId = urlParams.get('id')
 const docRef = doc(db, "artworks", editingArtworkId)
 const docSnap = await getDoc(docRef)
 
-//show exisiting file in pills
+// Show existing file in pills
 function showExistingFiles(urls) {
   if (!urls || urls.length === 0) return
 
