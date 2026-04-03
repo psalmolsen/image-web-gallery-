@@ -358,9 +358,7 @@ function cardShare(card, docId) {
         activeShareDropdown = null
         try {
             await navigator.clipboard.writeText(shareUrl)
-            if (typeof window.showCopyToast === 'function') {
-                window.showCopyToast()
-            }
+            showCopyToast()
         } catch (err) {
             console.error(err)
         }
