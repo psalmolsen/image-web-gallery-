@@ -319,12 +319,15 @@ function cardShare(card, docId) {
     const imagecode = card.querySelector('.image-code')
     const copylink = card.querySelector('.copy-link')
 
-    const shareUrl = `${window.location.origin}/src/Dashboard.html?artwork=${docId}`
+    // Check if running locally or in production
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    const pathPrefix = isLocal ? '/src' : ''
+    const shareUrl = `${window.location.origin}${pathPrefix}/dashboard.html?artwork=${docId}`
 
     cardShareBtn.addEventListener('click', (e) => {
         e.stopPropagation()
         if (window.innerWidth < 768) {
-            if (typeof window.openShareSheet === 'function') window.openShareSheet(shareUrl)
+            if (typeof window.openShareSheet === 'function') window.openShareSheet(shareUrl, docId)
         } else {
             if (activeShareDropdown && activeShareDropdown !== sharedropdown) {
                 closeDropdown(activeShareDropdown)
@@ -339,16 +342,12 @@ function cardShare(card, docId) {
         }
     })
 
-    imagecode.addEventListener('click', async (e) => {
+    imagecode.addEventListener('click', (e) => {
         e.stopPropagation()
-        sharedropdown.classList.add('hidden')
+        closeDropdown(sharedropdown)
         activeShareDropdown = null
-        if (navigator.share) {
-            try {
-                await navigator.share({ title: document.title, url: shareUrl })
-            } catch (err) {
-                if (err.name !== 'AbortError') console.error(err)
-            }
+        if (typeof window.showQRModal === 'function') {
+            window.showQRModal(docId)
         }
     })
 
@@ -358,7 +357,7 @@ function cardShare(card, docId) {
         activeShareDropdown = null
         try {
             await navigator.clipboard.writeText(shareUrl)
-            showCopyToast()
+            if (typeof window.showCopyToast === 'function') window.showCopyToast()
         } catch (err) {
             console.error(err)
         }

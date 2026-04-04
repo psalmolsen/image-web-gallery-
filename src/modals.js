@@ -143,23 +143,23 @@ function preloadMedia(url) {
 function prefetchAdjacentMedia(index, urls) {
     const nextIndex = (index + 1) % urls.length
     const prevIndex = (index - 1 + urls.length) % urls.length
-    
+
     if (urls.length > 1) {
-        preloadMedia(urls[nextIndex]).catch(() => {})
-        preloadMedia(urls[prevIndex]).catch(() => {})
+        preloadMedia(urls[nextIndex]).catch(() => { })
+        preloadMedia(urls[prevIndex]).catch(() => { })
     }
 }
 
 function showMediaInViewer(index) {
     const { urls } = mediaViewerState
     const url = urls[index]
-    
+
     const imgEl = document.getElementById('mediaViewerImage')
     const vidEl = document.getElementById('mediaViewerVideo')
     const counter = document.getElementById('mediaViewerCounter')
-    
+
     counter.textContent = `${index + 1} / ${urls.length}`
-    
+
     if (isVideoUrl(url)) {
         imgEl.classList.add('hidden')
         vidEl.classList.remove('hidden')
@@ -169,7 +169,7 @@ function showMediaInViewer(index) {
         imgEl.classList.remove('hidden')
         imgEl.src = url
     }
-    
+
     // Prefetch adjacent media
     prefetchAdjacentMedia(index, urls)
 }
@@ -178,7 +178,7 @@ function updateNavigationButtons() {
     const { urls } = mediaViewerState
     const prevBtn = document.getElementById('mediaViewerPrev')
     const nextBtn = document.getElementById('mediaViewerNext')
-    
+
     if (urls.length > 1) {
         prevBtn.classList.remove('opacity-0', 'pointer-events-none')
         nextBtn.classList.remove('opacity-0', 'pointer-events-none')
@@ -191,21 +191,21 @@ function updateNavigationButtons() {
 export function openMediaViewer(urls, startIndex) {
     mediaViewerState.urls = urls
     mediaViewerState.currentIndex = startIndex
-    
+
     const overlay = document.getElementById('mediaViewerOverlay')
     const url = urls[startIndex]
-    
+
     // Close full content modal first
     const fullSheetOverlay = document.getElementById('fullSheetOverlay')
     if (fullSheetOverlay && fullSheetOverlay.classList.contains('opacity-100')) {
         closeFullSheet()
     }
-    
+
     // Wait for media to load before opening viewer
     preloadMedia(url).then(() => {
         showMediaInViewer(startIndex)
         updateNavigationButtons()
-        
+
         overlay.classList.remove('pointer-events-none')
         requestAnimationFrame(() => {
             overlay.classList.remove('opacity-0')
@@ -219,14 +219,14 @@ export function openMediaViewer(urls, startIndex) {
 function closeMediaViewer() {
     const overlay = document.getElementById('mediaViewerOverlay')
     const vidEl = document.getElementById('mediaViewerVideo')
-    
+
     // Pause video if playing
     vidEl.pause()
     vidEl.src = ''
-    
+
     overlay.classList.remove('opacity-100')
     overlay.classList.add('opacity-0')
-    
+
     setTimeout(() => {
         overlay.classList.add('pointer-events-none')
     }, 300)
@@ -235,22 +235,161 @@ function closeMediaViewer() {
 function navigateMedia(direction) {
     const { urls, currentIndex } = mediaViewerState
     const vidEl = document.getElementById('mediaViewerVideo')
-    
+
     // Pause current video if playing
     if (!vidEl.classList.contains('hidden')) {
         vidEl.pause()
     }
-    
+
     let newIndex
     if (direction === 'next') {
         newIndex = (currentIndex + 1) % urls.length
     } else {
         newIndex = (currentIndex - 1 + urls.length) % urls.length
     }
-    
+
     mediaViewerState.currentIndex = newIndex
     showMediaInViewer(newIndex)
 }
+
+// QR Code modal
+
+export function showQRModal(docId) {
+    if (typeof QRCode === 'undefined') {
+        alert('QR Code library not loaded. Please refresh the page.')
+        return
+    }
+
+    const overlay = document.getElementById('qrModalOverlay')
+    const canvas = document.getElementById('qrCanvas')
+    const domainEl = document.getElementById('qrDomain')
+
+    if (!overlay || !canvas || !domainEl) {
+        alert('Modal elements not found')
+        return
+    }
+
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    const pathPrefix = isLocal ? '/src' : ''
+    const shareUrl = `${window.location.origin}${pathPrefix}/dashboard.html?artwork=${docId}`
+
+    domainEl.textContent = window.location.hostname || 'image-gallery-2748a.web.app'
+
+    const ctx = canvas.getContext('2d')
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+    const hidden = document.createElement('div')
+    hidden.style.display = 'none'
+    document.body.appendChild(hidden)
+
+    try {
+        new QRCode(hidden, {
+            text: shareUrl,
+            width: 240,
+            height: 240,
+            colorDark: '#C0451A',
+            colorLight: '#ffffff',
+            correctLevel: QRCode.CorrectLevel.M
+        })
+    } catch (error) {
+        document.body.removeChild(hidden)
+        alert('Error creating QR code: ' + error.message)
+        return
+    }
+
+    let attempts = 0
+    function checkAndOpenModal() {
+        const qrImg = hidden.querySelector('img') || hidden.querySelector('canvas')
+        
+        if (!qrImg) {
+            attempts++
+            if (attempts > 100) {
+                document.body.removeChild(hidden)
+                alert('Failed to generate QR code - timeout')
+                return
+            }
+            setTimeout(checkAndOpenModal, 50)
+            return
+        }
+
+        if (qrImg.tagName === 'IMG') {
+            if (!qrImg.complete || !qrImg.src) {
+                attempts++
+                if (attempts > 100) {
+                    document.body.removeChild(hidden)
+                    alert('Failed to generate QR code - image load timeout')
+                    return
+                }
+                setTimeout(checkAndOpenModal, 50)
+                return
+            }
+            const img = new Image()
+            img.onload = () => {
+                ctx.drawImage(img, 0, 0, 240, 240)
+                document.body.removeChild(hidden)
+                openModal()
+            }
+            img.onerror = () => {
+                document.body.removeChild(hidden)
+                alert('Failed to load QR code image')
+            }
+            img.src = qrImg.src
+        } else {
+            ctx.drawImage(qrImg, 0, 0, 240, 240)
+            document.body.removeChild(hidden)
+            openModal()
+        }
+    }
+
+    function openModal() {
+        overlay.classList.remove('pointer-events-none')
+        requestAnimationFrame(() => {
+            overlay.classList.remove('opacity-0')
+            overlay.classList.add('opacity-100')
+        })
+    }
+
+    checkAndOpenModal()
+}
+
+function closeQRModal() {
+    const overlay = document.getElementById('qrModalOverlay')
+
+    overlay.classList.remove('opacity-100')
+    overlay.classList.add('opacity-0')
+
+    setTimeout(() => {
+        overlay.classList.add('pointer-events-none')
+    }, 300)
+}
+
+function downloadQRCode() {
+    const qrCard = document.getElementById('qrCard')
+
+    // Use html2canvas to capture the entire QR card
+    import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js').then(module => {
+        const html2canvas = module.default
+
+        html2canvas(qrCard, {
+            backgroundColor: '#FAF3E8',
+            scale: 2
+        }).then(canvas => {
+            canvas.toBlob(blob => {
+                const url = URL.createObjectURL(blob)
+                const a = document.createElement('a')
+                a.href = url
+                a.download = 'iMAGE-QR-Code.png'
+                a.click()
+                URL.revokeObjectURL(url)
+            })
+        })
+    })
+}
+
+// Make showQRModal globally available
+window.showQRModal = showQRModal
+
+
 
 // Event listeners
 
@@ -259,32 +398,32 @@ setTimeout(() => {
     // Full content modal listeners
     const fullSheetOverlay = document.getElementById('fullSheetOverlay')
     const fullSheetClose = document.getElementById('fullSheetClose')
-    
+
     fullSheetOverlay?.addEventListener('click', (e) => {
         if (e.target === fullSheetOverlay) closeFullSheet()
     })
     fullSheetClose?.addEventListener('click', closeFullSheet)
-    
+
     // Media viewer listeners
     const closeBtn = document.getElementById('mediaViewerClose')
     const prevBtn = document.getElementById('mediaViewerPrev')
     const nextBtn = document.getElementById('mediaViewerNext')
     const overlay = document.getElementById('mediaViewerOverlay')
     const container = document.getElementById('mediaViewerContainer')
-    
+
     closeBtn?.addEventListener('click', closeMediaViewer)
     prevBtn?.addEventListener('click', () => navigateMedia('prev'))
     nextBtn?.addEventListener('click', () => navigateMedia('next'))
-    
+
     overlay?.addEventListener('click', (e) => {
         if (e.target === overlay) closeMediaViewer()
     })
-    
+
     // Touch swipe support
     container?.addEventListener('touchstart', (e) => {
         mediaViewerState.touchStartX = e.changedTouches[0].clientX
     }, { passive: true })
-    
+
     container?.addEventListener('touchend', (e) => {
         if (mediaViewerState.touchStartX === null) return
         const delta = e.changedTouches[0].clientX - mediaViewerState.touchStartX
@@ -293,7 +432,19 @@ setTimeout(() => {
         }
         mediaViewerState.touchStartX = null
     }, { passive: true })
-    
+
+    // QR modal listeners
+    const qrModalOverlay = document.getElementById('qrModalOverlay')
+    const qrModalClose = document.getElementById('qrModalClose')
+    const qrDownloadBtn = document.getElementById('qrDownloadBtn')
+
+    qrModalOverlay?.addEventListener('click', (e) => {
+        if (e.target === qrModalOverlay) closeQRModal()
+    })
+    qrModalClose?.addEventListener('click', closeQRModal)
+    qrDownloadBtn?.addEventListener('click', downloadQRCode)
+
+
     // ESC key to close modals
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {

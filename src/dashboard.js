@@ -37,10 +37,10 @@ const emptyState = document.querySelector('#emptyState')
 function showCopyToast() {
     const toast = document.getElementById('copyToast')
     if (!toast) return
-    
+
     toast.classList.remove('opacity-0', 'pointer-events-none')
     toast.classList.add('opacity-100')
-    
+
     setTimeout(() => {
         toast.classList.add('opacity-0', 'pointer-events-none')
         toast.classList.remove('opacity-100')
@@ -95,9 +95,11 @@ const shareSheetCopy = document.querySelector('#shareSheetCopy')
 const shareSheetImageCode = document.querySelector('#shareSheetImageCode')
 const shareSheetClose = document.querySelector('#shareSheetClose')
 let activeShareUrl = ''
+let activeShareDocId = ''
 
-window.openShareSheet = function (url) {
+window.openShareSheet = function (url, docId) {
     activeShareUrl = url
+    activeShareDocId = docId
     shareSheetOverlay.classList.remove('pointer-events-none')
     requestAnimationFrame(() => {
         shareSheetOverlay.classList.remove('opacity-0')
@@ -200,15 +202,11 @@ shareSheetCopy?.addEventListener('click', async () => {
 
 
 
-shareSheetImageCode?.addEventListener('click', async () => {
-    if (navigator.share) {
-        try {
-            await navigator.share({ title: document.title, url: activeShareUrl })
-        } catch (err) {
-            if (err.name !== 'AbortError') console.error(err)
-        }
-    }
+shareSheetImageCode?.addEventListener('click', () => {
     closeShareSheet()
+    if (typeof window.showQRModal === 'function') {
+        window.showQRModal(activeShareDocId)
+    }
 })
 
 document.addEventListener('click', () => {
@@ -338,7 +336,7 @@ if (artworkId) {
             openFullSheet(artwork)
         }
     }, 100)
-    
+
     // Stop checking after 10 seconds if artwork not found
     setTimeout(() => clearInterval(checkAndOpen), 10000)
 }
@@ -383,6 +381,8 @@ footer()
 //todo: slow data fetching on searching
 
 //todo: image qr code
-//todo: deploy it but not searchable on public so that we can test it with real link for sharing
 //todo: secure the site (no pop up ads etc.)
 //todo: after development, uncheck the firebase development rules so that the database is secure and not all info fecthcing to the web
+//todo: filter some times not accurate (simetimes iot only show one artwotrks even if the artwqorks is 2 )
+
+//todo: Warning: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
