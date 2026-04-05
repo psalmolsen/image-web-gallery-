@@ -32,6 +32,12 @@ let allArtworks = []
 let isSearching = false
 const layout = document.querySelector('#layout')
 const emptyState = document.querySelector('#emptyState')
+const worksSection = document.querySelector('#worksSection')
+const aboutSection = document.querySelector('#aboutSection')
+const fab = document.querySelector('.fab')
+const navWorksButtons = document.querySelectorAll('[data-nav-target="works"]')
+const navAboutButtons = document.querySelectorAll('[data-nav-target="about"]')
+let currentView = 'works'
 
 // Toast notification function
 function showCopyToast() {
@@ -49,6 +55,42 @@ function showCopyToast() {
 
 // Make it globally available for card.js
 window.showCopyToast = showCopyToast
+
+function updateNavStyles() {
+    navWorksButtons.forEach(btn => {
+        const isActive = currentView === 'works'
+        btn.classList.toggle('text-orange-500', isActive)
+        btn.classList.toggle('border-orange-500', isActive && btn.classList.contains('border-b-2'))
+        btn.classList.toggle('text-stone-500', !isActive && btn.classList.contains('border-b-2'))
+        btn.querySelectorAll('svg, span').forEach(el => {
+            el.classList.toggle('text-orange-500', isActive)
+            el.classList.toggle('text-[#4a4a4a]', !isActive)
+        })
+    })
+
+    navAboutButtons.forEach(btn => {
+        const isActive = currentView === 'about'
+        btn.classList.toggle('text-orange-500', isActive)
+        btn.classList.toggle('border-orange-500', isActive && btn.classList.contains('border-b-2'))
+        btn.classList.toggle('text-stone-500', !isActive && btn.classList.contains('border-b-2'))
+        btn.querySelectorAll('svg, span').forEach(el => {
+            el.classList.toggle('text-orange-500', isActive)
+            el.classList.toggle('text-[#4a4a4a]', !isActive)
+        })
+    })
+}
+
+function setActiveView(view) {
+    currentView = view
+    const showWorks = view === 'works'
+
+    worksSection?.classList.toggle('hidden', !showWorks)
+    aboutSection?.classList.toggle('hidden', showWorks)
+    fab?.classList.toggle('hidden', !showWorks)
+
+    updateNavStyles()
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+}
 
 
 
@@ -111,6 +153,7 @@ window.openShareSheet = function (url, docId) {
 
 // Category filtering
 window.filterByCategory = function (category) {
+    setActiveView('works')
     window.scrollTo({ top: 0, behavior: 'smooth' })
     isSearching = true
     const filtered = allArtworks.filter(artwork => {
@@ -143,6 +186,7 @@ window.filterByCategory = function (category) {
 
 // Artist filtering
 window.filterByArtist = function (artistName) {
+    setActiveView('works')
     window.scrollTo({ top: 0, behavior: 'smooth' })
     isSearching = true
     const filtered = allArtworks.filter(artwork => {
@@ -215,6 +259,7 @@ document.addEventListener('click', () => {
 
 //search
 function filterArtworks(query) {
+    setActiveView('works')
     isSearching = true
     const filtered = allArtworks.filter(artwork => {
         return artwork.title.toLowerCase().includes(query) ||
@@ -238,6 +283,7 @@ function bindSearch(input) {
             if (query) {
                 filterArtworks(query)
             } else {
+                setActiveView('works')
                 isSearching = false
                 renderCards(allArtworks)
             }
@@ -248,6 +294,7 @@ function bindSearch(input) {
         if (query) {
             filterArtworks(query)
         } else {
+            setActiveView('works')
             isSearching = false
             renderCards(allArtworks)
         }
@@ -260,6 +307,7 @@ function performSearch(input) {
     if (query) {
         filterArtworks(query)
     } else {
+        setActiveView('works')
         isSearching = false
         renderCards(allArtworks)
     }
@@ -359,20 +407,15 @@ window.addEventListener('resize', () => {
 
 
 function footer() {
-    const navWorks = document.querySelector('#nav-works')
-    const navAbout = document.querySelector('#nav-about')
+    navWorksButtons.forEach(btn => {
+        btn.addEventListener('click', () => setActiveView('works'))
+    })
 
-    function setActive(activeBtn, inactiveBtn) {
-        activeBtn.querySelectorAll('svg, span').forEach(el => {
-            el.classList.replace('text-stone-400', 'text-orange-600')
-        })
-        inactiveBtn.querySelectorAll('svg, span').forEach(el => {
-            el.classList.replace('text-orange-600', 'text-stone-400')
-        })
-    }
+    navAboutButtons.forEach(btn => {
+        btn.addEventListener('click', () => setActiveView('about'))
+    })
 
-    navWorks.addEventListener('click', () => setActive(navWorks, navAbout))
-    navAbout.addEventListener('click', () => setActive(navAbout, navWorks))
+    updateNavStyles()
 }
 
 footer()
