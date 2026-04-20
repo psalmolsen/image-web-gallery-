@@ -160,7 +160,7 @@
             onerror="this.style.display='none'" />
         </div>
         <h1 class="font-fraunces text-xl tracking-[0.06em] text-stone-200">
-          <em class="text-orange-500 italic">i</em>MAGE
+          <em class="text-orange-500 italic">i</em><em class="text-stone-200 italic">MAGE</em>
         </h1>
       </a>
 
@@ -355,41 +355,25 @@
     </section>
 
     <section id="aboutSection" class="hidden">
-      <div
-        class="overflow-hidden rounded-[32px] border border-[#1f1f1f] bg-[#f3eee7] text-[#181512] shadow-[0_18px_60px_rgba(0,0,0,0.22)]">
-        <div class="relative overflow-hidden border-b border-black/10 bg-[#171411] p-7 text-[#f4efe8] sm:p-10 lg:p-14">
+      <div class="overflow-hidden rounded-[32px] border border-[#1f1f1f] shadow-[0_18px_60px_rgba(0,0,0,0.22)]">
+        <div class="relative overflow-hidden bg-[#171411] p-7 text-[#f4efe8] sm:p-10 lg:p-14">
           <div
             class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_20%,rgba(194,86,43,0.22),transparent_28%),radial-gradient(circle_at_82%_28%,rgba(231,135,74,0.12),transparent_24%)]">
           </div>
-          <div
-            class="pointer-events-none absolute right-20 top-20 h-5 w-5 rounded-full bg-[#f0c24b] shadow-[0_0_30px_rgba(240,194,75,0.45)]">
-          </div>
-          <div
-            class="pointer-events-none absolute bottom-14 right-12 h-20 w-20 rounded-full border border-[#e8874a]/25">
-          </div>
 
-          <div class="relative mb-12 flex items-center justify-between gap-4">
-            <div>
-              <p class="font-syne text-[10px] font-bold uppercase tracking-[0.34em] text-[#c4b4a5]">About Us</p>
-              <p class="mt-2 font-outfit text-xs uppercase tracking-[0.28em] text-[#9f8f81]">Cavite State University -
-                Carmona Campus</p>
-            </div>
-            <div
-              class="h-14 w-14 overflow-hidden rounded-full border border-white/10 bg-white/5 shadow-[0_12px_30px_rgba(0,0,0,0.16)]">
-              <img alt="iMAGE logo" src="imgs/imgNoBg.png" class="h-full w-full object-contain p-1"
-                onerror="this.style.display='none'" />
-            </div>
+          <div class="relative mb-12">
+            <p class="font-syne text-[10px] font-bold uppercase tracking-[0.34em] text-[#c4b4a5]">About Us</p>
+            <p class="mt-2 font-outfit text-xs uppercase tracking-[0.28em] text-[#9f8f81]">Cavite State University -
+              Carmona Campus</p>
           </div>
 
           <div class="relative">
-            <p class="font-syne text-[11px] uppercase tracking-[0.3em] text-[#d2c2b4]">Creative student organization</p>
-
             <div class="mt-4 flex items-center justify-between gap-4 sm:gap-6">
               <div class="min-w-0 flex-1">
                 <h2
                   class="max-w-none font-fraunces text-[2rem] leading-[0.9] tracking-[-0.07em] sm:text-[3rem] lg:text-[4.5rem]">
-                  <span class="block">Individual</span>
-                  <span class="block">Multimedia Arts</span>
+                  <span class="block text-[#e8874a]">Individual</span>
+                  <span class="block text-[#e8874a]">Multimedia Arts</span>
                   <span class="block text-[#e8874a]">Guild Enthusiasts</span>
                 </h2>
               </div>
@@ -400,199 +384,49 @@
               </div>
             </div>
 
-            <p class="mt-8 max-w-xl font-outfit text-[15px] leading-8 text-[#d7ccc1] sm:text-[17px]">
+            <!-- Social Links -->
+            <div class="mt-4 flex items-center gap-4">
+              <!-- Instagram -->
+              <a href="https://www.instagram.com/image_cvsucarmona" target="_blank" aria-label="Instagram"
+                class="flex items-center justify-center w-10 h-10 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 transition-colors duration-200">
+                <svg class="w-5 h-5 text-[#f4efe8]" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                </svg>
+              </a>
+              <!-- Facebook -->
+              <a href="https://web.facebook.com/image.cvsucarmona" target="_blank" aria-label="Facebook"
+                class="flex items-center justify-center w-10 h-10 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 transition-colors duration-200">
+                <svg class="w-5 h-5 text-[#f4efe8]" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                </svg>
+              </a>
+              <!-- TikTok -->
+              <a href="https://www.tiktok.com/@image.cvsucarmona" target="_blank" aria-label="TikTok"
+                class="flex items-center justify-center w-10 h-10 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 transition-colors duration-200">
+                <svg class="w-5 h-5 text-[#f4efe8]" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.75a4.85 4.85 0 01-1.01-.06z" />
+                </svg>
+              </a>
+
+            </div>
+
+            <p class="mt-8 w-full font-fraunces text-[15px] leading-8 text-[#d7ccc1] sm:text-[17px]">
               iMAGE is a Non-Academic Student Organization at Cavite State University - Carmona Campus.
             </p>
+
+            <p class="mt-4 w-full font-fraunces text-[15px] leading-8 text-[#d7ccc1] sm:text-[17px]">
+              iMAGE is the creative organization of CVSU Carmona dedicated to producing and archiving visual and
+              multimedia artworks. We are a community of student artists, photographers, writers, and videographers
+              united by a passion for creativity and collaboration. Follow us on our socials and be part of our growing
+              creative community.
+            </p>
+
           </div>
 
-          <div class="relative mt-14 grid gap-5 lg:grid-cols-[1.15fr_0.85fr]">
-            <div class="rounded-[32px] border border-white/10 bg-white/5 p-7 backdrop-blur-sm sm:p-9">
-              <p class="font-syne text-[10px] font-bold uppercase tracking-[0.28em] text-[#c8b8aa]">Identity</p>
-              <h3 class="mt-5 max-w-lg font-fraunces text-3xl leading-[1.02] text-[#f4efe8] sm:text-4xl">
-                Student-made work deserves a space with memory, texture, and care.
-              </h3>
-              <p class="mt-6 max-w-xl font-outfit text-sm leading-8 text-[#d7ccc1] sm:text-[15px]">
-                iMAGE turns documentation into a living archive, giving exhibits, collaborations, and campus moments a
-                format that feels intentionally published instead of temporarily posted.
-              </p>
-            </div>
 
-            <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-1">
-              <div class="rounded-[28px] border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
-                <p class="font-syne text-[10px] font-bold uppercase tracking-[0.24em] text-[#c8b8aa]">Focus</p>
-                <p class="mt-6 font-fraunces text-[2rem] leading-none text-[#f4efe8]">Visual Storytelling</p>
-              </div>
-              <div class="rounded-[28px] border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
-                <p class="font-syne text-[10px] font-bold uppercase tracking-[0.24em] text-[#c8b8aa]">Community</p>
-                <p class="mt-6 font-fraunces text-[2rem] leading-none text-[#f4efe8]">Student Artists</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="border-b border-black/10 bg-[#f6f1e9] p-7 sm:p-10 lg:p-14">
-          <div class="grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
-            <div>
-              <p
-                class="inline-flex rounded-full border border-[#d7cdc2] px-4 py-1 font-syne text-[10px] font-bold uppercase tracking-[0.18em] text-[#8b7e72]">
-                About iMAGE</p>
-              <h3 class="mt-6 max-w-lg font-fraunces text-4xl leading-[1.02] sm:text-5xl">
-                Meet iMAGE: a student archive shaped by collaboration.
-              </h3>
-              <p class="mt-6 max-w-xl font-outfit text-[15px] leading-8 text-[#5a534d] sm:text-[16px]">
-                We collect campus moments, original artworks, and multimedia stories in a way that feels organized,
-                readable, and intentionally designed for both memory and sharing.
-              </p>
-            </div>
-
-            <div class="grid gap-5">
-              <div class="rounded-[28px] border border-black/10 bg-[#ece3d7] p-6 sm:p-8">
-                <p class="font-syne text-[10px] font-bold uppercase tracking-[0.24em] text-[#7a6457]">Archive</p>
-                <h4 class="mt-5 max-w-sm font-fraunces text-3xl leading-[1.02]">
-                  A curated home for campus visuals and student-made stories.
-                </h4>
-                <p class="mt-5 max-w-md font-outfit text-sm leading-8 text-[#5d554f]">
-                  The dashboard keeps published works browsable, searchable, and ready to share while preserving a warm,
-                  gallery-like viewing experience.
-                </p>
-              </div>
-
-              <div class="rounded-[30px] overflow-hidden border border-black/10 bg-[#181512] p-7 text-[#f4efe8]">
-                <p class="text-4xl font-fraunces leading-none">40%</p>
-                <p class="mt-2 font-outfit text-sm text-[#d8cbbd]">Increased growth in visibility through stronger
-                  visual documentation.</p>
-                <div class="mt-8 flex flex-wrap gap-3">
-                  <span
-                    class="rounded-full bg-white/10 px-4 py-2 text-xs uppercase tracking-[0.18em] text-[#e3d8ce]">Photography</span>
-                  <span
-                    class="rounded-full bg-white/10 px-4 py-2 text-xs uppercase tracking-[0.18em] text-[#e3d8ce]">Multimedia</span>
-                  <span
-                    class="rounded-full bg-white/10 px-4 py-2 text-xs uppercase tracking-[0.18em] text-[#e3d8ce]">Publication</span>
-                  <span
-                    class="rounded-full bg-white/10 px-4 py-2 text-xs uppercase tracking-[0.18em] text-[#e3d8ce]">Campus
-                    Archive</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="border-b border-black/10 bg-[#fbf8f2] p-7 sm:p-10 lg:p-14">
-          <div class="grid gap-10 lg:grid-cols-[0.78fr_1.22fr]">
-            <div>
-              <p
-                class="inline-flex rounded-full border border-[#d7cdc2] px-4 py-1 font-syne text-[10px] font-bold uppercase tracking-[0.18em] text-[#8b7e72]">
-                How We Work</p>
-              <h3 class="mt-6 max-w-md font-fraunces text-4xl leading-[1.03] sm:text-5xl">
-                Let us show how iMAGE drives every visual story from capture to archive.
-              </h3>
-              <p class="mt-6 max-w-md font-outfit text-[15px] leading-8 text-[#5c544e]">
-                We keep the process simple, collaborative, and publication-ready so every event and artwork can move
-                naturally into the archive.
-              </p>
-            </div>
-
-            <div class="relative min-h-[760px]">
-              <div
-                class="pointer-events-none absolute left-[14%] top-10 h-[82%] w-px border-l border-dashed border-[#cabeb2]">
-              </div>
-              <div
-                class="pointer-events-none absolute left-[14%] top-24 h-px w-[52%] border-t border-dashed border-[#cabeb2]">
-              </div>
-              <div
-                class="pointer-events-none absolute left-[14%] top-[43%] h-px w-[36%] border-t border-dashed border-[#cabeb2]">
-              </div>
-              <div
-                class="pointer-events-none absolute left-[14%] top-[72%] h-px w-[54%] border-t border-dashed border-[#cabeb2]">
-              </div>
-
-              <div
-                class="absolute left-[10%] top-8 h-5 w-5 rounded-full border-4 border-[#fbf8f2] bg-[#181512] shadow-[0_8px_18px_rgba(0,0,0,0.12)]">
-              </div>
-              <div
-                class="absolute left-[10%] top-[41%] h-5 w-5 rounded-full border-4 border-[#fbf8f2] bg-[#181512] shadow-[0_8px_18px_rgba(0,0,0,0.12)]">
-              </div>
-              <div
-                class="absolute left-[10%] top-[70%] h-5 w-5 rounded-full border-4 border-[#fbf8f2] bg-[#181512] shadow-[0_8px_18px_rgba(0,0,0,0.12)]">
-              </div>
-
-              <div
-                class="ml-auto w-[85%] rounded-[28px] border border-black/10 bg-white p-6 shadow-[0_18px_40px_rgba(0,0,0,0.08)] sm:w-[78%]">
-                <p class="font-syne text-[10px] font-bold uppercase tracking-[0.24em] text-[#8d8175]">01</p>
-                <p class="mt-6 font-fraunces text-3xl leading-none">Mission</p>
-                <p class="mt-5 font-outfit text-sm leading-7 text-[#5d554f]">
-                  Create a space where student work can be seen, preserved, and celebrated long after each event.
-                </p>
-              </div>
-
-              <div
-                class="mt-16 w-[82%] rounded-[28px] border border-black/10 bg-[#f3ece4] p-6 shadow-[0_18px_40px_rgba(0,0,0,0.08)] sm:w-[70%]">
-                <p class="font-syne text-[10px] font-bold uppercase tracking-[0.24em] text-[#8d8175]">02</p>
-                <p class="mt-6 font-fraunces text-3xl leading-none">Practice</p>
-                <p class="mt-5 font-outfit text-sm leading-7 text-[#5d554f]">
-                  Blend photography, film, layout, and documentation into one unified publication-ready workflow.
-                </p>
-              </div>
-
-              <div
-                class="ml-auto mt-16 w-[86%] rounded-[28px] border border-[#2b2622] bg-[#181512] p-6 text-[#f3eee7] shadow-[0_18px_40px_rgba(0,0,0,0.14)] sm:w-[76%]">
-                <p class="font-syne text-[10px] font-bold uppercase tracking-[0.24em] text-[#b8a99b]">03</p>
-                <p class="mt-6 font-fraunces text-3xl leading-none">Values</p>
-                <p class="mt-5 font-outfit text-sm leading-7 text-[#ddd1c6]">
-                  Collaboration, authorship, and respect for every image shared through the organization.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-[#11100e] px-7 py-10 text-[#f4efe8] sm:px-10 lg:px-14 lg:py-14">
-          <div class="grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
-            <div>
-              <p
-                class="inline-flex rounded-full border border-white/10 px-4 py-1 font-syne text-[10px] font-bold uppercase tracking-[0.18em] text-[#b9aa9d]">
-                What We Do</p>
-              <h3 class="mt-6 max-w-md font-fraunces text-4xl leading-[1.02] sm:text-5xl">
-                We design meaningful, not just quick impressions.
-              </h3>
-              <p class="mt-6 max-w-sm font-outfit text-[15px] leading-8 text-[#d9cec3]">
-                iMAGE creates a viewing experience where shared work feels intentional, credited, and worth revisiting.
-              </p>
-            </div>
-
-            <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-              <div class="rounded-[22px] border border-white/10 bg-white/[0.03] p-5">
-                <p class="font-fraunces text-2xl">Brand Identity</p>
-                <p class="mt-4 font-outfit text-sm leading-7 text-[#d9cec3]">A recognizable visual presence for the
-                  organization and its archive.</p>
-              </div>
-              <div class="rounded-[22px] border border-white/10 bg-white/[0.03] p-5">
-                <p class="font-fraunces text-2xl">Illustration</p>
-                <p class="mt-4 font-outfit text-sm leading-7 text-[#d9cec3]">Editorial graphics and visual accents that
-                  support storytelling.</p>
-              </div>
-              <div class="rounded-[22px] border border-white/10 bg-white/[0.03] p-5">
-                <p class="font-fraunces text-2xl">UI/UX Design</p>
-                <p class="mt-4 font-outfit text-sm leading-7 text-[#d9cec3]">Readable interfaces for browsing,
-                  searching, and sharing artworks.</p>
-              </div>
-              <div class="rounded-[22px] border border-white/10 bg-white/[0.03] p-5">
-                <p class="font-fraunces text-2xl">Frontend Design</p>
-                <p class="mt-4 font-outfit text-sm leading-7 text-[#d9cec3]">Layouts that feel curated on both desktop
-                  and mobile devices.</p>
-              </div>
-              <div class="rounded-[22px] border border-white/10 bg-white/[0.03] p-5">
-                <p class="font-fraunces text-2xl">Artist/OS App</p>
-                <p class="mt-4 font-outfit text-sm leading-7 text-[#d9cec3]">A student-friendly archive that supports
-                  artist discovery and access.</p>
-              </div>
-              <div class="rounded-[22px] border border-white/10 bg-white/[0.03] p-5">
-                <p class="font-fraunces text-2xl">Publishing Note</p>
-                <p class="mt-4 font-outfit text-sm leading-7 text-[#d9cec3]">All uploaded images and videos are owned by
-                  iMAGE. Cropping or removing the watermark is prohibited.</p>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </section>
