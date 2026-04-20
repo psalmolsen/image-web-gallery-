@@ -275,40 +275,6 @@ export function showQRModal(docId) {
 
     domainEl.textContent = window.location.hostname || 'image-gallery-2748a.web.app'
 
-    const ctx = canvas.getContext('2d')
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-
-    const hidden = document.createElement('div')
-    hidden.style.position = 'fixed'
-    hidden.style.left = '-9999px'
-    hidden.style.top = '0'
-    hidden.style.opacity = '0'
-    hidden.style.pointerEvents = 'none'
-    hidden.style.visibility = 'hidden'
-    document.body.appendChild(hidden)
-
-    try {
-        new QRCode(hidden, {
-            text: shareUrl,
-            width: 240,
-            height: 240,
-            colorDark: '#C0451A',
-            colorLight: '#ffffff',
-            correctLevel: QRCode.CorrectLevel.M
-        })
-    } catch (error) {
-        document.body.removeChild(hidden)
-        alert('Error creating QR code: ' + error.message)
-        return
-    }
-
-    let attempts = 0
-    function cleanupHidden() {
-        if (hidden.parentNode) {
-            hidden.parentNode.removeChild(hidden)
-        }
-    }
-
     function openModal() {
         overlay.classList.remove('pointer-events-none')
         requestAnimationFrame(() => {
@@ -317,65 +283,23 @@ export function showQRModal(docId) {
         })
     }
 
-    function checkAndOpenModal() {
-        const qrCanvas = hidden.querySelector('canvas')
-        const qrImg = hidden.querySelector('img')
-
-        if (!qrCanvas && !qrImg) {
-            attempts++
-            if (attempts > 100) {
-                cleanupHidden()
-                alert('Failed to generate QR code - timeout')
-                return
-            }
-            setTimeout(checkAndOpenModal, 50)
+    QRCode.toCanvas(canvas, shareUrl, {
+        width: 240,
+        margin: 1,
+        color: {
+            dark: '#C0451A',
+            light: '#ffffff'
+        },
+        errorCorrectionLevel: 'M'
+    }, (error) => {
+        if (error) {
+            console.error('QR generation failed:', error)
+            alert('Failed to generate QR code')
             return
         }
 
-        if (qrCanvas) {
-            ctx.drawImage(qrCanvas, 0, 0, 240, 240)
-            cleanupHidden()
-            openModal()
-            return
-        }
-
-        if (!qrImg.complete || !qrImg.src) {
-            attempts++
-            if (attempts > 100) {
-                cleanupHidden()
-                alert('Failed to generate QR code - image load timeout')
-                return
-            }
-            if (qrImg.src) {
-                qrImg.onload = () => {
-                    ctx.drawImage(qrImg, 0, 0, 240, 240)
-                    cleanupHidden()
-                    openModal()
-                }
-                qrImg.onerror = () => {
-                    cleanupHidden()
-                    alert('Failed to load QR code image')
-                }
-            } else {
-                setTimeout(checkAndOpenModal, 50)
-            }
-            return
-        }
-
-        const img = new Image()
-        img.onload = () => {
-            ctx.drawImage(img, 0, 0, 240, 240)
-            cleanupHidden()
-            openModal()
-        }
-        img.onerror = () => {
-            cleanupHidden()
-            alert('Failed to load QR code image')
-        }
-        img.src = qrImg.src
-    }
-
-    checkAndOpenModal()
+        openModal()
+    })
 }
 
 function closeQRModal() {
