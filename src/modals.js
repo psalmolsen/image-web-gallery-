@@ -255,7 +255,7 @@ function navigateMedia(direction) {
 // QR Code modal
 
 export function showQRModal(docId) {
-    if (typeof QRCode === 'undefined') {
+    if (typeof QrCreator === 'undefined') {
         alert('QR Code library not loaded. Please refresh the page.')
         return
     }
@@ -274,6 +274,8 @@ export function showQRModal(docId) {
     const shareUrl = `${window.location.origin}${pathPrefix}/dashboard.html?artwork=${docId}`
 
     domainEl.textContent = window.location.hostname || 'image-gallery-2748a.web.app'
+    const ctx = canvas.getContext('2d')
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
 
     function openModal() {
         overlay.classList.remove('pointer-events-none')
@@ -283,23 +285,20 @@ export function showQRModal(docId) {
         })
     }
 
-    QRCode.toCanvas(canvas, shareUrl, {
-        width: 240,
-        margin: 1,
-        color: {
-            dark: '#C0451A',
-            light: '#ffffff'
-        },
-        errorCorrectionLevel: 'M'
-    }, (error) => {
-        if (error) {
-            console.error('QR generation failed:', error)
-            alert('Failed to generate QR code')
-            return
-        }
-
+    try {
+        QrCreator.render({
+            text: shareUrl,
+            radius: 0,
+            ecLevel: 'M',
+            fill: '#C0451A',
+            background: '#ffffff',
+            size: 240
+        }, canvas)
         openModal()
-    })
+    } catch (error) {
+        console.error('QR generation failed:', error)
+        alert(`Failed to generate QR code${error?.message ? `: ${error.message}` : ''}`)
+    }
 }
 
 function closeQRModal() {
