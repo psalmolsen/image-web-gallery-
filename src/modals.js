@@ -255,7 +255,9 @@ function navigateMedia(direction) {
 // QR Code modal
 
 export function showQRModal(docId) {
-    if (typeof QrCreator === 'undefined') {
+    const qrCreator = window.QrCreator
+
+    if (!qrCreator) {
         alert('QR Code library not loaded. Please refresh the page.')
         return
     }
@@ -286,7 +288,7 @@ export function showQRModal(docId) {
     }
 
     try {
-        QrCreator.render({
+        qrCreator.render({
             text: shareUrl,
             radius: 0,
             ecLevel: 'M',
