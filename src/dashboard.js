@@ -429,3 +429,5 @@ footer()
 //todo: filter some times not accurate (simetimes iot only show one artwotrks even if the artwqorks is 2 )
 
 //todo: Warning: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+//todo: dl qr code
+//todo: qr on mobile

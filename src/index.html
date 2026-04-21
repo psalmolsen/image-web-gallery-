@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>iMAGE | Explore the art you love</title>
+  <meta name="description"
+    content="Explore the artworks, artists, and stories collected inside the iMAGE digital archive." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            instrument: ['"Instrument Serif"', "serif"],
+            syne: ["Syne", "sans-serif"],
+            outfit: ["Outfit", "sans-serif"],
+          },
+          colors: {
+            accent: "#e8874a",
+            accentDeep: "#c0451a",
+            ink: "#0c0c0c",
+            panel: "#141414",
+            panelEdge: "#1f1f1f",
+            panelAlt: "#1a1a1a",
+            copy: "#e2d9cf",
+            muted: "#6b6460",
+            mist: "#faf3e8",
+          },
+          boxShadow: {
+            float: "0 24px 60px rgba(31, 55, 110, 0.18)",
+            soft: "0 18px 40px rgba(15, 23, 42, 0.08)",
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background:
+        radial-gradient(circle at top left, rgba(232, 135, 74, 0.12), transparent 24%),
+        linear-gradient(180deg, #171411 0%, #0c0c0c 100%);
+    }
+  </style>
+</head>
+
+<body class="font-outfit bg-ink text-copy">
+  <main class="min-h-screen px-5 py-5 md:px-8 md:py-8">
+    <div
+      class="mx-auto max-w-7xl rounded-[2rem] border border-[#1f1f1f] bg-[#11110f] shadow-[0_24px_70px_rgba(0,0,0,0.35)]">
+      <header class="px-6 py-5 md:px-10 md:py-7">
+        <div class="flex items-center justify-between gap-4">
+          <a href="index.html" class="flex items-center gap-4">
+            <img src="imgs/imgNoBg.png" alt="iMAGE logo" class="h-20 w-20 object-contain" />
+            <div>
+              <p class="font-syne text-xs font-bold uppercase tracking-[0.32em] text-[#b8aba0]">iMAGE</p>
+              <p class="text-sm text-[#8d837d]">Individual Multimedia Arts Guild & Enthusiasts</p>
+            </div>
+          </a>
+
+          <nav class="hidden items-center gap-8 text-sm text-[#8d837d] md:flex">
+            <a href="#discover" class="transition hover:text-[#e2d9cf]">Discover</a>
+            <a href="#features" class="transition hover:text-[#e2d9cf]">Features</a>
+            <a href="#artists" class="transition hover:text-[#e2d9cf]">Artists</a>
+            <a href="#contact" class="transition hover:text-[#e2d9cf]">Contact</a>
+          </nav>
+
+          <a href="dashboard.html"
+            class="inline-flex items-center justify-center rounded-2xl bg-orange-500 px-5 py-3 font-syne text-xs font-bold uppercase tracking-[0.18em] text-white transition hover:bg-[#c0451a]">
+            Open Gallery
+          </a>
+        </div>
+      </header>
+
+      <section id="discover" class="overflow-hidden px-6 pb-10 pt-2 md:px-10 md:pb-16">
+        <div class="grid items-center gap-10 lg:grid-cols-[0.85fr_1.15fr]">
+          <div class="relative z-10 max-w-md pt-4 md:pt-10">
+            <h1 class="mt-4 font-instrument leading-[0.9] tracking-[-0.045em] text-[#f4efe8]">
+              <span class="block text-6xl font-normal italic md:text-[6.1rem]">
+                Explore
+              </span>
+              <span class="mt-2 block text-5xl font-normal md:text-[5.2rem]">
+                the Archive
+              </span>
+              <span class="mt-2 block text-5xl font-normal md:text-[5.2rem]">
+                of Our Creatives
+              </span>
+            </h1>
+            <div class="mt-8 flex flex-col gap-4 sm:flex-row">
+              <a href="dashboard.html"
+                class="inline-flex items-center justify-center rounded-2xl bg-orange-500 px-6 py-3.5 font-syne text-xs font-bold uppercase tracking-[0.18em] text-white transition hover:bg-[#c0451a]">
+                Explore Archive
+              </a>
+              <a href="posting.html"
+                class="inline-flex items-center justify-center rounded-2xl border border-[#2a2a2a] bg-[#141414] px-6 py-3.5 font-syne text-xs font-bold uppercase tracking-[0.18em] text-[#e2d9cf] transition hover:border-[#e8874a] hover:text-[#e8874a]">
+                Publish Artwork
+              </a>
+            </div>
+          </div>
+
+          <div class="relative min-h-[520px] md:min-h-[640px]">
+            <div
+              class="absolute left-[8%] top-[15%] rounded-full border border-[#2a2a2a] bg-[#141414] px-4 py-2 font-syne text-[11px] font-bold uppercase tracking-[0.18em] text-orange-500 shadow-float">
+              Featured drop
+            </div>
+            <div
+              class="absolute right-[1%] top-[7%] flex items-center gap-2 rounded-full bg-[#1a1a1a] px-4 py-2 font-syne text-sm font-bold text-[#e2d9cf] shadow-float border border-[#2a2a2a]">
+              <span class="inline-block h-2.5 w-2.5 rounded-full bg-orange-500"></span>
+              Live archive
+            </div>
+            <div
+              class="absolute bottom-[19%] right-[2%] flex h-16 w-16 items-center justify-center rounded-full bg-orange-500 text-xl font-bold text-white shadow-float md:h-20 md:w-20">
+              iM
+            </div>
+
+            <article
+              class="absolute left-[14%] top-[16%] w-[42%] rounded-[1.8rem] border border-[#2a2a2a] bg-[#141414] p-3 shadow-float md:w-[34%]">
+              <div class="overflow-hidden rounded-[1.3rem] bg-[#1e1e1e]">
+                <div class="h-44 bg-gradient-to-br from-[#2b2622] via-[#171411] to-[#23201d] md:h-56">
+                  <div class="relative h-full w-full">
+                    <div
+                      class="absolute left-[10%] top-[15%] h-[78%] w-[80%] rounded-[1.2rem] bg-[#e9decf] shadow-inner">
+                    </div>
+                    <div class="absolute left-[17%] top-[24%] h-[45%] w-[62%] rotate-[-8deg] rounded-md bg-[#d4c1a7]">
+                    </div>
+                    <div class="absolute left-[34%] top-[34%] h-[10%] w-[30%] rounded bg-[#e8874a]"></div>
+                    <div class="absolute bottom-[12%] left-[12%] h-[12%] w-[18%] rounded-full bg-[#caa07a]"></div>
+                    <div class="absolute bottom-[12%] right-[13%] h-[20%] w-[40%] rounded-t-[1.3rem] bg-[#6b6460]">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article
+              class="absolute right-[9%] top-[2%] w-[48%] rounded-[2rem] border border-[#2a2a2a] bg-[#141414] p-3 shadow-float md:w-[40%]">
+              <div
+                class="overflow-hidden rounded-[1.5rem] bg-gradient-to-br from-[#4b2413] via-[#2d1a12] to-[#171411] p-4">
+                <div class="mb-3 h-1.5 w-24 rounded-full bg-[#f4efe8]/80"></div>
+                <div class="relative h-[310px] overflow-hidden rounded-[1.3rem] md:h-[390px]">
+                  <img src="imgs/img_silakbo.jpg" alt="Silakbo artwork" class="absolute inset-0 h-full w-full object-cover" />
+                  <div class="absolute inset-0 bg-[linear-gradient(180deg,rgba(23,20,17,0.04)_0%,rgba(23,20,17,0.22)_100%)]"></div>
+                  <div class="absolute bottom-[6%] right-[8%] flex gap-2">
+                    <span class="h-4 w-4 rounded-full border-2 border-[#f4efe8]/80"></span>
+                    <span class="h-4 w-4 rounded-full border-2 border-[#f4efe8]/80"></span>
+                    <span class="h-4 w-4 rounded-full border-2 border-[#f4efe8]/80"></span>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article
+              class="absolute bottom-[12%] left-[22%] w-[42%] rounded-[1.8rem] border border-[#2a2a2a] bg-[#141414] p-3 shadow-float md:w-[33%]">
+              <div class="mb-3 flex items-center gap-2">
+                <div class="flex h-7 w-7 items-center justify-center rounded-xl bg-orange-500 text-sm text-white">A
+                </div>
+                <div class="h-2 w-16 rounded-full bg-[#2a2a2a]"></div>
+              </div>
+              <div
+                class="h-40 rounded-[1.3rem] bg-[linear-gradient(135deg,#e8874a_0%,#c0451a_26%,#3d1a0a_58%,#171411_100%)] md:h-48">
+                <div class="flex h-full items-end justify-center pb-4">
+                  <div class="relative h-[74%] w-[44%] rounded-t-[4rem] bg-[#241f1f]">
+                    <div class="absolute left-[26%] top-[11%] h-[16%] w-[48%] rounded-full bg-[#2d1e1e]"></div>
+                    <div class="absolute left-[20%] top-[20%] h-[16%] w-[60%] rounded-full bg-[#6a472d]"></div>
+                    <div class="absolute left-[25%] top-[28%] h-[12%] w-[50%] rounded-full bg-[#b47b53]"></div>
+                    <div class="absolute left-[18%] top-[42%] h-[9%] w-[64%] rounded bg-[#0f1115]"></div>
+                    <div class="absolute -right-[10%] top-[34%] h-[20%] w-[18%] rounded bg-[#141821]"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-4 space-y-2">
+                <div class="h-3 w-28 rounded-full bg-[#2a2a2a]"></div>
+                <div class="h-3 w-20 rounded-full bg-[#1f1f1f]"></div>
+              </div>
+            </article>
+
+            <article
+              class="absolute bottom-[5%] left-[52%] h-54 w-54 overflow-hidden rounded-full border-[4px] border-orange-500 bg-[#141414] p-1.5 shadow-float md:h-36 md:w-36">
+              <img src="imgs/image_ureta.jpg" alt="Featured artist" class="h-full w-full rounded-full object-cover" />
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="features" class="border-t border-[#1f1f1f] px-6 py-10 md:px-10 md:py-14">
+        <div class="grid gap-5 md:grid-cols-3">
+          <article class="rounded-[1.8rem] bg-[#141414] p-6 ring-1 ring-[#1f1f1f]">
+            <p class="font-syne text-xs font-bold uppercase tracking-[0.24em] text-orange-500">Discover</p>
+            <h2 class="mt-4 text-2xl font-semibold tracking-[-0.04em] text-[#e2d9cf]">Browse visual collections</h2>
+            <p class="mt-3 text-sm leading-7 text-[#8d837d]">
+              Move from featured pieces to complete collections with a cleaner, more inviting archive experience.
+            </p>
+          </article>
+          <article class="rounded-[1.8rem] bg-[#171411] p-6 ring-1 ring-[#2a2a2a]">
+            <p class="font-syne text-xs font-bold uppercase tracking-[0.24em] text-orange-500">Publish</p>
+            <h2 class="mt-4 text-2xl font-semibold tracking-[-0.04em] text-[#e2d9cf]">Share artist-first entries</h2>
+            <p class="mt-3 text-sm leading-7 text-[#8d837d]">
+              Upload artwork, add credits, and keep each submission aligned with your existing publishing flow.
+            </p>
+          </article>
+          <article class="rounded-[1.8rem] bg-[#e8874a]/[0.08] p-6 ring-1 ring-[#e8874a]/20 text-white">
+            <p class="font-syne text-xs font-bold uppercase tracking-[0.24em] text-[#f0b186]">Connect</p>
+            <h2 class="mt-4 text-2xl font-semibold tracking-[-0.04em]">Turn the archive into a destination</h2>
+            <p class="mt-3 text-sm leading-7 text-[#d7ccc1]">
+              Let the landing page feel like a real front door instead of a placeholder before users enter the app.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section id="artists" class="border-t border-[#1f1f1f] px-6 py-10 md:px-10 md:py-14">
+        <div class="grid gap-10 md:grid-cols-[0.95fr_1.05fr] md:items-center">
+          <div>
+            <p class="font-syne text-xs font-bold uppercase tracking-[0.24em] text-[#9a8f8a]">Artists and stories</p>
+            <h2 class="mt-4 text-4xl font-semibold leading-tight tracking-[-0.05em] text-[#e2d9cf] md:text-5xl">
+              A more social, expressive way to introduce your gallery
+            </h2>
+            <p class="mt-5 max-w-xl text-base leading-8 text-[#8d837d]">
+              This direction uses layered cards, floating reactions, and stronger typography so the homepage feels more
+              alive while still guiding visitors to the archive and posting pages.
+            </p>
+          </div>
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div class="rounded-[1.6rem] bg-[#141414] p-5 ring-1 ring-[#1f1f1f]">
+              <p class="font-syne text-xs font-bold uppercase tracking-[0.2em] text-orange-500">Bold Hero</p>
+              <p class="mt-3 text-sm leading-7 text-[#8d837d]">Large headline blocks create stronger first impact and
+                make the page feel more modern.</p>
+            </div>
+            <div class="rounded-[1.6rem] bg-[#171411] p-5 ring-1 ring-[#2a2a2a]">
+              <p class="font-syne text-xs font-bold uppercase tracking-[0.2em] text-orange-500">Floating Cards</p>
+              <p class="mt-3 text-sm leading-7 text-[#8d837d]">Layered visuals mimic social discovery and work well for
+                an artwork archive.</p>
+            </div>
+            <div class="rounded-[1.6rem] bg-[#141414] p-5 ring-1 ring-[#1f1f1f]">
+              <p class="font-syne text-xs font-bold uppercase tracking-[0.2em] text-[#9a8f8a]">Clean Canvas</p>
+              <p class="mt-3 text-sm leading-7 text-[#8d837d]">The layout now stays expressive while fitting the same
+                darker visual language as the rest of the site.</p>
+            </div>
+            <div class="rounded-[1.6rem] bg-[#141414] p-5 ring-1 ring-[#1f1f1f]">
+              <p class="font-syne text-xs font-bold uppercase tracking-[0.2em] text-[#9a8f8a]">Mobile Friendly</p>
+              <p class="mt-3 text-sm leading-7 text-[#8d837d]">The composition still stacks and reads well on smaller
+                screens without losing the visual idea.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer id="contact" class="border-t border-[#1f1f1f] px-6 py-6 md:px-10 md:py-8">
+        <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p class="font-syne text-xs font-bold uppercase tracking-[0.28em] text-[#9a8f8a]">iMAGE</p>
+            <p class="mt-2 max-w-md text-sm text-[#8d837d]">Explore the art you love, then step into the full archive.
+            </p>
+          </div>
+          <div class="flex flex-wrap gap-3">
+            <a href="dashboard.html"
+              class="inline-flex items-center justify-center rounded-2xl bg-orange-500 px-5 py-3 text-sm text-white transition hover:bg-[#c0451a]">
+              Open Dashboard
+            </a>
+            <a href="posting.html"
+              class="inline-flex items-center justify-center rounded-2xl border border-[#2a2a2a] bg-[#141414] px-5 py-3 text-sm text-[#e2d9cf] transition hover:border-[#e8874a] hover:text-[#e8874a]">
+              Add Artwork
+            </a>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </main>
+</body>
+
+</html>
