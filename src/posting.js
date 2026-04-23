@@ -412,7 +412,7 @@ if (docSnap.exists()) {
 
 
 
-
+//todo:make sure that it is adaptive to all devices (mobile, desktop, tablet, etc.)
 //todo: off browser suggestion on the form
 //todo: docker
 //todo: refactor
