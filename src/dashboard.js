@@ -1,5 +1,5 @@
 import { db } from "./firebase.js"
-import { collection, getDocs, query, orderBy, limit, startAfter, where } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js"
+import { collection, getDocs, query, orderBy, limit, startAfter } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js"
 import { createCard, closeAllDropdowns } from "./card.js"
 import { openFullSheet } from "./modals.js"
 
@@ -159,33 +159,24 @@ window.openShareSheet = function (url, docId, artworkTitle) {
     })
 }
 
-async function queryFromDB(constraints) {
-    const artworksRef = collection(db, "artworks")
-    const q = query(artworksRef, ...constraints, orderBy("date", "desc"))
-    const result = await getDocs(q)
-    return result.docs.map(doc => ({ ...doc.data(), id: doc.id }))
-}
-
 // Category filtering
 window.filterByCategory = async function (category) {
+    isSearching = true
+    await loadAllArtworks()
+    const filtered = allArtworks.filter(a => a.category === category)
+
     setActiveView('works')
     window.scrollTo({ top: 0, behavior: 'smooth' })
-    isSearching = true
-    const filtered = await queryFromDB([where("category", "==", category)])
 
-    // Update banner
     const bannerContent = document.querySelector('#bannerContent')
     const categoryBanner = document.querySelector('#categoryBanner')
     const artistBanner = document.querySelector('#artistBanner')
     const categoryName = document.querySelector('#categoryName')
     const artworkCount = document.querySelector('#artworkCount')
 
-    // Hide default content and artist banner, show category banner
     bannerContent.classList.add('hidden')
     artistBanner.classList.add('hidden')
     categoryBanner.classList.remove('hidden')
-
-    // Update category name and count
     categoryName.textContent = category
     artworkCount.textContent = filtered.length
 
@@ -199,17 +190,16 @@ window.filterByCategory = async function (category) {
 
 // Artist filtering
 window.filterByArtist = async function (artistName) {
+    isSearching = true
+    await loadAllArtworks()
+    const trimmed = artistName.trim()
+    const filtered = allArtworks.filter(a =>
+        Object.values(a.artists).flat().some(n => n.trim() === trimmed)
+    )
+
     setActiveView('works')
     window.scrollTo({ top: 0, behavior: 'smooth' })
-    isSearching = true
-    const roles = ['graphicartist', 'writer', 'videographer', 'photographer']
-    const results = await Promise.all(
-        roles.map(role => queryFromDB([where(`artists.${role}`, "array-contains", artistName)]))
-    )
-    const seen = new Set()
-    const filtered = results.flat().filter(a => seen.has(a.id) ? false : seen.add(a.id))
 
-    // Update banner
     const bannerContent = document.querySelector('#bannerContent')
     const categoryBanner = document.querySelector('#categoryBanner')
     const artistBanner = document.querySelector('#artistBanner')
@@ -217,12 +207,9 @@ window.filterByArtist = async function (artistName) {
     const artistNameText = document.querySelector('#artistNameText')
     const artistCount = document.querySelector('#artistCount')
 
-    // Hide default content and category banner, show artist banner
     bannerContent.classList.add('hidden')
     categoryBanner.classList.add('hidden')
     artistBanner.classList.remove('hidden')
-
-    // Update artist name and count
     artistNameEl.textContent = artistName
     artistNameText.textContent = artistName
     artistCount.textContent = filtered.length
