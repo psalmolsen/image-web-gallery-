@@ -60,8 +60,11 @@ function updateNavStyles() {
     navWorksButtons.forEach(btn => {
         const isActive = currentView === 'works'
         btn.classList.toggle('text-orange-500', isActive)
-        btn.classList.toggle('border-orange-500', isActive && btn.classList.contains('border-b-2'))
-        btn.classList.toggle('text-stone-500', !isActive && btn.classList.contains('border-b-2'))
+        btn.classList.toggle('text-stone-500', !isActive)
+        if (btn.classList.contains('border-b-2')) {
+            btn.classList.toggle('border-orange-500', isActive)
+            btn.classList.toggle('border-transparent', !isActive)
+        }
         btn.querySelectorAll('svg, span').forEach(el => {
             el.classList.toggle('text-orange-500', isActive)
             el.classList.toggle('text-[#4a4a4a]', !isActive)
@@ -71,8 +74,11 @@ function updateNavStyles() {
     navAboutButtons.forEach(btn => {
         const isActive = currentView === 'about'
         btn.classList.toggle('text-orange-500', isActive)
-        btn.classList.toggle('border-orange-500', isActive && btn.classList.contains('border-b-2'))
-        btn.classList.toggle('text-stone-500', !isActive && btn.classList.contains('border-b-2'))
+        btn.classList.toggle('text-stone-500', !isActive)
+        if (btn.classList.contains('border-b-2')) {
+            btn.classList.toggle('border-orange-500', isActive)
+            btn.classList.toggle('border-transparent', !isActive)
+        }
         btn.querySelectorAll('svg, span').forEach(el => {
             el.classList.toggle('text-orange-500', isActive)
             el.classList.toggle('text-[#4a4a4a]', !isActive)
