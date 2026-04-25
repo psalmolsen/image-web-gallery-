@@ -25,4 +25,4 @@ jobs:
       - name: Deploy to Firebase Hosting
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-        run: firebase deploy --only hosting --project image-gallery-2748a
+        run: firebase deploy --only hosting,firestore:indexes --project image-gallery-2748a

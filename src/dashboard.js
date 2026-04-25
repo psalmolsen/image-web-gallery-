@@ -1,5 +1,5 @@
 import { db } from "./firebase.js"
-import { collection, getDocs, query, orderBy, limit, startAfter } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js"
+import { collection, getDocs, query, orderBy, limit, startAfter, where } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js"
 import { createCard, closeAllDropdowns } from "./card.js"
 import { openFullSheet } from "./modals.js"
 
@@ -159,14 +159,19 @@ window.openShareSheet = function (url, docId, artworkTitle) {
     })
 }
 
+async function queryFromDB(constraints) {
+    const artworksRef = collection(db, "artworks")
+    const q = query(artworksRef, ...constraints, orderBy("date", "desc"))
+    const result = await getDocs(q)
+    return result.docs.map(doc => ({ ...doc.data(), id: doc.id }))
+}
+
 // Category filtering
-window.filterByCategory = function (category) {
+window.filterByCategory = async function (category) {
     setActiveView('works')
     window.scrollTo({ top: 0, behavior: 'smooth' })
     isSearching = true
-    const filtered = allArtworks.filter(artwork => {
-        return artwork.category === category
-    })
+    const filtered = await queryFromDB([where("category", "==", category)])
 
     // Update banner
     const bannerContent = document.querySelector('#bannerContent')
@@ -193,14 +198,16 @@ window.filterByCategory = function (category) {
 }
 
 // Artist filtering
-window.filterByArtist = function (artistName) {
+window.filterByArtist = async function (artistName) {
     setActiveView('works')
     window.scrollTo({ top: 0, behavior: 'smooth' })
     isSearching = true
-    const filtered = allArtworks.filter(artwork => {
-        // Check if artist name exists in any role
-        return Object.values(artwork.artists).flat().includes(artistName)
-    })
+    const roles = ['graphicartist', 'writer', 'videographer', 'photographer']
+    const results = await Promise.all(
+        roles.map(role => queryFromDB([where(`artists.${role}`, "array-contains", artistName)]))
+    )
+    const seen = new Set()
+    const filtered = results.flat().filter(a => seen.has(a.id) ? false : seen.add(a.id))
 
     // Update banner
     const bannerContent = document.querySelector('#bannerContent')
@@ -265,10 +272,25 @@ document.addEventListener('click', () => {
     closeAllDropdowns()
 })
 
+async function loadAllArtworks() {
+    if (!hasMore) return
+    while (hasMore && !isLoading) {
+        await loadMoreArtworks()
+    }
+    if (isLoading) {
+        await new Promise(resolve => {
+            const check = setInterval(() => {
+                if (!isLoading) { clearInterval(check); resolve() }
+            }, 100)
+        })
+    }
+}
+
 //search
-function filterArtworks(query) {
+async function filterArtworks(query) {
     setActiveView('works')
     isSearching = true
+    await loadAllArtworks()
     const filtered = allArtworks.filter(artwork => {
         return artwork.title.toLowerCase().includes(query) ||
             artwork.category.toLowerCase().includes(query) ||
@@ -284,12 +306,12 @@ function filterArtworks(query) {
 
 function bindSearch(input) {
     if (!input) return
-    input.addEventListener('keydown', function (e) {
+    input.addEventListener('keydown', async function (e) {
         if (e.key === 'Enter' || e.key === 'Go' || e.key === 'Search') {
             e.preventDefault()
             const query = this.value.trim().toLowerCase()
             if (query) {
-                filterArtworks(query)
+                await filterArtworks(query)
             } else {
                 setActiveView('works')
                 isSearching = false
@@ -297,10 +319,10 @@ function bindSearch(input) {
             }
         }
     })
-    input.addEventListener('search', function () {
+    input.addEventListener('search', async function () {
         const query = this.value.trim().toLowerCase()
         if (query) {
-            filterArtworks(query)
+            await filterArtworks(query)
         } else {
             setActiveView('works')
             isSearching = false
@@ -309,11 +331,11 @@ function bindSearch(input) {
     })
 }
 
-function performSearch(input) {
+async function performSearch(input) {
     if (!input) return
     const query = input.value.trim().toLowerCase()
     if (query) {
-        filterArtworks(query)
+        await filterArtworks(query)
     } else {
         setActiveView('works')
         isSearching = false
