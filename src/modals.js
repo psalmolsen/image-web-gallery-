@@ -254,7 +254,11 @@ function navigateMedia(direction) {
 
 // QR Code modal
 
-export function showQRModal(docId) {
+let currentArtworkTitle = ''
+
+export function showQRModal(docId, artworkTitle) {
+    currentArtworkTitle = artworkTitle || 'Artwork'
+
     const qrCreator = window.QrCreator
 
     if (!qrCreator) {
@@ -275,7 +279,7 @@ export function showQRModal(docId) {
     const pathPrefix = isLocal ? '/src' : ''
     const shareUrl = `${window.location.origin}${pathPrefix}/dashboard.html?artwork=${docId}`
 
-    domainEl.textContent = window.location.hostname || 'image-gallery-2748a.web.app'
+    domainEl.textContent = currentArtworkTitle
     const ctx = canvas.getContext('2d')
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
@@ -294,7 +298,7 @@ export function showQRModal(docId) {
             ecLevel: 'M',
             fill: '#C0451A',
             background: '#ffffff',
-            size: 240
+            size: 252
         }, canvas)
         openModal()
     } catch (error) {
@@ -314,31 +318,56 @@ function closeQRModal() {
     }, 300)
 }
 
-function downloadQRCode() {
+async function downloadQRCode() {
     const qrCard = document.getElementById('qrCard')
+    const downloadBtn = document.getElementById('qrDownloadBtn')
+    const btnLabel = downloadBtn?.querySelector('span')
+    const originalLabel = btnLabel?.textContent
 
-    // Use html2canvas to capture the entire QR card
-    import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js').then(module => {
+    // Show loading state on button
+    if (downloadBtn) downloadBtn.disabled = true
+    if (btnLabel) btnLabel.textContent = 'Saving...'
+
+    try {
+        const module = await import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js')
         const html2canvas = module.default
 
-        html2canvas(qrCard, {
-            backgroundColor: '#FAF3E8',
-            scale: 2
-        }).then(canvas => {
-            canvas.toBlob(blob => {
-                const url = URL.createObjectURL(blob)
-                const a = document.createElement('a')
-                a.href = url
-                a.download = 'iMAGE-QR-Code.png'
-                a.click()
-                URL.revokeObjectURL(url)
-            })
+        const snapshot = await html2canvas(qrCard, {
+            backgroundColor: '#141414',
+            scale: 3,
+            useCORS: true,
+            allowTaint: false,
+            logging: false
         })
-    })
+
+        snapshot.toBlob(blob => {
+            if (!blob) {
+                alert('Failed to generate image. Please try again.')
+                return
+            }
+            const safeTitle = currentArtworkTitle.replace(/[^a-zA-Z0-9\s-_]/g, '').trim().replace(/\s+/g, '-') || 'artwork'
+            const filename = `iMAGE-${safeTitle}.png`
+            const url = URL.createObjectURL(blob)
+            const a = document.createElement('a')
+            a.href = url
+            a.download = filename
+            document.body.appendChild(a)
+            a.click()
+            document.body.removeChild(a)
+            URL.revokeObjectURL(url)
+        }, 'image/png')
+
+    } catch (error) {
+        console.error('[QR download] Failed:', error)
+        alert('Download failed. Please try again.')
+    } finally {
+        if (downloadBtn) downloadBtn.disabled = false
+        if (btnLabel) btnLabel.textContent = originalLabel
+    }
 }
 
 // Make showQRModal globally available
-window.showQRModal = showQRModal
+window.showQRModal = (docId, artworkTitle) => showQRModal(docId, artworkTitle)
 
 
 

@@ -3,6 +3,45 @@
 
 <head>
   <meta charset="UTF-8">
+  <style>
+    /* ── QR Corner brackets ── */
+    .qr-corner {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-color: #e8874a;
+      border-style: solid;
+      pointer-events: none;
+    }
+
+    .qr-corner-tl {
+      top: -1px;
+      left: -1px;
+      border-width: 2px 0 0 2px;
+      border-radius: 3px 0 0 0;
+    }
+
+    .qr-corner-tr {
+      top: -1px;
+      right: -1px;
+      border-width: 2px 2px 0 0;
+      border-radius: 0 3px 0 0;
+    }
+
+    .qr-corner-bl {
+      bottom: -1px;
+      left: -1px;
+      border-width: 0 0 2px 2px;
+      border-radius: 0 0 0 3px;
+    }
+
+    .qr-corner-br {
+      bottom: -1px;
+      right: -1px;
+      border-width: 0 2px 2px 0;
+      border-radius: 0 0 3px 0;
+    }
+  </style>
 </head>
 
 <body>
@@ -113,13 +152,13 @@
   </div>
 
   <!-- ══════════════════════════════════════════════════════════════════════ -->
-  <!-- QR Code Modal -->
+  <!-- QR CODE MODAL (redesigned) -->
   <!-- ══════════════════════════════════════════════════════════════════════ -->
   <div
     class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[70] opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4"
     id="qrModalOverlay">
 
-    <div class="relative" id="qrModalCard">
+    <div class="relative flex flex-col items-center gap-3" id="qrModalCard">
 
       <!-- Close button -->
       <button
@@ -131,64 +170,98 @@
       </button>
 
       <!-- QR Card -->
-      <div class="relative bg-[#FAF3E8]" style="width:340px; border: 2px solid #2B1208;" id="qrCard">
+      <div class="relative bg-[#141414] border border-[#2a2a2a] rounded-2xl overflow-hidden" style="width: 360px;"
+        id="qrCard">
 
-        <!-- Corner brackets -->
-        <span class="corner corner-tl"></span>
-        <span class="corner corner-tr"></span>
-        <span class="corner corner-bl"></span>
-        <span class="corner corner-br"></span>
+        <!-- Orange top accent bar -->
+        <div class="w-full h-[3px]" style="background: linear-gradient(90deg, #e8874a 0%, #c0451a 100%);"></div>
 
         <!-- Header -->
-        <div class="bg-[#3D1A0A] px-5 pt-5 pb-4">
-          <h1 class="font-fraunces text-[#C0451A] text-4xl leading-none tracking-wide">iMAGE</h1>
-          <p class="font-outfit text-[#FAF3E8]/50 text-xs tracking-[0.2em] mt-1 uppercase">CVSU Carmona &nbsp;·&nbsp;
-            Artwork Gallery</p>
-          <div class="mt-3 h-px bg-[#C0451A]/60"></div>
+        <div class="flex items-center gap-3 px-5 pt-5 pb-4 border-b border-[#2a2a2a]">
+
+          <!-- Logo ring -->
+          <div
+            class="w-[42px] h-[42px] rounded-full border border-[#e8874a] bg-[#1e1e1e] flex items-center justify-center shrink-0 overflow-hidden">
+            <img src="imgs/image_logo.jpg" alt="iMAGE Logo" class="w-[38px] h-[38px] rounded-full object-cover"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+            <span class="hidden font-fraunces italic text-[#e8874a] text-sm font-semibold">iM</span>
+          </div>
+
+          <!-- Brand text -->
+          <div>
+            <h1 class="font-fraunces italic font-semibold text-[#e2d9cf] text-2xl leading-none tracking-wide"><span
+                class="text-[#e8874a]">i</span>MAGE</h1>
+            <p class="font-syne text-[8px] font-bold tracking-[0.22em] uppercase text-[#6b6460] mt-1">
+              CVSU Carmona &nbsp;·&nbsp; Artwork Gallery
+            </p>
+          </div>
         </div>
 
-        <!-- QR Section -->
-        <div class="flex items-center justify-center py-8 px-8">
-          <div class="relative bg-white p-3 shadow-md" style="border-radius:2px;">
-            <canvas id="qrCanvas" width="240" height="240"></canvas>
+        <!-- QR Body -->
+        <div class="flex flex-col items-center px-6 pt-5 pb-4 gap-4">
 
-            <!-- Center logo overlay -->
-            <div class="absolute inset-0 flex items-center justify-center">
-              <div class="bg-white rounded-full flex items-center justify-center shadow-sm"
-                style="width:54px;height:54px;">
-                <img src="imgs/image_logo.jpg" alt="iMAGE Logo" class="w-10 h-10 rounded-full object-cover">
+          <p class="font-syne text-[8px] font-bold tracking-[0.22em] uppercase text-[#6b6460] self-start">
+            Artwork QR Code
+          </p>
+
+          <!-- QR frame with corner brackets -->
+          <div class="relative" style="width: 268px; height: 268px;">
+            <span class="qr-corner qr-corner-tl"></span>
+            <span class="qr-corner qr-corner-tr"></span>
+            <span class="qr-corner qr-corner-bl"></span>
+            <span class="qr-corner qr-corner-br"></span>
+
+            <!-- White inner QR area -->
+            <div class="absolute bg-white rounded-md flex items-center justify-center overflow-hidden"
+              style="inset: 8px;">
+              <canvas id="qrCanvas" width="252" height="252"></canvas>
+
+              <!-- Center logo overlay -->
+              <div class="absolute flex items-center justify-center bg-white rounded-full overflow-hidden"
+                style="width: 48px; height: 48px; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 2px solid #fff;">
+                <img src="imgs/image_logo.jpg" alt="iMAGE Logo" class="w-11 h-11 rounded-full object-cover"
+                  onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                <span class="hidden font-fraunces italic text-[#c0451a] text-xs font-semibold">iM</span>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Footer -->
-        <div class="px-5 pb-5">
-          <div class="h-px bg-[#2B1208]/20 mb-3"></div>
-          <p class="font-outfit text-[#2B1208]/50 text-[10px] tracking-[0.25em] uppercase text-center">Scan to View
-            Artwork</p>
-          <p id="qrDomain" class="font-outfit text-[#2B1208]/70 text-[11px] text-center mt-1 tracking-wide"></p>
+        <div class="px-5 pb-5 flex flex-col gap-2">
+          <div class="w-full h-px bg-[#2a2a2a]"></div>
+
+          <!-- URL pill -->
+          <div class="flex items-center gap-2 bg-[#1e1e1e] border border-[#2a2a2a] rounded-full px-4 py-2">
+            <div class="w-[6px] h-[6px] rounded-full bg-[#e8874a] shrink-0"></div>
+            <span id="qrDomain" class="font-outfit text-[11px] text-[#9a8f8a] tracking-wide truncate">
+            </span>
+          </div>
+
+          <p class="font-syne text-[8px] font-bold tracking-[0.2em] uppercase text-[#e8874a] text-center opacity-70">
+            Scan to view artwork
+          </p>
         </div>
 
       </div>
+      <!-- end #qrCard -->
 
       <!-- Download button -->
       <button
-        class="mt-4 w-full bg-[#C0451A] hover:bg-[#A33A14] text-[#FAF3E8] font-outfit text-sm tracking-wider uppercase py-3 rounded-lg transition-colors flex items-center justify-center gap-2"
-        id="qrDownloadBtn">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-linecap="round"
-            stroke-linejoin="round" stroke-width="2" />
+        class="flex items-center justify-center gap-2 bg-[#1e1e1e] border border-[#2a2a2a] rounded-xl py-3 transition-all duration-200 hover:bg-[#e8874a]/10 hover:border-[#e8874a]/50"
+        style="width: 360px;" id="qrDownloadBtn">
+        <svg class="w-4 h-4 text-[#e8874a]" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round" viewBox="0 0 24 24">
+          <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
         </svg>
-        Download QR Code
+        <span class="font-syne text-[10px] font-bold tracking-[0.22em] uppercase text-[#e8874a]">
+          Download QR Code
+        </span>
       </button>
 
     </div>
   </div>
-
-
-
-
+  <!-- end #qrModalOverlay -->
 
 </body>
 

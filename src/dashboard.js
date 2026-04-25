@@ -144,10 +144,12 @@ const shareSheetImageCode = document.querySelector('#shareSheetImageCode')
 const shareSheetClose = document.querySelector('#shareSheetClose')
 let activeShareUrl = ''
 let activeShareDocId = ''
+let activeShareTitle = ''
 
-window.openShareSheet = function (url, docId) {
+window.openShareSheet = function (url, docId, artworkTitle) {
     activeShareUrl = url
     activeShareDocId = docId
+    activeShareTitle = artworkTitle || ''
     shareSheetOverlay.classList.remove('pointer-events-none')
     requestAnimationFrame(() => {
         shareSheetOverlay.classList.remove('opacity-0')
@@ -255,7 +257,7 @@ shareSheetCopy?.addEventListener('click', async () => {
 shareSheetImageCode?.addEventListener('click', () => {
     closeShareSheet()
     if (typeof window.showQRModal === 'function') {
-        window.showQRModal(activeShareDocId)
+        window.showQRModal(activeShareDocId, activeShareTitle)
     }
 })
 
@@ -437,3 +439,4 @@ footer()
 //todo: Warning: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
 //todo: dl qr code
 //todo: qr on mobile
+//todo: no artwork yet (create artwork) only on admin or publisher. not for viewwer only 

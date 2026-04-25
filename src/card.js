@@ -241,7 +241,7 @@ export function createCard(artWorkData, docId, onDelete) {
     setupMedia(card, imageUrls, artWorkData.title)
     setupArtists(card, artWorkData.artists)
     cardMenu(card, docId, onDelete)
-    cardShare(card, docId)
+    cardShare(card, docId, artWorkData.title)
 
     // Intercept card link to open full sheet
     const cardLink = card.querySelector('.card-link')
@@ -313,7 +313,7 @@ function closeDropdown(el) {
     setTimeout(() => el.classList.add('hidden'), 200)
 }
 
-function cardShare(card, docId) {
+function cardShare(card, docId, artworkTitle) {
     const cardShareBtn = card.querySelector('.card-share')
     const sharedropdown = card.querySelector('.share-dropdown')
     const imagecode = card.querySelector('.image-code')
@@ -327,7 +327,7 @@ function cardShare(card, docId) {
     cardShareBtn.addEventListener('click', (e) => {
         e.stopPropagation()
         if (window.innerWidth < 768) {
-            if (typeof window.openShareSheet === 'function') window.openShareSheet(shareUrl, docId)
+            if (typeof window.openShareSheet === 'function') window.openShareSheet(shareUrl, docId, artworkTitle)
         } else {
             if (activeShareDropdown && activeShareDropdown !== sharedropdown) {
                 closeDropdown(activeShareDropdown)
@@ -347,7 +347,7 @@ function cardShare(card, docId) {
         closeDropdown(sharedropdown)
         activeShareDropdown = null
         if (typeof window.showQRModal === 'function') {
-            window.showQRModal(docId)
+            window.showQRModal(docId, artworkTitle)
         }
     })
 
