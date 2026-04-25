@@ -47,10 +47,7 @@
     }
 
     body {
-      background:
-        radial-gradient(circle at top center, rgba(232, 135, 74, 0.14), transparent 24%),
-        radial-gradient(circle at left top, rgba(192, 69, 26, 0.12), transparent 20%),
-        linear-gradient(180deg, #050505 0%, #0a0a0a 100%);
+      background: #0a0a0a;
     }
 
     .landing-entry-button {
@@ -58,7 +55,7 @@
       border-radius: 999px;
       background: #e8874a;
       color: #1a0903;
-      box-shadow: 0 20px 40px rgba(232, 135, 74, 0.24);
+      box-shadow: none;
       transition: transform 160ms ease, background-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
     }
 
@@ -69,7 +66,7 @@
 
     .landing-entry-button:active {
       transform: translateY(2px);
-      box-shadow: 0 10px 24px rgba(232, 135, 74, 0.2);
+      box-shadow: none;
     }
 
     .ghost-header-button {
@@ -85,16 +82,11 @@
     }
 
     .hero-gradient-text {
-      background: linear-gradient(135deg, #ffbe8f 0%, #f09f63 38%, #e8874a 62%, #c0451a 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+      color: #e8874a;
     }
 
     .hero-media-glow {
-      background:
-        radial-gradient(circle at center, rgba(232, 135, 74, 0.22), transparent 58%),
-        radial-gradient(circle at center, rgba(192, 69, 26, 0.18), transparent 68%);
+      background: none;
     }
   </style>
 </head>
@@ -114,20 +106,12 @@
           <a href="index.html" class="flex items-center gap-3">
             <img src="imgs/imgNoBg.png" alt="iMAGE logo" class="h-11 w-11 object-contain md:h-12 md:w-12" />
             <div>
-              <p class="font-syne text-2xl font-bold tracking-[-0.04em] text-white md:text-3xl">iMAGE</p>
+              <p class="font-syne text-2xl font-bold tracking-[-0.04em] md:text-3xl"><span
+                  class="text-[#e8874a]">i</span><span class="text-white">MAGE</span></p>
             </div>
           </a>
         </div>
-        <div class="hidden items-center gap-3 md:flex">
-          <a href="dashboard.html"
-            class="ghost-header-button inline-flex items-center justify-center px-6 py-3 font-syne text-sm font-bold tracking-[-0.01em]">
-            Enter as Viewer
-          </a>
-          <a href="posting.html"
-            class="inline-flex items-center justify-center rounded-2xl bg-white px-6 py-3 font-syne text-sm font-bold tracking-[-0.01em] text-black transition hover:bg-[#f2f2f2]">
-            Enter as Publisher
-          </a>
-        </div>
+
       </div>
     </header>
 
@@ -142,7 +126,8 @@
             <span class="hero-gradient-text block">of our creatives</span>
           </h1>
           <p class="mx-auto mt-6 max-w-2xl text-lg leading-8 text-[#8b8b8b] md:text-[2rem] md:leading-[1.45]">
-            Experience the creative works of iMAGE in a digital archive built to preserve, present, and celebrate our
+            Experience the creative works of iMAGE in a digital archive built to preserve, present, and
+            celebrate our
             artists.
           </p>
           <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row md:mt-10">
@@ -150,7 +135,7 @@
               class="landing-entry-button inline-flex min-w-[260px] items-center justify-center px-7 py-4 font-syne text-lg font-bold tracking-[-0.02em]">
               Enter as a Viewer
             </a>
-            <a href="posting.html"
+            <a href="signin.html"
               class="ghost-header-button inline-flex min-w-[220px] items-center justify-center px-7 py-4 font-syne text-lg font-bold tracking-[-0.02em] text-white">
               Enter as a Publisher
             </a>
@@ -158,80 +143,112 @@
         </div>
 
         <!-- COLLAGE -->
-        <div class="mt-16 md:mt-20 mb-16 overflow-hidden">
-          <div class="w-[700px] h-[420px]"
-            style="transform: scale(0.6) translateX(calc(50vw / 0.7 - 350px)); transform-origin: top left;">
-            <div class="hero-media-glow relative h-[420px] w-[700px]">
+        <div class="mt-16 md:mt-20 mb-16" id="collage-outer" style="width:100%; position:relative;">
+          <!-- This wrapper grows/shrinks to match the scaled height so no clipping or gap -->
+          <div id="collage-sizer" style="width:100%; position:relative; overflow:visible;">
+            <div id="collage-inner"
+              style="width:700px; height:420px; transform-origin:top left; position:absolute; top:0; left:0;">
+              <div class="hero-media-glow relative h-[420px] w-[700px]">
 
-              <!-- card A: lit card -->
-              <article
-                class="absolute top-[60px] left-[80px] z-[5] w-[270px] h-[216px] rounded-[1.8rem] border border-[#2a2a2a] bg-[#141414] p-3 shadow-float overflow-hidden">
-                <div class="overflow-hidden rounded-[1.3rem] bg-[#1e1e1e] h-full">
-                  <img src="imgs/img_lit.jpg" alt="Literature artwork" class="h-full w-full object-cover" />
-                </div>
-              </article>
-
-              <!-- CARD B: silakbo card -->
-              <article
-                class="absolute top-[10px] left-[360px] z-[8] w-[240px] rounded-[2rem] border border-[#2a2a2a] bg-[#141414] p-3 shadow-float overflow-hidden">
-                <div class="relative overflow-hidden rounded-[1.5rem] bg-[#1a0e08]">
-                  <img src="imgs/img_silakbo.jpg" alt="Silakbo artwork" class="w-full h-full object-cover" />
-                  <div
-                    class="absolute inset-0 bg-[linear-gradient(180deg,rgba(23,20,17,0.04)_0%,rgba(23,20,17,0.22)_100%)]">
+                <!-- card A: lit card -->
+                <article
+                  class="absolute top-[60px] left-[80px] z-[5] w-[270px] h-[216px] rounded-[1.8rem] border border-[#2a2a2a] bg-[#141414] p-3 shadow-float overflow-hidden">
+                  <div class="overflow-hidden rounded-[1.3rem] bg-[#1e1e1e] h-full">
+                    <img src="imgs/img_lit.jpg" alt="Literature artwork" class="h-full w-full object-cover" />
                   </div>
-                  <div class="absolute bottom-[6%] right-[8%] flex gap-1.5">
-                    <span class="h-3 w-3 rounded-full border-2 border-[#f4efe8]/80"></span>
-                    <span class="h-3 w-3 rounded-full border-2 border-[#f4efe8]/80"></span>
-                    <span class="h-3 w-3 rounded-full border-2 border-[#f4efe8]/80"></span>
+                </article>
+
+                <!-- CARD B: silakbo card -->
+                <article
+                  class="absolute top-[10px] left-[360px] z-[8] w-[240px] rounded-[2rem] border border-[#2a2a2a] bg-[#141414] p-3 shadow-float overflow-hidden">
+                  <div class="relative overflow-hidden rounded-[1.5rem] bg-[#1a0e08]">
+                    <img src="imgs/img_silakbo.jpg" alt="Silakbo artwork" class="w-full h-full object-cover" />
+                    <div
+                      class="absolute inset-0 bg-[linear-gradient(180deg,rgba(23,20,17,0.04)_0%,rgba(23,20,17,0.22)_100%)]">
+                    </div>
+                    <div class="absolute bottom-[6%] right-[8%] flex gap-1.5">
+                      <span class="h-3 w-3 rounded-full border-2 border-[#f4efe8]/80"></span>
+                      <span class="h-3 w-3 rounded-full border-2 border-[#f4efe8]/80"></span>
+                      <span class="h-3 w-3 rounded-full border-2 border-[#f4efe8]/80"></span>
+                    </div>
                   </div>
-                </div>
-              </article>
+                </article>
 
-              <!-- ureta circle -->
-              <div
-                class="absolute top-[220px] left-[40px] z-[10] h-[170px] w-[170px] overflow-hidden rounded-full border-[2px] border-[#e8874a] bg-[#141414] p-1.5 shadow-float">
-                <img src="imgs/image_ureta.jpg" alt="Featured artist" class="h-full w-full rounded-full object-cover" />
+                <!-- ureta circle -->
+                <div
+                  class="absolute top-[220px] left-[40px] z-[10] h-[170px] w-[170px] overflow-hidden rounded-full border-[2px] border-[#e8874a] bg-[#141414] p-1.5 shadow-float">
+                  <img src="imgs/image_ureta.jpg" alt="Featured artist"
+                    class="h-full w-full rounded-full object-cover" />
+                </div>
+
+                <!-- CARD C: ureta work -->
+                <article
+                  class="absolute top-[220px] left-[180px] z-[20] w-[220px] rounded-[1.8rem] border border-[#2a2a2a] bg-[#141414] p-2 shadow-float overflow-hidden">
+                  <div class="mb-2.5 flex items-center gap-2 px-1">
+                    <img src="imgs/image_logo.jpg" alt="iMAGE logo" class="h-6 w-6 rounded-xl object-cover shrink-0" />
+                    <p class="truncate font-syne text-[11px] font-bold text-[#ece5db]">
+                      image_cvsucarmona</p>
+                  </div>
+                  <img src="imgs/img_halloween.jpg" alt="Featured artwork"
+                    class="h-full w-full rounded-[0.6rem] object-cover" />
+                  <div class="my-2 h-px w-full bg-white/10"></div>
+                  <div class="flex items-center justify-between">
+                    <span class="font-syne text-[10px] font-bold uppercase tracking-[0.08em] text-[#e8874a]">See
+                      Full
+                      Content</span>
+                    <span
+                      class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#e8874a] text-[#1a0903]">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                          d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z" />
+                        <path d="m21.854 2.147-10.94 10.939" />
+                      </svg>
+                    </span>
+                  </div>
+                </article>
+
+                <!-- Small circle: silakbo logo -->
+                <div
+                  class="absolute top-[340px] left-[360px] z-[30] h-[140px] w-[140px] overflow-hidden rounded-full border-[4px] border-[#b3261e] bg-[#141414] p-1 shadow-float">
+                  <img src="imgs/img_silakbologo.jpg" alt="Silakbo logo"
+                    class="h-full w-full rounded-full object-cover" />
+                </div>
+
               </div>
-
-              <!-- CARD C: ureta work -->
-              <article
-                class="absolute top-[220px] left-[180px] z-[20] w-[220px] rounded-[1.8rem] border border-[#2a2a2a] bg-[#141414] p-2 shadow-float overflow-hidden">
-                <div class="mb-2.5 flex items-center gap-2 px-1">
-                  <img src="imgs/image_logo.jpg" alt="iMAGE logo" class="h-6 w-6 rounded-xl object-cover shrink-0" />
-                  <p class="truncate font-syne text-[11px] font-bold text-[#ece5db]">image_cvsucarmona</p>
-                </div>
-                <img src="imgs/img_halloween.jpg" alt="Featured artwork"
-                  class="h-full w-full rounded-[0.6rem] object-cover" />
-                <div class="my-2 h-px w-full bg-white/10"></div>
-                <div class="flex items-center justify-between">
-                  <span class="font-syne text-[10px] font-bold uppercase tracking-[0.08em] text-[#e8874a]">See Full
-                    Content</span>
-                  <span
-                    class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#e8874a] text-[#1a0903]">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                      <path
-                        d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z" />
-                      <path d="m21.854 2.147-10.94 10.939" />
-                    </svg>
-                  </span>
-                </div>
-              </article>
-
-              <!-- Small circle: silakbo logo -->
-              <div
-                class="absolute top-[340px] left-[360px] z-[30] h-[140px] w-[140px] overflow-hidden rounded-full border-[4px] border-[#b3261e] bg-[#141414] p-1 shadow-float">
-                <img src="imgs/img_silakbologo.jpg" alt="Silakbo logo"
-                  class="h-full w-full rounded-full object-cover" />
-              </div>
-
-            </div>
-          </div>
-        </div>
+            </div><!-- /collage-inner -->
+          </div><!-- /collage-sizer -->
+        </div><!-- /collage-outer -->
 
       </div>
     </section>
   </main>
+  <script>
+    // Responsive collage: scale the fixed 700×420 canvas to always fit its container.
+    // Layout/positions of cards are never touched — only the outer scale changes.
+    (function () {
+      const COLLAGE_W = 700;
+      const COLLAGE_H = 420;
+
+      const outer = document.getElementById('collage-outer');
+      const sizer = document.getElementById('collage-sizer');
+      const inner = document.getElementById('collage-inner');
+
+      function rescale() {
+        const availW = outer.clientWidth;
+        const scale = Math.min(availW / COLLAGE_W, 1); // never upscale beyond natural size
+        const scaledH = COLLAGE_H * scale;
+        const offsetX = (availW - COLLAGE_W * scale) / 2; // center horizontally
+
+        inner.style.transform = `translateX(${offsetX}px) scale(${scale})`;
+        sizer.style.height = scaledH + 'px'; // make the parent grow/shrink to match
+      }
+
+      rescale();
+      const ro = new ResizeObserver(rescale);
+      ro.observe(outer);
+    })();
+  </script>
 </body>
 
 </html>

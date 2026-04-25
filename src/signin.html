@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>iMAGE | Publisher Sign In</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;1,9..144,700&family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500;600&display=swap"
+        rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        fraunces: ["Fraunces", "serif"],
+                        syne: ["Syne", "sans-serif"],
+                        outfit: ["Outfit", "sans-serif"],
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        :root {
+            --orange: #e8874a;
+            --orange-dim: rgba(232, 135, 74, 0.12);
+            --orange-border: rgba(232, 135, 74, 0.25);
+            --bg: #0a0a0a;
+            --panel: #141414;
+            --panel-edge: #1f1f1f;
+            --copy: #e2d9cf;
+            --muted: #6b6460;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg);
+            min-height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            font-family: "Outfit", sans-serif;
+            color: var(--copy);
+            position: relative;
+            overflow: hidden;
+        }
+
+
+
+        .card {
+            position: relative;
+            z-index: 1;
+            background: var(--panel);
+            border: 1px solid var(--panel-edge);
+            border-radius: 1.75rem;
+            width: 100%;
+            max-width: 420px;
+            padding: 2.5rem 2rem;
+
+        }
+
+
+
+
+
+        .logo-mark {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .logo-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.75rem;
+            background: var(--orange-dim);
+            border: 1px solid var(--orange-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: "Syne", sans-serif;
+            font-weight: 800;
+            font-size: 0.75rem;
+            color: var(--orange);
+            letter-spacing: -0.02em;
+            flex-shrink: 0;
+        }
+
+        .logo-text {
+            font-family: "Syne", sans-serif;
+            font-weight: 700;
+            font-size: 1.35rem;
+            letter-spacing: -0.04em;
+            line-height: 1;
+        }
+
+        .divider {
+            width: 100%;
+            height: 1px;
+            background: var(--panel-edge);
+            margin: 1.5rem 0;
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        .input-wrap svg {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted);
+            width: 1.1rem;
+            height: 1.1rem;
+            pointer-events: none;
+            transition: color 200ms;
+        }
+
+        .input-field {
+            width: 100%;
+            background: #111;
+            border: 1px solid #272727;
+            border-radius: 0.85rem;
+            padding: 0.85rem 1rem 0.85rem 2.75rem;
+            font-family: "Outfit", sans-serif;
+            font-size: 0.9rem;
+            color: var(--copy);
+            outline: none;
+            transition: border-color 200ms, box-shadow 200ms;
+            -webkit-appearance: none;
+        }
+
+        .input-field::placeholder {
+            color: #484848;
+        }
+
+        .input-field:focus {
+            border-color: var(--orange);
+
+        }
+
+        .input-field:focus~svg,
+        .input-wrap:focus-within svg {
+            color: var(--orange);
+        }
+
+        /* Fix SVG z-order so it's above input visually but not blocking */
+        .input-wrap svg {
+            z-index: 1;
+        }
+
+        .input-field {
+            position: relative;
+            z-index: 0;
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: var(--orange);
+            color: #1a0903;
+            border: none;
+            border-radius: 0.85rem;
+            padding: 0.9rem 1.5rem;
+            font-family: "Syne", sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: 0.02em;
+            cursor: pointer;
+            transition: opacity 160ms, transform 160ms;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            opacity: 0.92;
+        }
+
+        .btn-primary:active:not(:disabled) {
+            transform: translateY(1px);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+
+        /* Spinner */
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(26, 9, 3, 0.25);
+            border-top-color: #1a0903;
+            border-radius: 50%;
+            animation: spin 0.65s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Status message */
+        .status {
+            display: none;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            font-size: 0.82rem;
+            font-family: "Outfit", sans-serif;
+            font-weight: 500;
+
+        }
+
+
+
+        .status.error {
+            display: flex;
+            background: rgba(220, 50, 50, 0.08);
+            border: 1px solid rgba(220, 50, 50, 0.2);
+            color: #f87171;
+        }
+
+        .status.success {
+            display: flex;
+            background: var(--orange-dim);
+            border: 1px solid var(--orange-border);
+            color: var(--orange);
+        }
+
+        /* Access badge */
+        .access-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-family: "Syne", sans-serif;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--orange);
+            background: var(--orange-dim);
+            border: 1px solid var(--orange-border);
+            border-radius: 999px;
+            padding: 0.3rem 0.75rem;
+        }
+
+        .access-badge span.dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--orange);
+            display: inline-block;
+
+        }
+
+
+
+        .viewer-link {
+            color: var(--muted);
+            font-size: 0.8rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            transition: color 160ms;
+        }
+
+        .viewer-link:hover {
+            color: var(--copy);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card">
+
+        <!-- Logo -->
+        <div class="logo-mark mb-6">
+            <div class="logo-icon"><img src="imgs/imgNoBg.png" alt="iMAGE logo"
+                    style="width:100%;height:100%;object-fit:contain;" /></div>
+            <div class="logo-text">
+                <span style="color: var(--orange);">i</span><span style="color: #fff;">MAGE</span>
+            </div>
+        </div>
+
+        <!-- Access badge -->
+        <div class="mb-5">
+            <span class="access-badge"><span class="dot"></span> Publisher Access</span>
+        </div>
+
+        <!-- Heading -->
+        <h1 class="font-fraunces text-[1.6rem] italic leading-tight text-white mb-1">
+            Sign in as a Publisher
+        </h1>
+        <p class="text-sm text-[#6b6460] font-outfit leading-relaxed mb-6">
+            Enter your Gmail address. Only authorized members can post, edit, or delete artworks.
+        </p>
+
+        <div class="divider"></div>
+
+        <!-- Status message -->
+        <div class="status mb-4" id="statusMsg">
+            <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" id="statusIcon">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                    d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+            </svg>
+            <span id="statusText"></span>
+        </div>
+
+        <!-- Email input -->
+        <div class="input-wrap mb-4">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            <input type="email" id="emailInput" class="input-field" placeholder="yourname@gmail.com"
+                autocomplete="email" spellcheck="false" />
+        </div>
+
+        <!-- Sign in button -->
+        <button class="btn-primary" id="signInBtn" type="button">
+            <div class="spinner" id="spinner"></div>
+            <span id="btnText">Sign In</span>
+            <svg id="btnArrow" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+        </button>
+
+        <div class="divider"></div>
+
+        <!-- Viewer link -->
+        <div class="text-center">
+            <a href="dashboard.html" class="viewer-link">
+                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                Continue as Viewer instead
+            </a>
+        </div>
+
+    </div>
+
+    <script type="module" src="./auth.js"></script>
+
+</body>
+
+</html>
