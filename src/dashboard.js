@@ -259,30 +259,19 @@ document.addEventListener('click', () => {
     closeAllDropdowns()
 })
 
-async function loadAllArtworks() {
-    if (!hasMore) return
-    while (hasMore && !isLoading) {
-        await loadMoreArtworks()
-    }
-    if (isLoading) {
-        await new Promise(resolve => {
-            const check = setInterval(() => {
-                if (!isLoading) { clearInterval(check); resolve() }
-            }, 100)
-        })
-    }
-}
-
 //search
-async function filterArtworks(query) {
-    setActiveView('works')
+async function filterArtworks(searchQuery) {
     isSearching = true
-    await loadAllArtworks()
-    const filtered = allArtworks.filter(artwork => {
-        return artwork.title.toLowerCase().includes(query) ||
-            artwork.category.toLowerCase().includes(query) ||
-            Object.values(artwork.artists).flat().join(' ').toLowerCase().includes(query)
-    })
+    const artworksRef = collection(db, "artworks")
+    const q = query(artworksRef, orderBy("date", "desc"))
+    const result = await getDocs(q)
+    const all = result.docs.map(doc => ({ ...doc.data(), id: doc.id }))
+    const filtered = all.filter(artwork =>
+        artwork.title.toLowerCase().includes(searchQuery) ||
+        artwork.category.toLowerCase().includes(searchQuery) ||
+        Object.values(artwork.artists).flat().join(' ').toLowerCase().includes(searchQuery)
+    )
+    setActiveView('works')
     if (filtered.length === 0) {
         layout.innerHTML = ''
         emptyState.classList.remove('hidden')
@@ -438,12 +427,10 @@ function footer() {
 footer()
 
 
-//todo: slow data fetching on searching
 
 //todo: image qr code
 //todo: secure the site (no pop up ads etc.)
 //todo: after development, uncheck the firebase development rules so that the database is secure and not all info fecthcing to the web
-//todo: filter some times not accurate (simetimes iot only show one artwotrks even if the artwqorks is 2 )
 
 //todo: Warning: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
 //todo: dl qr code
