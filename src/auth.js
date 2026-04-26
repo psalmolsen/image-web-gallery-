@@ -75,7 +75,7 @@ async function handleSignIn() {
                 window.location.href = 'dashboard.html'
             }, 1000)
         } else {
-            showError('This Gmail is not authorized. Contact the administrator.')
+            showError('This Gmail is not authorized. Contact the administrator')
             setLoading(false)
         }
     } catch (err) {
