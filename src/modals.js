@@ -341,38 +341,235 @@ function closeQRModal() {
 }
 
 async function downloadQRCode() {
-    const qrCard = document.getElementById('qrCard')
     const downloadBtn = document.getElementById('qrDownloadBtn')
     const btnLabel = downloadBtn?.querySelector('span')
     const originalLabel = btnLabel?.textContent
 
-    // Show loading state on button
     if (downloadBtn) downloadBtn.disabled = true
     if (btnLabel) btnLabel.textContent = 'Saving...'
 
     try {
-        const module = await import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js')
-        const html2canvas = module.default
+        const qrCanvas = document.getElementById('qrCanvas')
+        const logoImg = document.querySelector('#qrCard img')
 
-        const snapshot = await html2canvas(qrCard, {
-            backgroundColor: '#141414',
-            scale: 3,
-            useCORS: true,
-            allowTaint: false,
-            logging: false
+        // Card dimensions (matching the HTML design at 2x scale)
+        const SCALE = 2
+        const W = 360 * SCALE
+        const PADDING = 20 * SCALE
+        const QR_SIZE = 252 * SCALE
+        const QR_FRAME = 268 * SCALE
+        const RADIUS = 16 * SCALE
+
+        // Compute total height
+        const TOP_BAR = 3 * SCALE
+        const HEADER_H = 72 * SCALE
+        const LABEL_H = 36 * SCALE
+        const QR_SECTION_H = QR_FRAME + 24 * SCALE
+        const FOOTER_H = 80 * SCALE
+        const H = TOP_BAR + HEADER_H + LABEL_H + QR_SECTION_H + FOOTER_H
+
+        const out = document.createElement('canvas')
+        out.width = W
+        out.height = H
+        const ctx = out.getContext('2d')
+
+        // ── Helpers ──────────────────────────────────────────────────────────
+        function roundRect(x, y, w, h, r) {
+            ctx.beginPath()
+            ctx.moveTo(x + r, y)
+            ctx.lineTo(x + w - r, y)
+            ctx.quadraticCurveTo(x + w, y, x + w, y + r)
+            ctx.lineTo(x + w, y + h - r)
+            ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h)
+            ctx.lineTo(x + r, y + h)
+            ctx.quadraticCurveTo(x, y + h, x, y + h - r)
+            ctx.lineTo(x, y + r)
+            ctx.quadraticCurveTo(x, y, x + r, y)
+            ctx.closePath()
+        }
+
+        function loadImage(src) {
+            return new Promise((resolve) => {
+                const img = new Image()
+                img.crossOrigin = 'anonymous'
+                img.onload = () => resolve(img)
+                img.onerror = () => resolve(null)
+                img.src = src
+            })
+        }
+
+        // ── Card background ───────────────────────────────────────────────────
+        roundRect(0, 0, W, H, RADIUS)
+        ctx.fillStyle = '#141414'
+        ctx.fill()
+
+        // ── Orange top gradient bar ───────────────────────────────────────────
+        const grad = ctx.createLinearGradient(0, 0, W, 0)
+        grad.addColorStop(0, '#e8874a')
+        grad.addColorStop(1, '#c0451a')
+        ctx.fillStyle = grad
+        ctx.fillRect(0, 0, W, TOP_BAR)
+
+        // ── Header: logo + brand text ─────────────────────────────────────────
+        let y = TOP_BAR + 20 * SCALE
+
+        // load logo
+        const logo = await loadImage(logoImg?.src || 'imgs/image_logo.jpg')
+
+        // Logo circle
+        const LOGO_SIZE = 38 * SCALE
+        const logoX = PADDING
+        const logoY = y
+        ctx.save()
+        ctx.beginPath()
+        ctx.arc(logoX + LOGO_SIZE / 2, logoY + LOGO_SIZE / 2, LOGO_SIZE / 2, 0, Math.PI * 2)
+        ctx.strokeStyle = '#e8874a'
+        ctx.lineWidth = 1 * SCALE
+        ctx.stroke()
+        ctx.clip()
+        if (logo) ctx.drawImage(logo, logoX, logoY, LOGO_SIZE, LOGO_SIZE)
+        ctx.restore()
+
+        // Brand "iMAGE"
+        const textX = logoX + LOGO_SIZE + 12 * SCALE
+        ctx.font = `italic ${22 * SCALE}px serif`
+        ctx.fillStyle = '#e8874a'
+        ctx.fillText('i', textX, logoY + 22 * SCALE)
+        const iWidth = ctx.measureText('i').width
+        ctx.fillStyle = '#e2d9cf'
+        ctx.fillText('MAGE', textX + iWidth, logoY + 22 * SCALE)
+
+        // Subtitle
+        ctx.font = `bold ${7 * SCALE}px sans-serif`
+        ctx.fillStyle = '#6b6460'
+        ctx.letterSpacing = `${2 * SCALE}px`
+        ctx.fillText('CVSU CARMONA  ·  ARTWORK GALLERY', textX, logoY + 36 * SCALE)
+        ctx.letterSpacing = '0px'
+
+        // Header divider
+        y = TOP_BAR + HEADER_H
+        ctx.strokeStyle = '#2a2a2a'
+        ctx.lineWidth = 1
+        ctx.beginPath()
+        ctx.moveTo(0, y)
+        ctx.lineTo(W, y)
+        ctx.stroke()
+
+        // ── "Artwork QR Code" label ───────────────────────────────────────────
+        y += 16 * SCALE
+        ctx.font = `bold ${7 * SCALE}px sans-serif`
+        ctx.fillStyle = '#6b6460'
+        ctx.letterSpacing = `${2 * SCALE}px`
+        ctx.fillText('ARTWORK QR CODE', PADDING, y + 8 * SCALE)
+        ctx.letterSpacing = '0px'
+
+        // ── QR frame + white background ───────────────────────────────────────
+        y += LABEL_H
+        const frameX = (W - QR_FRAME) / 2
+        const frameY = y
+
+        // White QR background
+        const innerX = frameX + 8 * SCALE
+        const innerY = frameY + 8 * SCALE
+        const innerSize = QR_FRAME - 16 * SCALE
+        roundRect(innerX, innerY, innerSize, innerSize, 6 * SCALE)
+        ctx.fillStyle = '#ffffff'
+        ctx.fill()
+
+        // Draw the QR canvas onto output
+        const qrOffsetX = innerX + (innerSize - QR_SIZE) / 2
+        const qrOffsetY = innerY + (innerSize - QR_SIZE) / 2
+        ctx.drawImage(qrCanvas, qrOffsetX, qrOffsetY, QR_SIZE, QR_SIZE)
+
+        // Orange corner brackets
+        const brSize = 14 * SCALE
+        const brThick = 2 * SCALE
+        ctx.strokeStyle = '#e8874a'
+        ctx.lineWidth = brThick
+        const corners = [
+            // TL
+            [[frameX, frameY + brSize], [frameX, frameY], [frameX + brSize, frameY]],
+            // TR
+            [[frameX + QR_FRAME - brSize, frameY], [frameX + QR_FRAME, frameY], [frameX + QR_FRAME, frameY + brSize]],
+            // BL
+            [[frameX, frameY + QR_FRAME - brSize], [frameX, frameY + QR_FRAME], [frameX + brSize, frameY + QR_FRAME]],
+            // BR
+            [[frameX + QR_FRAME - brSize, frameY + QR_FRAME], [frameX + QR_FRAME, frameY + QR_FRAME], [frameX + QR_FRAME, frameY + QR_FRAME - brSize]]
+        ]
+        corners.forEach(([start, mid, end]) => {
+            ctx.beginPath()
+            ctx.moveTo(...start)
+            ctx.lineTo(...mid)
+            ctx.lineTo(...end)
+            ctx.stroke()
         })
 
-        snapshot.toBlob(blob => {
-            if (!blob) {
-                alert('Failed to generate image. Please try again.')
-                return
-            }
+        // Center logo overlay on QR
+        const centerLogoSize = 44 * SCALE
+        const centerLogoX = W / 2 - centerLogoSize / 2
+        const centerLogoY = frameY + QR_FRAME / 2 - centerLogoSize / 2
+        ctx.save()
+        ctx.beginPath()
+        ctx.arc(centerLogoX + centerLogoSize / 2, centerLogoY + centerLogoSize / 2, centerLogoSize / 2, 0, Math.PI * 2)
+        ctx.fillStyle = '#ffffff'
+        ctx.fill()
+        ctx.clip()
+        if (logo) ctx.drawImage(logo, centerLogoX, centerLogoY, centerLogoSize, centerLogoSize)
+        ctx.restore()
+
+        // ── Footer ────────────────────────────────────────────────────────────
+        y = frameY + QR_FRAME + 20 * SCALE
+
+        // Divider
+        ctx.strokeStyle = '#2a2a2a'
+        ctx.lineWidth = 1
+        ctx.beginPath()
+        ctx.moveTo(PADDING, y)
+        ctx.lineTo(W - PADDING, y)
+        ctx.stroke()
+
+        y += 12 * SCALE
+
+        // URL pill background
+        const pillH = 28 * SCALE
+        roundRect(PADDING, y, W - PADDING * 2, pillH, pillH / 2)
+        ctx.fillStyle = '#1e1e1e'
+        ctx.fill()
+        ctx.strokeStyle = '#2a2a2a'
+        ctx.lineWidth = 1
+        ctx.stroke()
+
+        // Orange dot
+        ctx.beginPath()
+        ctx.arc(PADDING + 14 * SCALE, y + pillH / 2, 3 * SCALE, 0, Math.PI * 2)
+        ctx.fillStyle = '#e8874a'
+        ctx.fill()
+
+        // Artwork title in pill
+        ctx.font = `${10 * SCALE}px sans-serif`
+        ctx.fillStyle = '#9a8f8a'
+        ctx.fillText(currentArtworkTitle, PADDING + 24 * SCALE, y + pillH / 2 + 4 * SCALE)
+
+        // "Scan to view artwork"
+        y += pillH + 10 * SCALE
+        ctx.font = `bold ${7 * SCALE}px sans-serif`
+        ctx.fillStyle = '#e8874a'
+        ctx.globalAlpha = 0.7
+        ctx.letterSpacing = `${2 * SCALE}px`
+        const scanText = 'SCAN TO VIEW ARTWORK'
+        const scanW = ctx.measureText(scanText).width
+        ctx.fillText(scanText, (W - scanW) / 2, y + 8 * SCALE)
+        ctx.globalAlpha = 1
+        ctx.letterSpacing = '0px'
+
+        // ── Download ──────────────────────────────────────────────────────────
+        out.toBlob(blob => {
+            if (!blob) return
             const safeTitle = currentArtworkTitle.replace(/[^a-zA-Z0-9\s-_]/g, '').trim().replace(/\s+/g, '-') || 'artwork'
-            const filename = `iMAGE-${safeTitle}.png`
             const url = URL.createObjectURL(blob)
             const a = document.createElement('a')
             a.href = url
-            a.download = filename
+            a.download = `iMAGE-${safeTitle}.png`
             document.body.appendChild(a)
             a.click()
             document.body.removeChild(a)
