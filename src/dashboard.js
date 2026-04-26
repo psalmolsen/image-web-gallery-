@@ -120,6 +120,7 @@ function setActiveView(view) {
 //delete artworks
 function onDelete(deletedId) {
     allArtworks = allArtworks.filter(a => a.id !== deletedId)
+    if (filterCache) filterCache = filterCache.filter(a => a.id !== deletedId)
     renderCards(allArtworks)
 }
 
@@ -175,11 +176,21 @@ window.openShareSheet = function (url, docId, artworkTitle) {
     })
 }
 
+// ─── Filter cache — lazy loaded only when filtering/searching is triggered ────
+let filterCache = null
+
+async function getFilterCache() {
+    if (filterCache) return filterCache
+    const result = await getDocs(query(collection(db, "artworks"), orderBy("date", "desc")))
+    filterCache = result.docs.map(doc => ({ ...doc.data(), id: doc.id }))
+    return filterCache
+}
+
 // Category filtering
 window.filterByCategory = async function (category) {
     isSearching = true
-    await loadAllArtworks()
-    const filtered = allArtworks.filter(a => a.category === category)
+    const all = await getFilterCache()
+    const filtered = all.filter(a => a.category === category)
 
     setActiveView('works')
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -207,9 +218,9 @@ window.filterByCategory = async function (category) {
 // Artist filtering
 window.filterByArtist = async function (artistName) {
     isSearching = true
-    await loadAllArtworks()
+    const all = await getFilterCache()
     const trimmed = artistName.trim()
-    const filtered = allArtworks.filter(a =>
+    const filtered = all.filter(a =>
         Object.values(a.artists).flat().some(n => n.trim() === trimmed)
     )
 
@@ -276,10 +287,7 @@ document.addEventListener('click', () => {
 //search
 async function filterArtworks(searchQuery) {
     isSearching = true
-    const artworksRef = collection(db, "artworks")
-    const q = query(artworksRef, orderBy("date", "desc"))
-    const result = await getDocs(q)
-    const all = result.docs.map(doc => ({ ...doc.data(), id: doc.id }))
+    const all = await getFilterCache()
     const filtered = all.filter(artwork =>
         artwork.title.toLowerCase().includes(searchQuery) ||
         artwork.category.toLowerCase().includes(searchQuery) ||
@@ -343,13 +351,6 @@ document.querySelector('#searchBtnMob')?.addEventListener('click', () => {
     performSearch(document.querySelector('#searchInputMob'))
 })
 
-async function loadAllArtworks() {
-    if (allArtworks.length > 0) return
-    const artworksRef = collection(db, "artworks")
-    const q = query(artworksRef, orderBy("date", "desc"))
-    const result = await getDocs(q)
-    allArtworks = result.docs.map(doc => ({ ...doc.data(), id: doc.id }))
-}
 
 async function loadMoreArtworks() {
     if (isLoading || !hasMore) return

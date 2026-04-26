@@ -23,7 +23,17 @@ export function openFullSheet(artworkData) {
 
     // Populate title, category, date
     document.getElementById('fullSheetTitle').textContent = artworkData.title || ''
-    document.getElementById('fullSheetCategory').textContent = artworkData.category || ''
+    const categoryEl = document.getElementById('fullSheetCategory')
+    categoryEl.textContent = artworkData.category || ''
+    categoryEl.style.cursor = 'pointer'
+    categoryEl.onclick = () => {
+        closeFullSheet()
+        setTimeout(() => {
+            if (typeof window.filterByCategory === 'function') {
+                window.filterByCategory(artworkData.category)
+            }
+        }, 300)
+    }
     document.getElementById('fullSheetDate').textContent = formatDate(artworkData.date)
 
     // Full content
@@ -85,12 +95,24 @@ export function openFullSheet(artworkData) {
                     ${artists.map(name => `
                         <div class="flex items-start gap-1.5">
                             <span class="text-[#e8874a]/60 shrink-0 mt-0.5">•</span>
-                            <span class="text-sm font-outfit text-[#e8874a] break-words">${name}</span>
+                            <button type="button" data-artist="${name}" class="text-sm font-outfit text-[#e8874a] break-words text-left cursor-pointer hover:underline underline-offset-4 decoration-[#e8874a] bg-transparent border-none p-0">${name}</button>
                         </div>
                     `).join('')}
                 </div>
             `
             artistsContainer.appendChild(card)
+
+            card.querySelectorAll('button[data-artist]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const name = btn.getAttribute('data-artist')
+                    closeFullSheet()
+                    setTimeout(() => {
+                        if (typeof window.filterByArtist === 'function') {
+                            window.filterByArtist(name)
+                        }
+                    }, 300)
+                })
+            })
         }
     })
 
