@@ -396,4 +396,5 @@ if (docSnap.exists()) {
 //todo:make sure that it is adaptive to all devices (mobile, desktop, tablet, etc.)
 //todo: off browser suggestion on the form
 //todo: docker
-//todo: refactor
+//todo: refactor (make it as smaller file as possible so it dont feel heavy on the browser)
+//todo: qr scanned-go to index(ladning)-artworks card
