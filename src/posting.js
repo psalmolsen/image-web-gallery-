@@ -1,10 +1,10 @@
 import { db } from "./firebase.js"
 import { collection, addDoc, getDocs, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js"
 
-
-
-
-
+// ─── Auth Guard — must be publisher to access this page ──────────────────────
+if (sessionStorage.getItem('publisher_auth') !== 'true') {
+  window.location.href = 'signin.html'
+}
 
 // Cloudinary config
 const cloudinaryConfig = {
@@ -172,8 +172,6 @@ function fileoverview() {
   const dropzonedefault = document.querySelector("#dropzoneDefault")
   const filepreviewcontainer = document.querySelector("#filePreviewContainer")
 
-
-
   fileinput.addEventListener("change", function () {
     Array.from(this.files).forEach(file => {
       dropzonedefault.classList.add("hidden")
@@ -186,25 +184,15 @@ function fileoverview() {
     });
 
   })
-
-
-
-
-
-
 }
 fileoverview()
-
-
 
 
 // Add new category 
 async function saveCategory(newCategrory) {
   await addDoc(collection(db, "categories"), {
     name: newCategrory
-
   })
-
 }
 
 function addCategory() {
@@ -403,13 +391,6 @@ if (docSnap.exists()) {
   })
   showExistingFiles(data.image_urls)
 }
-
-
-
-
-
-
-
 
 
 //todo:make sure that it is adaptive to all devices (mobile, desktop, tablet, etc.)

@@ -38,8 +38,6 @@ function clearStatus() {
 
 // ─── Auth check ──────────────────────────────────────────────────────────────
 async function checkPublisherAccess(email) {
-    // Expects a "publishers" collection in Firestore
-    // Each doc: { email: "someone@gmail.com" }
     const snapshot = await getDocs(collection(db, "publishers"))
     const authorizedEmails = snapshot.docs.map(doc =>
         doc.data().email?.toLowerCase().trim()
@@ -74,7 +72,7 @@ async function handleSignIn() {
             sessionStorage.setItem('publisher_email', email)
             sessionStorage.setItem('publisher_auth', 'true')
             setTimeout(() => {
-                window.location.href = 'posting.html'
+                window.location.href = 'dashboard.html'
             }, 1000)
         } else {
             showError('This Gmail is not authorized. Contact your administrator.')
@@ -96,11 +94,15 @@ emailInput.addEventListener('keydown', (e) => {
 
 emailInput.addEventListener('input', clearStatus)
 
-// ─── Session guard (call this from posting.js / dashboard.js if needed) ──────
+// ─── Session helpers (used by posting.js / dashboard.js) ─────────────────────
 export function requirePublisherAuth() {
     if (sessionStorage.getItem('publisher_auth') !== 'true') {
         window.location.href = 'signin.html'
     }
+}
+
+export function isPublisher() {
+    return sessionStorage.getItem('publisher_auth') === 'true'
 }
 
 export function getPublisherEmail() {

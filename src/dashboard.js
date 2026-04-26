@@ -3,6 +3,11 @@ import { collection, getDocs, query, orderBy, limit, startAfter } from "https://
 import { createCard, closeAllDropdowns } from "./card.js"
 import { openFullSheet } from "./modals.js"
 
+// ─── Publisher check ──────────────────────────────────────────────────────────
+function isPublisher() {
+    return sessionStorage.getItem('publisher_auth') === 'true'
+}
+
 async function init() {
     // Load card template
     const cardRes = await fetch('card.html')
@@ -21,6 +26,14 @@ async function init() {
     Array.from(modalsContent).forEach(el => {
         document.body.appendChild(document.adoptNode(el))
     })
+
+    // ─── Hide FAB for viewers ─────────────────────────────────────────────────
+    const fab = document.querySelector('.fab')
+    if (fab && !isPublisher()) {
+        fab.style.display = 'none'
+    } else if (fab && isPublisher()) {
+        fab.style.display = 'flex'
+    }
 }
 init()
 
@@ -92,7 +105,10 @@ function setActiveView(view) {
 
     worksSection?.classList.toggle('hidden', !showWorks)
     aboutSection?.classList.toggle('hidden', showWorks)
-    fab?.classList.toggle('hidden', !showWorks)
+
+    // Only show FAB for publishers
+    const fab = document.querySelector('.fab')
+    if (fab) fab.style.display = (showWorks && isPublisher()) ? 'flex' : 'none'
 
     updateNavStyles()
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -204,14 +220,12 @@ window.filterByArtist = async function (artistName) {
     const categoryBanner = document.querySelector('#categoryBanner')
     const artistBanner = document.querySelector('#artistBanner')
     const artistNameEl = document.querySelector('#artistName')
-    const artistNameText = document.querySelector('#artistNameText')
     const artistCount = document.querySelector('#artistCount')
 
     bannerContent.classList.add('hidden')
     categoryBanner.classList.add('hidden')
     artistBanner.classList.remove('hidden')
     artistNameEl.textContent = artistName
-    artistNameText.textContent = artistName
     artistCount.textContent = filtered.length
 
     if (filtered.length === 0) {
@@ -329,12 +343,15 @@ document.querySelector('#searchBtnMob')?.addEventListener('click', () => {
     performSearch(document.querySelector('#searchInputMob'))
 })
 
-async function loadMoreArtworks() {
-    // let lastVisible = null
-    // let isLoading = false
-    // let hasMore = true
-    // let allArtworks = []
+async function loadAllArtworks() {
+    if (allArtworks.length > 0) return
+    const artworksRef = collection(db, "artworks")
+    const q = query(artworksRef, orderBy("date", "desc"))
+    const result = await getDocs(q)
+    allArtworks = result.docs.map(doc => ({ ...doc.data(), id: doc.id }))
+}
 
+async function loadMoreArtworks() {
     if (isLoading || !hasMore) return
     isLoading = true
     try {
@@ -427,7 +444,7 @@ function footer() {
 footer()
 
 
-
+//todo: see ful content artist colection not clicakble 
 //todo: image qr code
 //todo: secure the site (no pop up ads etc.)
 //todo: after development, uncheck the firebase development rules so that the database is secure and not all info fecthcing to the web
@@ -435,4 +452,4 @@ footer()
 //todo: Warning: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
 //todo: dl qr code
 //todo: qr on mobile
-//todo: no artwork yet (create artwork) only on admin or publisher. not for viewwer only 
+//todo: no artwork yet (create artwork) only on admin or publisher. not for viewwer only

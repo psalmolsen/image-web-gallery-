@@ -19,6 +19,11 @@ function toArray(value) {
     return []
 }
 
+// ─── Publisher check ──────────────────────────────────────────────────────────
+function isPublisher() {
+    return sessionStorage.getItem('publisher_auth') === 'true'
+}
+
 // Card carousel
 
 function setupMedia(card, imageUrls, title) {
@@ -39,7 +44,6 @@ function setupMedia(card, imageUrls, title) {
 
     imageWrap.classList.remove('hidden')
 
-    // Preload all images upfront
     imageUrls.forEach(url => {
         if (!isVideoUrl(url)) {
             const preloadImg = new Image()
@@ -65,7 +69,6 @@ function setupMedia(card, imageUrls, title) {
         }
     }
 
-    // Add click handler to open media viewer
     function addMediaClickHandler(el, index) {
         el.style.cursor = 'pointer'
         el.onclick = (e) => {
@@ -106,7 +109,6 @@ function setupMedia(card, imageUrls, title) {
             ).onfinish = () => {
                 currentIndex = nextIndex
                 renderMedia(currentIndex)
-                // Update click handlers with new index
                 addMediaClickHandler(imageEl, currentIndex)
                 addMediaClickHandler(videoEl, currentIndex)
                 getActiveEl().animate(
@@ -193,8 +195,6 @@ export function createCard(artWorkData, docId, onDelete) {
         }
     })
 
-
-
     card.querySelector('.card-link').href = `card.html?id=${docId}`
 
     // Overview toggle
@@ -233,17 +233,24 @@ export function createCard(artWorkData, docId, onDelete) {
         }
     }
 
-
     const imageUrls = artWorkData.image_urls
         ? (Array.isArray(artWorkData.image_urls) ? artWorkData.image_urls : [artWorkData.image_urls])
         : []
 
     setupMedia(card, imageUrls, artWorkData.title)
     setupArtists(card, artWorkData.artists)
-    cardMenu(card, docId, onDelete)
+
+    // ─── Only show menu for publishers ───────────────────────────────────────
+    if (isPublisher()) {
+        cardMenu(card, docId, onDelete)
+    } else {
+        // Hide the 3-dot menu button entirely for viewers
+        const menuBtn = card.querySelector('.card-menu')
+        if (menuBtn) menuBtn.style.display = 'none'
+    }
+
     cardShare(card, docId, artWorkData.title)
 
-    // Intercept card link to open full sheet
     const cardLink = card.querySelector('.card-link')
     cardLink.addEventListener('click', (e) => {
         e.preventDefault()
@@ -260,7 +267,6 @@ function cardMenu(card, docId, onDelete) {
     const dropdown = card.querySelector('.card-dropdown')
     const editBtn = card.querySelector('.card-edit')
     const deleteBtn = card.querySelector('.card-delete')
-    const articleElement = card.querySelector('article')  // Get article reference early
 
     cardMenuBtn.addEventListener('click', (e) => {
         e.stopPropagation()
@@ -282,7 +288,6 @@ function cardMenu(card, docId, onDelete) {
         e.stopPropagation()
         if (!window.confirm("Are you sure you want to delete this artwork?")) return
 
-        // Find the actual article element in the DOM
         const actualArticle = deleteBtn.closest('article')
         actualArticle?.remove()
 
@@ -294,7 +299,6 @@ function cardMenu(card, docId, onDelete) {
             alert('Failed to delete artwork. Please refresh and try again.')
         }
     })
-
 }
 
 let activeShareDropdown = null
@@ -319,7 +323,6 @@ function cardShare(card, docId, artworkTitle) {
     const imagecode = card.querySelector('.image-code')
     const copylink = card.querySelector('.copy-link')
 
-    // Check if running locally or in production
     const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     const pathPrefix = isLocal ? '/src' : ''
     const shareUrl = `${window.location.origin}${pathPrefix}/dashboard.html?artwork=${docId}`
