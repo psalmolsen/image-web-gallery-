@@ -27,12 +27,10 @@ async function init() {
         document.body.appendChild(document.adoptNode(el))
     })
 
-    // ─── Hide FAB for viewers ─────────────────────────────────────────────────
+    // ─── Show FAB only for publishers ────────────────────────────────────────
     const fab = document.querySelector('.fab')
-    if (fab && !isPublisher()) {
-        fab.style.display = 'none'
-    } else if (fab && isPublisher()) {
-        fab.style.display = 'flex'
+    if (fab && isPublisher()) {
+        fab.style.setProperty('display', 'flex', 'important')
     }
 }
 init()
@@ -106,9 +104,11 @@ function setActiveView(view) {
     worksSection?.classList.toggle('hidden', !showWorks)
     aboutSection?.classList.toggle('hidden', showWorks)
 
-    // Only show FAB for publishers
+    // Only show FAB for publishers, and only on works view
     const fab = document.querySelector('.fab')
-    if (fab) fab.style.display = (showWorks && isPublisher()) ? 'flex' : 'none'
+    if (fab && isPublisher()) {
+        fab.style.setProperty('display', showWorks ? 'flex' : 'none', 'important')
+    }
 
     updateNavStyles()
     window.scrollTo({ top: 0, behavior: 'smooth' })
