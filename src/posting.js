@@ -1,18 +1,21 @@
 import { db } from "./firebase.js"
 import { collection, addDoc, getDocs, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js"
 
-// ─── Auth Guard — must be publisher to access this page ──────────────────────
 if (sessionStorage.getItem('publisher_auth') !== 'true') {
   window.location.href = 'signin.html'
 }
 
-// Cloudinary config
 const cloudinaryConfig = {
   cloudName: "drfzsz1t6",
   uploadPreset: "image-gallery"
 }
 
-// Add artist on the same team
+const artistAddButtonClass = 'artist-btn shrink-0 flex h-6 w-6 items-center justify-center rounded-full border border-[#e8874a]/35 bg-[#e8874a]/10 text-xs font-bold text-[#e8874a] transition-all duration-200 hover:bg-[#e8874a] hover:text-[#1a0903]'
+const artistRemoveButtonClass = 'artist-btn shrink-0 flex h-6 w-6 items-center justify-center rounded-full border border-[#2a2a2a] bg-transparent text-[#9a8f8a] transition-all duration-200 hover:border-[#e8874a] hover:text-[#e8874a]'
+const artistRowClass = 'artist-row flex items-center gap-2 border-b-2 border-[#2a2a2a] focus-within:border-[#e8874a] transition-colors duration-200'
+const artistInputClass = 'flex-1 bg-transparent outline-none py-2.5 text-sm text-[#e2d9cf] placeholder-[#6b6460] font-outfit'
+const filePreviewClass = 'flex items-center gap-2 rounded-xl border border-[#2a2a2a] bg-[#171717] px-4 py-3 text-sm font-outfit text-[#c4b4a5]'
+
 function addArtistInput(roleWrapper) {
   const container = roleWrapper.querySelector('.artist-inputs')
   const placeholder = roleWrapper.querySelector('input').placeholder
@@ -22,29 +25,27 @@ function addArtistInput(roleWrapper) {
     lastInput.focus()
     return
   }
-  // convert current last row's + to ✕
+
   const lastRow = container.querySelector('.artist-row:last-child')
   if (lastRow) {
     const lastBtn = lastRow.querySelector('.artist-btn')
-    lastBtn.textContent = '✕'
-    lastBtn.classList.remove('bg-orange-100', 'text-orange-500', 'hover:bg-orange-500', 'hover:text-white')
-    lastBtn.classList.add('text-stone-300', 'hover:text-orange-500', 'bg-transparent')
-    lastBtn.addEventListener('click', () => lastRow.remove())
+    lastBtn.textContent = '×'
+    lastBtn.className = artistRemoveButtonClass
+    lastBtn.addEventListener('click', () => lastRow.remove(), { once: true })
   }
 
-  // create new row with +
   const row = document.createElement('div')
-  row.className = 'artist-row flex items-center gap-2 border-b-2 border-orange-100 focus-within:border-orange-500 transition-colors duration-200'
+  row.className = artistRowClass
 
   const input = document.createElement('input')
   input.type = 'text'
   input.placeholder = placeholder
-  input.className = 'flex-1 bg-transparent outline-none py-2.5 text-sm text-stone-900 placeholder-stone-400 font-outfit'
+  input.className = artistInputClass
 
   const plusBtn = document.createElement('button')
   plusBtn.type = 'button'
   plusBtn.textContent = '+'
-  plusBtn.className = 'artist-btn shrink-0 w-5 h-5 rounded-full bg-orange-100 text-orange-500 text-xs font-bold hover:bg-orange-500 hover:text-white transition-all duration-200 flex items-center justify-center'
+  plusBtn.className = artistAddButtonClass
   plusBtn.addEventListener('click', () => addArtistInput(roleWrapper))
 
   row.appendChild(input)
@@ -56,39 +57,32 @@ function getArtistValues(role) {
   const wrapper = document.querySelector(`[data-role="${role}"]`)
   if (!wrapper) return []
   return Array.from(wrapper.querySelectorAll('input'))
-    .map(i => i.value.trim())
+    .map((input) => input.value.trim())
     .filter(Boolean)
 }
 
-// wire up all initial + buttons
-document.querySelectorAll('[data-role]').forEach(wrapper => {
+document.querySelectorAll('[data-role]').forEach((wrapper) => {
   wrapper.querySelector('.artist-btn').addEventListener('click', () => {
     addArtistInput(wrapper)
   })
 })
 
-
-// Artwork data form (collect values)
 class FormValues {
-  // Setters function 
   setFormValues() {
-    // artwork data  
     this.file = document.getElementById("FileInput").files
     this.title = document.getElementById("titleInput").value.trim()
     this.overview = document.getElementById("overview").value.trim()
     this.fullcontext = document.getElementById("descriptionInput").value.trim()
     this.date = document.getElementById("Date").value
 
-    //artist data 
     this.graphicartist = getArtistValues("graphicartist")
     this.writer = getArtistValues("writer")
     this.videographer = getArtistValues("videographer")
     this.photographer = getArtistValues("photographer")
 
-    //artwork category
     this.artcategory = document.getElementById("category").value
   }
-  // Getters function 
+
   getFormValues() {
     this.setFormValues()
     return {
@@ -97,7 +91,6 @@ class FormValues {
       overview: this.overview,
       fullcontext: this.fullcontext,
       date: this.date,
-
       artists: {
         graphicartist: this.graphicartist,
         writer: this.writer,
@@ -105,13 +98,11 @@ class FormValues {
         photographer: this.photographer
       },
       category: this.artcategory
-
     }
   }
 
-  // Validate function (check if values are empty)  
   validateForm() {
-    let data = this.getFormValues()
+    const data = this.getFormValues()
 
     if (!data.title) {
       alert("Please enter a title for the artwork.")
@@ -127,22 +118,25 @@ class FormValues {
       alert("Please enter a full context for the artwork.")
       return false
     }
+
     if (!data.category) {
       alert("Please enter a category for the artwork.")
       return false
     }
+
     if (!data.date) {
       alert("Please enter a date for the artwork.")
       return false
     }
-    if ((!data.artists.graphicartist.length && !data.artists.writer.length && !data.artists.videographer.length && !data.artists.photographer.length)) {
+
+    if (!data.artists.graphicartist.length && !data.artists.writer.length && !data.artists.videographer.length && !data.artists.photographer.length) {
       alert("Please enter at least one artist.")
       return false
     }
+
     return true
   }
 
-  // Clear textfield after submit
   clearForm() {
     document.querySelector("#FileInput").value = null
     document.querySelector("#titleInput").value = null
@@ -150,21 +144,29 @@ class FormValues {
     document.querySelector("#overview").value = null
     document.querySelector("#category").value = null
 
-    document.querySelectorAll('[data-role]').forEach(wrapper => {
+    document.querySelectorAll('[data-role]').forEach((wrapper) => {
       const container = wrapper.querySelector('.artist-inputs')
-      // remove all rows except first
       const rows = container.querySelectorAll('.artist-row')
-      rows.forEach((row, i) => { if (i > 0) row.remove() })
-      // clear first row input and reset its button back to +
+      rows.forEach((row, index) => {
+        if (index > 0) row.remove()
+      })
+
       const firstInput = container.querySelector('input')
       const firstBtn = container.querySelector('.artist-btn')
       if (firstInput) firstInput.value = ''
       if (firstBtn) {
         firstBtn.textContent = '+'
-        firstBtn.className = 'artist-btn shrink-0 w-5 h-5 rounded-full bg-orange-100 text-orange-500 text-xs font-bold hover:bg-orange-500 hover:text-white transition-all duration-200 flex items-center justify-center'
+        firstBtn.className = artistAddButtonClass
       }
     })
   }
+}
+
+function appendFilePreview(name) {
+  const card = document.createElement("div")
+  card.className = filePreviewClass
+  card.textContent = name
+  document.querySelector("#filePreviewContainer").appendChild(card)
 }
 
 function fileoverview() {
@@ -173,22 +175,15 @@ function fileoverview() {
   const filepreviewcontainer = document.querySelector("#filePreviewContainer")
 
   fileinput.addEventListener("change", function () {
-    Array.from(this.files).forEach(file => {
+    Array.from(this.files).forEach((file) => {
       dropzonedefault.classList.add("hidden")
       filepreviewcontainer.classList.remove("hidden")
-      const card = document.createElement("div")
-      card.className = "flex items-center gap-2 bg-white border border-stone-200 rounded-xl px-4 py-3 text-sm font-outfit text-stone-700 shadow-sm"
-      card.textContent = file.name
-      filepreviewcontainer.appendChild(card)
-
-    });
-
+      appendFilePreview(file.name)
+    })
   })
 }
 fileoverview()
 
-
-// Add new category 
 async function saveCategory(newCategrory) {
   await addDoc(collection(db, "categories"), {
     name: newCategrory
@@ -225,8 +220,8 @@ function addCategory() {
 
 async function loadCategory() {
   const result = await getDocs(collection(db, "categories"))
-  result.forEach(doc => {
-    const categoryData = doc.data()
+  result.forEach((entry) => {
+    const categoryData = entry.data()
     const categoryOption = document.createElement("option")
     categoryOption.value = categoryData.name
     categoryOption.textContent = categoryData.name
@@ -237,7 +232,6 @@ async function loadCategory() {
 addCategory()
 loadCategory()
 
-// Cloudinary upload function
 async function cloudinaryUpload(file, title) {
   const dataFile = new FormData()
   const safeTitle = title ? title.replace(/[^a-zA-Z0-9-_]/g, "-") : "artwork"
@@ -253,7 +247,6 @@ async function cloudinaryUpload(file, title) {
   })
   const result = await response.json()
   return result.secure_url
-
 }
 
 async function cloudinaryUploadMultiple(files, title) {
@@ -261,7 +254,6 @@ async function cloudinaryUploadMultiple(files, title) {
   return Promise.all(uploadTasks)
 }
 
-// Firebase upload
 async function firebaseUpload(data, urls, editingArtworkId) {
   const cleanUrls = Array.isArray(urls) ? urls.filter(Boolean) : []
   const primaryUrl = cleanUrls[0] || null
@@ -273,7 +265,6 @@ async function firebaseUpload(data, urls, editingArtworkId) {
     let finalImageUrls = cleanUrls
 
     if (cleanUrls.length === 0) {
-      // No new files uploaded, get old URLs
       const existingDoc = await getDoc(docRef)
       const existingData = existingDoc.data()
       finalImageUrl = existingData.image_url
@@ -290,8 +281,7 @@ async function firebaseUpload(data, urls, editingArtworkId) {
       image_urls: finalImageUrls,
       date: data.date
     })
-  }
-  else {
+  } else {
     await addDoc(collection(db, "artworks"), {
       title: data.title,
       overview: data.overview,
@@ -305,20 +295,17 @@ async function firebaseUpload(data, urls, editingArtworkId) {
   }
 }
 
-
-// Publish button
 const publishBtn = document.querySelector("#publishBtn")
 publishBtn.addEventListener("click", async function () {
-
   const form = new FormValues()
 
   if (!form.validateForm()) {
     return false
   }
 
-  const originalText = publishBtn.textContent;
-  publishBtn.disabled = true;
-  publishBtn.textContent = "Publishing...";
+  const originalText = publishBtn.textContent
+  publishBtn.disabled = true
+  publishBtn.textContent = "Publishing..."
 
   const data = form.getFormValues()
 
@@ -332,24 +319,18 @@ publishBtn.addEventListener("click", async function () {
     form.clearForm()
     alert("Artwork published successfully!")
     window.location.href = "Dashboard.html"
-
   } catch (error) {
     alert("An error occurred while publishing the artwork. Please try again.")
-    publishBtn.disabled = false;
-    publishBtn.textContent = originalText;
-
+    publishBtn.disabled = false
+    publishBtn.textContent = originalText
   }
-});
+})
 
-
-
-// Edit 
 const urlParams = new URLSearchParams(window.location.search)
 const editingArtworkId = urlParams.get('id')
 const docRef = doc(db, "artworks", editingArtworkId)
 const docSnap = await getDoc(docRef)
 
-// Show existing file in pills
 function showExistingFiles(urls) {
   if (!urls || urls.length === 0) return
 
@@ -359,24 +340,20 @@ function showExistingFiles(urls) {
   dropzonedefault.classList.add("hidden")
   filepreviewcontainer.classList.remove("hidden")
 
-  urls.forEach((url, index) => {
+  urls.forEach((url) => {
     const fileName = url.split('/').pop().split('?')[0]
-    const card = document.createElement("div")
-    card.className = "flex items-center gap-2 bg-white border border-stone-200 rounded-xl px-4 py-3 text-sm font-outfit text-stone-700 shadow-sm"
-    card.textContent = fileName
-    filepreviewcontainer.appendChild(card)
+    appendFilePreview(fileName)
   })
 }
 
 if (docSnap.exists()) {
   const data = docSnap.data()
 
-  //pre-fill value 
-  document.getElementById('titleInput').value = data.title;
-  document.getElementById('overview').value = data.overview;
-  document.getElementById('descriptionInput').value = data.fullcontext;
-  document.getElementById('Date').value = data.date;
-  document.getElementById('category').value = data.category;
+  document.getElementById('titleInput').value = data.title
+  document.getElementById('overview').value = data.overview
+  document.getElementById('descriptionInput').value = data.fullcontext
+  document.getElementById('Date').value = data.date
+  document.getElementById('category').value = data.category
 
   Object.entries(data.artists).forEach(([role, names]) => {
     const wrapper = document.querySelector(`[data-role="${role}"]`)
@@ -385,16 +362,8 @@ if (docSnap.exists()) {
       names.forEach((name) => {
         addArtistInput(wrapper)
         wrapper.lastElementChild.querySelector('input').value = name
-      }
-      )
+      })
     }
   })
   showExistingFiles(data.image_urls)
 }
-
-
-//todo:make sure that it is adaptive to all devices (mobile, desktop, tablet, etc.)
-//todo: off browser suggestion on the form
-//todo: docker
-//todo: refactor (make it as smaller file as possible so it dont feel heavy on the browser)
-//todo: qr scanned-go to index(ladning)-artworks card
