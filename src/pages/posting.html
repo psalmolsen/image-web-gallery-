@@ -26,6 +26,11 @@
     .font-outfit {
       font-family: "Outfit", sans-serif;
     }
+
+    #Date::-webkit-calendar-picker-indicator {
+      filter: invert(62%) sepia(60%) saturate(500%) hue-rotate(340deg) brightness(100%);
+      cursor: pointer;
+    }
   </style>
 </head>
 
@@ -50,29 +55,30 @@
         <label class="mb-3 block font-syne text-[0.65rem] font-bold uppercase tracking-[0.16em] text-[#c4b4a5]">
           Upload Artwork
         </label>
-        <label for="FileInput"
-          class="group relative flex min-h-[160px] cursor-pointer flex-col items-center justify-center gap-3 overflow-hidden rounded-[1.75rem] border-2 border-dashed border-[#2a2a2a] bg-[#141414] transition-all duration-300 hover:border-[#e8874a]">
-          <div id="dropzoneDefault" class="flex flex-col items-center gap-3">
-            <div
-              class="flex h-14 w-14 items-center justify-center rounded-full border border-[#2a2a2a] bg-[#1f1f1f] text-2xl transition-transform duration-300 group-hover:scale-105">
-              <svg class="h-6 w-6 text-[#e8874a]" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round">
-                <path
-                  d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551" />
-              </svg>
+        <div
+          class="group relative flex min-h-[160px] cursor-pointer flex-col items-center justify-center gap-3 rounded-[1.75rem] border-2 border-dashed border-[#2a2a2a] bg-[#141414] transition-all duration-300 hover:border-[#e8874a] p-5">
+          <label for="FileInput" class="flex flex-col items-center gap-3 cursor-pointer w-full">
+            <div id="dropzoneDefault" class="flex flex-col items-center gap-3">
+              <div
+                class="flex h-14 w-14 items-center justify-center rounded-full border border-[#2a2a2a] bg-[#1f1f1f] text-2xl transition-transform duration-300 group-hover:scale-105">
+                <svg class="h-6 w-6 text-[#e8874a]" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path
+                    d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551" />
+                </svg>
+              </div>
+              <div class="text-center">
+                <p class="font-syne text-sm font-semibold text-[#c4b4a5]">
+                  <span class="text-[#e8874a]">Choose file</span> or drag &amp; drop
+                </p>
+                <p class="mt-1 text-xs tracking-wide text-[#6b6460]">PNG / JPG / MP4</p>
+              </div>
             </div>
-            <div class="text-center">
-              <p class="font-syne text-sm font-semibold text-[#c4b4a5]">
-                <span class="text-[#e8874a]">Choose file</span> or drag &amp; drop
-              </p>
-              <p class="mt-1 text-xs tracking-wide text-[#6b6460]">PNG / JPG / MP4</p>
-            </div>
-          </div>
-          <div id="filePreviewContainer" class="mt-4 flex flex-wrap gap-3"></div>
-          <input type="file" id="FileInput" multiple
-            class="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0" />
-        </label>
+          </label>
+          <div id="filePreviewContainer" class="flex flex-wrap gap-3 w-full"></div>
+          <input type="file" id="FileInput" multiple class="hidden" />
+        </div>
       </div>
     </div>
 

@@ -17,7 +17,7 @@ const artistRowClass =
 const artistInputClass =
   "flex-1 bg-transparent outline-none py-2.5 text-sm text-[#e2d9cf] placeholder-[#6b6460] font-outfit";
 const filePreviewClass =
-  "flex items-center gap-2 rounded-xl border border-[#2a2a2a] bg-[#171717] px-4 py-3 text-sm font-outfit text-[#c4b4a5]";
+  "relative flex items-center gap-2 rounded-xl border border-[#2a2a2a] bg-[#171717] px-4 py-3 text-sm font-outfit text-[#c4b4a5]";
 
 const fileInput = document.getElementById("FileInput");
 const dropzoneDefault = document.getElementById("dropzoneDefault");
@@ -34,18 +34,45 @@ const editingArtworkId = urlParams.get("id");
 // TODO: sessionStorage auth has been replaced with Firebase Email Link Auth
 // TODO: Consider adding onAuthStateChanged listener to show a loading state
 // while Firebase checks auth — prevents flash of wrong UI on page load
-function appendFilePreview(name) {
+let selectedFiles = [];
+
+function appendFilePreview(name, index) {
   const preview = document.createElement("div");
   preview.className = filePreviewClass;
-  preview.textContent = name;
+  preview.dataset.index = index;
+
+  const label = document.createElement("span");
+  label.textContent = name;
+
+  const removeBtn = document.createElement("button");
+  removeBtn.type = "button";
+  removeBtn.textContent = "×";
+  removeBtn.className = "ml-1 text-[#9a8f8a] hover:text-[#e8874a] font-bold text-base leading-none transition-colors duration-200";
+  removeBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    selectedFiles.splice(index, 1);
+    renderFilePreviews();
+  });
+
+  preview.append(label, removeBtn);
   filePreviewContainer.appendChild(preview);
 }
 
-function resetFilePreview() {
+function renderFilePreviews() {
   filePreviewContainer.innerHTML = "";
-  if (filePreviewContainer.children.length === 0) {
+  if (selectedFiles.length === 0) {
     dropzoneDefault.classList.remove("hidden");
+    return;
   }
+  dropzoneDefault.classList.add("hidden");
+  selectedFiles.forEach((file, i) => appendFilePreview(file.name, i));
+}
+
+function resetFilePreview() {
+  selectedFiles = [];
+  filePreviewContainer.innerHTML = "";
+  dropzoneDefault.classList.remove("hidden");
 }
 
 function addArtistInput(roleWrapper, presetValue = "") {
@@ -98,7 +125,7 @@ function getArtistValues(role) {
 
 function collectFormValues() {
   return {
-    file: fileInput.files,
+    file: selectedFiles,
     title: document.getElementById("titleInput").value.trim(),
     overview: document.getElementById("overview").value.trim(),
     fullcontext: document.getElementById("descriptionInput").value.trim(),
@@ -236,16 +263,9 @@ function bindCategoryActions() {
 
 function bindFilePreview() {
   fileInput.addEventListener("change", () => {
-    filePreviewContainer.innerHTML = "";
-
-    Array.from(fileInput.files).forEach((file) => {
-      dropzoneDefault.classList.add("hidden");
-      appendFilePreview(file.name);
-    });
-
-    if (!fileInput.files.length) {
-      dropzoneDefault.classList.remove("hidden");
-    }
+    selectedFiles = [...selectedFiles, ...Array.from(fileInput.files)];
+    fileInput.value = "";
+    renderFilePreviews();
   });
 }
 
@@ -286,8 +306,8 @@ publishButton.addEventListener("click", async () => {
 
   try {
     let uploadedUrls = [];
-    if (formData.file && formData.file.length) {
-      uploadedUrls = await uploadFiles(Array.from(formData.file), formData.title);
+    if (selectedFiles.length) {
+      uploadedUrls = await uploadFiles(selectedFiles, formData.title);
     }
 
     await saveArtwork(formData, uploadedUrls, editingArtworkId);
