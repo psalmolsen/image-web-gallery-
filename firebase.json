@@ -2,6 +2,53 @@
   "hosting": {
     "public": "src",
     "cleanUrls": true,
+    "redirects": [
+      {
+        "source": "/",
+        "destination": "/pages/index.html",
+        "type": 302
+      },
+      {
+        "source": "/index",
+        "destination": "/pages/index.html",
+        "type": 302
+      },
+      {
+        "source": "/index.html",
+        "destination": "/pages/index.html",
+        "type": 302
+      },
+      {
+        "source": "/dashboard",
+        "destination": "/pages/dashboard.html",
+        "type": 302
+      },
+      {
+        "source": "/dashboard.html",
+        "destination": "/pages/dashboard.html",
+        "type": 302
+      },
+      {
+        "source": "/signin",
+        "destination": "/pages/signin.html",
+        "type": 302
+      },
+      {
+        "source": "/signin.html",
+        "destination": "/pages/signin.html",
+        "type": 302
+      },
+      {
+        "source": "/posting",
+        "destination": "/pages/posting.html",
+        "type": 302
+      },
+      {
+        "source": "/posting.html",
+        "destination": "/pages/posting.html",
+        "type": 302
+      }
+    ],
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -9,6 +56,7 @@
     ]
   },
   "firestore": {
-    "indexes": "firestore.indexes.json"
+    "indexes": "firestore.indexes.json",
+    "rules": "firestore.rules"
   }
 }

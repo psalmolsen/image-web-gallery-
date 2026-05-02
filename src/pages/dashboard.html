@@ -5,29 +5,29 @@
   <meta charset="utf-8" />
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
   <title>iMAGE — The Gallery Archive</title>
+  <!-- TODO: Add Content Security Policy <meta> tag to all HTML pages to prevent XSS attacks -->
+  <!-- TODO: Replace cdn.tailwindcss.com with a proper production build — CDN version is slow, not for production, and purges nothing -->
+  <!-- TODO: Set up Vite as the build tool — enables bundling, minification, tree-shaking, and proper ES module handling -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com" rel="preconnect" />
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
   <link
     href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,700&family=Outfit:wght@300;400;500;600;700&family=Syne:wght@400;700&display=swap"
     rel="stylesheet" />
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            fraunces: ["Fraunces", "serif"],
-            syne: ["Syne", "sans-serif"],
-            outfit: ["Outfit", "sans-serif"],
-          },
-        },
-      },
-    };
-  </script>
-  <script src="vendor/qr-creator.min.js"></script>
-
-
+  <script src="../vendor/qr-creator.min.js"></script>
   <style>
+    .font-fraunces {
+      font-family: "Fraunces", serif;
+    }
+
+    .font-syne {
+      font-family: "Syne", sans-serif;
+    }
+
+    .font-outfit {
+      font-family: "Outfit", sans-serif;
+    }
+
     html {
       scroll-behavior: smooth;
     }
@@ -88,7 +88,6 @@
       }
     }
 
-    /* QR modal corner brackets */
     .corner {
       position: absolute;
       width: 18px;
@@ -97,7 +96,7 @@
 
     .corner::before,
     .corner::after {
-      content: '';
+      content: "";
       position: absolute;
       background: #C0451A;
     }
@@ -138,27 +137,59 @@
     #qrCanvas {
       image-rendering: pixelated;
     }
+
+    .qr-corner {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-color: #e8874a;
+      border-style: solid;
+      pointer-events: none;
+    }
+
+    .qr-corner-tl {
+      top: -1px;
+      left: -1px;
+      border-width: 2px 0 0 2px;
+      border-radius: 3px 0 0 0;
+    }
+
+    .qr-corner-tr {
+      top: -1px;
+      right: -1px;
+      border-width: 2px 2px 0 0;
+      border-radius: 0 3px 0 0;
+    }
+
+    .qr-corner-bl {
+      bottom: -1px;
+      left: -1px;
+      border-width: 0 0 2px 2px;
+      border-radius: 0 0 0 3px;
+    }
+
+    .qr-corner-br {
+      bottom: -1px;
+      right: -1px;
+      border-width: 0 2px 2px 0;
+      border-radius: 0 0 3px 0;
+    }
   </style>
 </head>
 
 <body class="min-h-screen font-outfit bg-[#0c0c0c] text-stone-200">
-
-  <!-- HEADER -->
   <header class="sticky top-0 z-50 border-b border-[#1f1f1f] bg-[#0c0c0c]/[0.93] backdrop-blur-[14px]">
     <div class="flex items-center justify-between gap-4 px-5 mx-auto max-w-7xl h-[52px]">
-
-      <!-- Logo -->
       <a href="dashboard.html" class="flex items-center gap-2.5 flex-shrink-0">
         <div
           class="flex items-center justify-center flex-shrink-0 w-12 h-12 rounded-xl overflow-hidden bg-[#1f1f1f] border border-[#2a2a2a]">
-          <img alt="iMAGE logo" src="imgs/imgNoBg.png" class="w-full h-full object-contain p-1" />
+          <img alt="iMAGE logo" src="../imgs/imgNoBg.png" class="w-full h-full object-contain p-1" />
         </div>
         <h1 class="font-syne text-[1.35rem] font-bold leading-none tracking-[-0.01em]">
           <span class="text-[#e8874a]">i</span><span class="text-white">MAGE</span>
         </h1>
       </a>
 
-      <!-- Desktop center nav -->
       <nav class="dsk-only items-center gap-1">
         <button data-nav-target="works"
           class="px-4 py-1.5 font-syne text-[11px] font-bold tracking-widest uppercase border-b-2 border-orange-500 text-orange-500 transition-colors duration-200 bg-transparent border-l-0 border-r-0 border-t-0 cursor-pointer">
@@ -170,9 +201,11 @@
         </button>
       </nav>
 
-      <!-- Right controls -->
       <div class="flex items-center gap-2">
-        <!-- Search  -->
+        <button id="signOutBtn"
+          class="hidden items-center justify-center rounded-[9px] border border-[#252525] bg-[#141414] px-3 py-1.5 font-syne text-[11px] font-bold uppercase tracking-[0.12em] text-[#e8874a] transition-colors duration-200 hover:border-orange-500 hover:text-[#ffb27f]">
+          Sign Out
+        </button>
         <div class="dsk-only relative items-center">
           <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 pointer-events-none text-stone-500"
             fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -189,17 +222,12 @@
             </svg>
           </button>
         </div>
-
       </div>
-
     </div>
   </header>
 
-  <!-- MAIN -->
   <main class="px-5 py-7 pb-28 mx-auto max-w-7xl">
     <section id="worksSection">
-
-      <!-- Mobile search -->
       <div class="mob-only mb-5">
         <div class="flex items-center w-full bg-[#141414] border border-[#252525] rounded-[10px] overflow-hidden">
           <svg class="shrink-0 ml-3 w-4 h-4 pointer-events-none text-stone-500" fill="none" stroke="currentColor"
@@ -219,7 +247,6 @@
         </div>
       </div>
 
-      <!-- label banner -->
       <div class="p-7 mb-6 rounded-[18px] bg-[#141414] border border-[#1f1f1f]">
         <p class="font-syne text-[10px] font-bold tracking-[0.18em] uppercase mb-5 text-stone-500">Individual Multimedia
           Arts Guild Enthusiasts
@@ -227,15 +254,7 @@
 
         <div class="flex items-start gap-4">
           <div class="min-w-0 flex-1">
-
-
-            <!-- Default content  -->
             <div id="bannerContent">
-
-
-              <!-- <p class="font-outfit text-base leading-relaxed text-stone-300 mb-3 text-justify">
-              iMAGE is a Non-Academic Student Organization at Cavite State University – Carmona Campus.
-            </p> -->
               <p class="font-outfit text-xs leading-relaxed text-stone-300 text-justify">
                 All images/videos uploaded are owned by iMAGE. Cropping or removing the watermark is strictly
                 prohibited.
@@ -243,8 +262,6 @@
               </p>
             </div>
 
-
-            <!-- banner for category - hidden by default -->
             <div id="categoryBanner" class="hidden">
               <div class="flex items-start gap-4">
                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
@@ -265,7 +282,7 @@
                 </div>
               </div>
             </div>
-            <!-- banner for artist - hidden by default -->
+
             <div id="artistBanner" class="hidden">
               <div class="flex items-start gap-4">
                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
@@ -284,13 +301,10 @@
                 </div>
               </div>
             </div>
-
-
           </div>
         </div>
       </div>
 
-      <!-- Empty State -->
       <div class="hidden py-20 text-center rounded-2xl bg-[#141414] border border-[#1f1f1f]" id="emptyState">
         <div class="flex items-center justify-center w-16 h-16 mx-auto mb-4 rounded-full bg-[#1e1e1e]">
           <svg class="w-8 h-8 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -310,13 +324,11 @@
         </a>
       </div>
 
-      <!-- layout  (mansory hoirizontal-->
       <div class="flex flex-col md:flex-row gap-5" id="layout">
         <div class="flex-1 flex flex-col gap-5" id="col-0"></div>
         <div class="hidden md:flex flex-1 flex-col gap-5" id="col-1"></div>
         <div class="hidden lg:flex flex-1 flex-col gap-5" id="col-2"></div>
       </div>
-
     </section>
 
     <section id="aboutSection" class="hidden">
@@ -344,14 +356,12 @@
               </div>
 
               <div class="relative w-[34%] min-w-[110px] max-w-[250px] shrink-0 sm:w-[30%] lg:max-w-[320px]">
-                <img alt="iMAGE logo feature" src="imgs/imgNoBg.png"
+                <img alt="iMAGE logo feature" src="../imgs/imgNoBg.png"
                   class="relative z-10 w-full object-contain drop-shadow-[0_24px_60px_rgba(0,0,0,0.34)]" />
               </div>
             </div>
 
-            <!-- Social Links -->
             <div class="mt-4 flex items-center gap-4">
-              <!-- Instagram -->
               <a href="https://www.instagram.com/image_cvsucarmona" target="_blank" aria-label="Instagram"
                 class="flex items-center justify-center w-10 h-10 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 transition-colors duration-200">
                 <svg class="w-5 h-5 text-[#f4efe8]" fill="currentColor" viewBox="0 0 24 24">
@@ -359,7 +369,6 @@
                     d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
                 </svg>
               </a>
-              <!-- Facebook -->
               <a href="https://web.facebook.com/image.cvsucarmona" target="_blank" aria-label="Facebook"
                 class="flex items-center justify-center w-10 h-10 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 transition-colors duration-200">
                 <svg class="w-5 h-5 text-[#f4efe8]" fill="currentColor" viewBox="0 0 24 24">
@@ -367,7 +376,6 @@
                     d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                 </svg>
               </a>
-              <!-- TikTok -->
               <a href="https://www.tiktok.com/@image.cvsucarmona" target="_blank" aria-label="TikTok"
                 class="flex items-center justify-center w-10 h-10 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 transition-colors duration-200">
                 <svg class="w-5 h-5 text-[#f4efe8]" fill="currentColor" viewBox="0 0 24 24">
@@ -375,7 +383,6 @@
                     d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.75a4.85 4.85 0 01-1.01-.06z" />
                 </svg>
               </a>
-
             </div>
 
             <p class="mt-8 w-full text-justify font-outfit text-[15px] leading-8 text-[#d7ccc1] sm:text-[17px]">
@@ -388,17 +395,12 @@
               united by a passion for creativity and collaboration. Follow us on our socials and be part of our growing
               creative community.
             </p>
-
           </div>
-
-
         </div>
       </div>
     </section>
-
   </main>
 
-  <!-- BOTTOM NAV (mobile) -->
   <footer
     class="mob-only fixed bottom-0 left-0 right-0 z-50 border-t border-[#1f1f1f] bg-[#0c0c0c]/[0.95] backdrop-blur-[12px]">
     <div class="flex items-center justify-around px-4 mx-auto max-w-7xl h-[58px]">
@@ -422,7 +424,6 @@
     </div>
   </footer>
 
-  <!-- FAB -->
   <a href="posting.html"
     class="fab fixed z-40 hidden items-center justify-center rounded-full transition-all duration-300 bg-orange-500 bottom-[74px] right-[20px] w-[50px] h-[50px]"
     style="display:none !important">
@@ -431,11 +432,9 @@
     </svg>
   </a>
 
-  <!-- Share Bottom Sheet overlay (used by dashboard.js) -->
   <div class="fixed inset-0 bg-black/40 z-[60] opacity-0 pointer-events-none transition-opacity duration-300"
     id="shareSheetOverlay"></div>
 
-  <!-- Share Bottom Sheet -->
   <div
     class="fixed left-0 right-0 bottom-0 rounded-t-3xl shadow-2xl z-[61] translate-y-full transition-transform duration-300 ease-out will-change-transform bg-[#1a1a1a]"
     id="shareSheet">
@@ -481,15 +480,328 @@
     </div>
   </div>
 
-  <!-- Toast Notification -->
   <div id="copyToast"
     class="fixed bottom-24 left-1/2 -translate-x-1/2 px-5 py-3 rounded-xl shadow-2xl z-[70] opacity-0 pointer-events-none transition-all duration-300 bg-[#1a1a1a] border border-[#2a2a2a] flex items-center gap-3">
-    <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" />
+    <svg class="w-5 h-5 text-[#e8874a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" />
     </svg>
     <span class="font-outfit text-sm text-[#e2d9cf]">Link copied to clipboard!</span>
   </div>
 
-  <script src="dashboard.js" type="module"></script>
+  <template id="cardTemplate">
+    <article class="bg-[#171717] border border-[#252525] rounded-[14px] overflow-visible">
+      <div class="flex items-center gap-3 px-4 py-3 border-b border-[#1f1f1f]">
+        <div class="flex items-center justify-center w-9 h-9 rounded-full overflow-hidden shrink-0 bg-orange-500">
+          <img src="../imgs/image_logo.jpg" alt="iMAGE" class="w-full h-full object-cover" />
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-bold font-syne text-[#e2d9cf]">image_cvsucarmona</p>
+          <p class="card-date text-xs mt-1 font-outfit text-[#6b6460]"></p>
+        </div>
+
+        <div class="relative">
+          <button
+            class="card-menu flex items-center justify-center w-8 h-8 rounded-full hover:bg-[#252525] transition-colors duration-200 shrink-0">
+            <svg class="w-5 h-5 text-[#e8874a]" fill="currentColor" viewBox="0 0 24 24">
+              <circle cx="12" cy="5" r="2"></circle>
+              <circle cx="12" cy="12" r="2"></circle>
+              <circle cx="12" cy="19" r="2"></circle>
+            </svg>
+          </button>
+          <div
+            class="card-dropdown hidden absolute right-0 top-10 w-44 rounded-xl shadow-lg z-10 overflow-hidden bg-[#1a1a1a] border border-[#2a2a2a]">
+            <button
+              class="card-edit w-full flex items-center gap-3 px-4 py-3 text-sm font-outfit transition-colors duration-150 text-[#e8874a] bg-transparent border-none cursor-pointer">
+              <svg class="w-5 h-5 text-[#e8874a]" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                viewBox="0 0 24 24">
+                <path fill="currentColor"
+                  d="m14.06 9l.94.94L5.92 19H5v-.92zm3.6-6c-.25 0-.51.1-.7.29l-1.83 1.83l3.75 3.75l1.83-1.83c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29m-3.6 3.19L3 17.25V21h3.75L17.81 9.94z"
+                  stroke-width="0.5" stroke="currentColor" />
+              </svg>
+              Edit Artwork
+            </button>
+            <button
+              class="card-delete w-full flex items-center gap-3 px-4 py-3 text-sm font-outfit transition-colors duration-150 text-[#e8874a] bg-transparent border-none cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="lucide lucide-trash-icon lucide-trash">
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                <path d="M3 6h18" />
+                <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+              </svg>
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-image-wrap relative w-full hidden overflow-hidden bg-[#111]">
+        <img class="card-image w-full h-auto block" src="" alt="" />
+        <video class="card-video w-full h-auto hidden" controls playsinline
+          controlsList="nodownload nofullscreen noplaybackrate" disablePictureInPicture></video>
+        <button
+          class="card-prev hidden md:flex absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/35 text-white backdrop-blur-sm border border-white/20 items-center justify-center opacity-0 pointer-events-none">
+          <span aria-hidden="true">&#10094;</span>
+        </button>
+        <button
+          class="card-next hidden md:flex absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/35 text-white backdrop-blur-sm border border-white/20 items-center justify-center opacity-0 pointer-events-none">
+          <span aria-hidden="true">&#10095;</span>
+        </button>
+        <div
+          class="card-image-dots hidden absolute top-3 left-3 flex items-center gap-1.5 bg-black/25 backdrop-blur-sm rounded-full px-2 py-1">
+        </div>
+        <span
+          class="card-image-count hidden absolute bottom-3 left-3 text-[11px] font-syne font-bold tracking-wide text-white bg-black/45 backdrop-blur-sm px-2 py-1 rounded-full border border-white/20">1
+          / 1</span>
+      </div>
+
+      <div class="px-4 pt-4 pb-1">
+        <div class="w-full mb-3 rounded-full h-[1.5px] bg-[#e8874a]/35"></div>
+        <h2 class="card-title font-fraunces text-2xl italic font-semibold leading-snug text-[#e2d9cf]"></h2>
+        <div class="mt-2 flex flex-wrap items-center gap-1.5 text-[11px] font-outfit text-[#8d837d]">
+          <span class="font-medium tracking-wide text-[#9a8f8a]">Collection:</span>
+          <button
+            class="card-category inline-flex items-center justify-center border-none bg-transparent p-0 text-[11px] font-syne font-bold tracking-[0.12em] uppercase text-[#e8874a] cursor-pointer transition-colors duration-200 hover:text-[#ffb27f] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e8874a] focus-visible:ring-offset-2 focus-visible:ring-offset-[#171717]"></button>
+        </div>
+      </div>
+
+      <div class="mx-4 mb-3 px-4 py-3 rounded-2xl bg-[#e8874a]/[0.06] border border-[#e8874a]/[0.12]">
+        <p class="text-[10px] font-syne font-bold tracking-widest uppercase text-[#9a8f8a] mb-2">OVERVIEW:</p>
+        <div class="card-overview-wrap relative">
+          <span class="card-overview text-sm leading-loose font-outfit text-[#6b6460]"></span>
+          <button
+            class="card-overview-toggle font-outfit text-xs font-semibold hidden text-[#e8874a] cursor-pointer bg-transparent border-none p-0 ml-1">
+            more
+          </button>
+        </div>
+      </div>
+
+      <div class="card-artists px-4 pb-3 grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
+
+      <div class="pl-4 pr-6 py-3 mt-2 flex items-center justify-between border-t border-[#1f1f1f]">
+        <a class="card-link group flex items-center gap-2 text-sm font-bold font-syne tracking-wide transition-colors duration-200 text-[#e8874a]"
+          href="#">
+          <span>See Full Content</span>
+          <svg class="w-4 h-4 transition-transform duration-150 group-hover:translate-x-1" fill="none"
+            stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </a>
+
+        <div class="relative">
+          <button
+            class="card-share flex items-center gap-1.5 text-sm font-medium font-outfit transition-colors duration-200 text-[#e8874a] bg-transparent border-none cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              class="lucide lucide-send-icon lucide-send">
+              <path
+                d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z" />
+              <path d="m21.854 2.147-10.94 10.939" />
+            </svg>
+            <span>share</span>
+          </button>
+          <div
+            class="share-dropdown hidden opacity-0 -translate-y-1 scale-95 absolute right-0 top-10 w-44 rounded-xl shadow-sm z-10 overflow-hidden transition-all duration-200 ease-out will-change-transform bg-[#1a1a1a] border border-[#2a2a2a]">
+            <button
+              class="image-code w-full flex items-center gap-3 px-4 py-3 text-sm font-outfit transition-colors duration-150 text-[#e8874a] bg-transparent border-none cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="lucide lucide-qr-code-icon lucide-qr-code">
+                <rect width="5" height="5" x="3" y="3" rx="1" />
+                <rect width="5" height="5" x="16" y="3" rx="1" />
+                <rect width="5" height="5" x="3" y="16" rx="1" />
+                <path d="M21 16h-3a2 2 0 0 0-2 2v3" />
+                <path d="M21 21v.01" />
+                <path d="M12 7v3a2 2 0 0 1-2 2H7" />
+                <path d="M3 12h.01" />
+                <path d="M12 3h.01" />
+                <path d="M12 16v.01" />
+                <path d="M16 12h1" />
+                <path d="M21 12v.01" />
+                <path d="M12 21v-1" />
+              </svg>
+              image code
+            </button>
+            <button
+              class="copy-link w-full flex items-center gap-3 px-4 py-3 text-sm font-outfit transition-colors duration-150 text-[#e8874a] bg-transparent border-none cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="lucide lucide-copy-icon lucide-copy">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+              </svg>
+              <span>copy link</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </article>
+  </template>
+
+  <div
+    class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[70] opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4"
+    id="fullSheetOverlay">
+    <div
+      class="bg-[#141414] border border-[#2a2a2a] rounded-2xl shadow-2xl w-full max-w-2xl max-h-[85vh] overflow-y-auto scale-95 opacity-0 transition-all duration-300"
+      id="fullSheet" style="transition-timing-function: cubic-bezier(0.32, 0.72, 0, 1);">
+      <button
+        class="absolute top-4 right-4 w-8 h-8 rounded-full bg-[#1e1e1e] border border-[#2a2a2a] flex items-center justify-center text-[#6b6460] hover:text-[#e2d9cf] transition-colors z-10"
+        id="fullSheetClose">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+        </svg>
+      </button>
+
+      <div class="p-6 flex flex-col gap-4">
+        <div class="w-full aspect-video rounded-xl overflow-hidden bg-[#1e1e1e] hidden" id="fullSheetMedia">
+          <img class="w-full h-full object-contain hidden cursor-pointer" id="fullSheetImage" />
+          <video class="w-full h-full object-contain hidden cursor-pointer" id="fullSheetVideo" controls></video>
+        </div>
+
+        <div class="flex items-center gap-3 flex-wrap">
+          <span
+            class="text-[9px] font-syne font-bold tracking-widest uppercase text-[#e8874a] bg-[#e8874a]/15 border border-[#e8874a]/25 rounded-full px-3 py-1"
+            id="fullSheetCategory"></span>
+          <span class="text-xs font-outfit text-[#6b6460]" id="fullSheetDate"></span>
+        </div>
+
+        <h2 class="font-fraunces text-2xl italic font-semibold text-[#e2d9cf]" id="fullSheetTitle"></h2>
+        <div class="w-full h-[1.5px] bg-[#e8874a]/35 rounded-full"></div>
+
+        <div id="fullSheetFullContentWrap">
+          <p class="text-[10px] font-syne font-bold tracking-widest uppercase text-[#6b6460] mb-2">FULL CONTENT</p>
+          <p class="text-sm font-outfit text-[#9a8f8a] leading-relaxed" id="fullSheetFullContent"></p>
+        </div>
+
+        <div>
+          <p class="text-[10px] font-syne font-bold tracking-widest uppercase text-[#6b6460] mb-3">ARTISTS</p>
+          <div class="grid grid-cols-2 gap-2" id="fullSheetArtists"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[80] opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center"
+    id="mediaViewerOverlay">
+    <button
+      class="absolute top-4 right-4 w-10 h-10 rounded-full bg-[#1e1e1e]/80 border border-[#2a2a2a] flex items-center justify-center text-[#6b6460] hover:text-[#e2d9cf] transition-colors z-10"
+      id="mediaViewerClose">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+      </svg>
+    </button>
+
+    <div
+      class="absolute top-4 left-4 px-3 py-1.5 rounded-full bg-[#1e1e1e]/80 border border-[#2a2a2a] text-xs font-outfit text-stone-200 z-10"
+      id="mediaViewerCounter">1 / 1</div>
+
+    <button
+      class="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-[#1e1e1e]/80 border border-[#2a2a2a] items-center justify-center text-stone-200 hover:text-orange-500 transition-colors opacity-0 pointer-events-none"
+      id="mediaViewerPrev">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" />
+      </svg>
+    </button>
+
+    <button
+      class="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-[#1e1e1e]/80 border border-[#2a2a2a] items-center justify-center text-stone-200 hover:text-orange-500 transition-colors opacity-0 pointer-events-none"
+      id="mediaViewerNext">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" />
+      </svg>
+    </button>
+
+    <div class="w-full h-full flex items-center justify-center p-4" id="mediaViewerContainer">
+      <img class="max-w-full max-h-full object-contain hidden" id="mediaViewerImage" />
+      <video class="max-w-full max-h-full object-contain hidden" id="mediaViewerVideo" controls autoplay></video>
+    </div>
+  </div>
+
+  <div
+    class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[70] opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4"
+    id="qrModalOverlay">
+    <div class="relative flex flex-col items-center gap-3" id="qrModalCard">
+      <button
+        class="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-[#1e1e1e] border border-[#2a2a2a] flex items-center justify-center text-[#6b6460] hover:text-[#e2d9cf] transition-colors z-10"
+        id="qrModalClose">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+        </svg>
+      </button>
+
+      <div class="relative bg-[#141414] border border-[#2a2a2a] rounded-2xl overflow-hidden" style="width: 360px;"
+        id="qrCard">
+        <div class="w-full h-[3px]" style="background: linear-gradient(90deg, #e8874a 0%, #c0451a 100%);"></div>
+
+        <div class="flex items-center gap-3 px-5 pt-5 pb-4 border-b border-[#2a2a2a]">
+          <div
+            class="w-[42px] h-[42px] rounded-full border border-[#e8874a] bg-[#1e1e1e] flex items-center justify-center shrink-0 overflow-hidden">
+            <img src="../imgs/image_logo.jpg" alt="iMAGE Logo" class="w-[38px] h-[38px] rounded-full object-cover"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+            <span class="hidden font-fraunces italic text-[#e8874a] text-sm font-semibold">iM</span>
+          </div>
+
+          <div>
+            <h1 class="font-fraunces italic font-semibold text-[#e2d9cf] text-2xl leading-none tracking-wide"><span
+                class="text-[#e8874a]">i</span>MAGE</h1>
+            <p class="font-syne text-[8px] font-bold tracking-[0.22em] uppercase text-[#6b6460] mt-1">
+              CVSU Carmona · Artwork Gallery
+            </p>
+          </div>
+        </div>
+
+        <div class="flex flex-col items-center px-6 pt-5 pb-4 gap-4">
+          <p class="font-syne text-[8px] font-bold tracking-[0.22em] uppercase text-[#6b6460] self-start">
+            Artwork QR Code
+          </p>
+
+          <div class="relative" style="width: 268px; height: 268px;">
+            <span class="qr-corner qr-corner-tl"></span>
+            <span class="qr-corner qr-corner-tr"></span>
+            <span class="qr-corner qr-corner-bl"></span>
+            <span class="qr-corner qr-corner-br"></span>
+
+            <div class="absolute bg-white rounded-md flex items-center justify-center overflow-hidden"
+              style="inset: 8px;">
+              <canvas id="qrCanvas" width="252" height="252"></canvas>
+              <div class="absolute flex items-center justify-center bg-white rounded-full overflow-hidden"
+                style="width: 48px; height: 48px; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 2px solid #fff;">
+                <img src="../imgs/image_logo.jpg" alt="iMAGE Logo" class="w-11 h-11 rounded-full object-cover"
+                  onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                <span class="hidden font-fraunces italic text-[#c0451a] text-xs font-semibold">iM</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="px-5 pb-5 flex flex-col gap-2">
+          <div class="w-full h-px bg-[#2a2a2a]"></div>
+          <div class="flex items-center gap-2 bg-[#1e1e1e] border border-[#2a2a2a] rounded-full px-4 py-2">
+            <div class="w-[6px] h-[6px] rounded-full bg-[#e8874a] shrink-0"></div>
+            <span id="qrDomain" class="font-outfit text-[11px] text-[#9a8f8a] tracking-wide truncate"></span>
+          </div>
+          <p class="font-syne text-[8px] font-bold tracking-[0.2em] uppercase text-[#e8874a] text-center opacity-70">
+            Scan to view artwork
+          </p>
+        </div>
+      </div>
+
+      <button
+        class="flex items-center justify-center gap-2 bg-[#1e1e1e] border border-[#2a2a2a] rounded-xl py-3 transition-all duration-200 hover:bg-[#e8874a]/10 hover:border-[#e8874a]/50"
+        style="width: 360px;" id="qrDownloadBtn">
+        <svg class="w-4 h-4 text-[#e8874a]" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round" viewBox="0 0 24 24">
+          <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+        </svg>
+        <span class="font-syne text-[10px] font-bold tracking-[0.22em] uppercase text-[#e8874a]">
+          Download QR Code
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <script type="module" src="../js/features/dashboard.js"></script>
 </body>
 
 </html>

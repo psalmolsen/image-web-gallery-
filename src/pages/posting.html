@@ -5,29 +5,31 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Publish Artwork</title>
+  <!-- TODO: Add Content Security Policy <meta> tag to all HTML pages to prevent XSS attacks -->
+  <!-- TODO: Replace cdn.tailwindcss.com with a proper production build — CDN version is slow, not for production, and purges nothing -->
+  <!-- TODO: Set up Vite as the build tool — enables bundling, minification, tree-shaking, and proper ES module handling -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,700&family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap"
     rel="stylesheet" />
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            fraunces: ["Fraunces", "serif"],
-            syne: ["Syne", "sans-serif"],
-            outfit: ["Outfit", "sans-serif"],
-          },
-        },
-      },
-    };
-  </script>
+  <style>
+    .font-fraunces {
+      font-family: "Fraunces", serif;
+    }
+
+    .font-syne {
+      font-family: "Syne", sans-serif;
+    }
+
+    .font-outfit {
+      font-family: "Outfit", sans-serif;
+    }
+  </style>
 </head>
 
 <body class="min-h-screen bg-[#0a0a0a] font-outfit text-[#e2d9cf]">
-
   <div class="mx-auto max-w-2xl px-6 py-14 pb-24">
     <header class="mb-14">
       <div class="mb-3 flex items-center gap-3">
@@ -214,8 +216,7 @@
         <button type="button" id="publishBtn"
           class="flex w-full items-center justify-center gap-3 rounded-2xl bg-[#e8874a] px-8 py-5 font-syne text-sm font-bold uppercase tracking-[0.12em] text-[#1a0903] transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-40 disabled:transform-none">
           <span>Publish Artwork</span>
-          <span
-            class="flex h-7 w-7 items-center justify-center rounded-full bg-[#1a0903]/10 text-sm">
+          <span class="flex h-7 w-7 items-center justify-center rounded-full bg-[#1a0903]/10 text-sm">
             >
           </span>
         </button>
@@ -223,7 +224,7 @@
     </div>
   </div>
 
-  <script type="module" src="posting.js"></script>
+  <script type="module" src="../js/features/posting.js"></script>
 </body>
 
 </html>

@@ -7,41 +7,28 @@
   <title>iMAGE | Explore the art you love</title>
   <meta name="description"
     content="Explore the artworks, artists, and stories collected inside the iMAGE digital archive." />
+  <!-- TODO: Add Content Security Policy <meta> tag to all HTML pages to prevent XSS attacks -->
+  <!-- TODO: Replace cdn.tailwindcss.com with a proper production build — CDN version is slow, not for production, and purges nothing -->
+  <!-- TODO: Set up Vite as the build tool — enables bundling, minification, tree-shaking, and proper ES module handling -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,700&family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet" />
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            fraunces: ["Fraunces", "serif"],
-            syne: ["Syne", "sans-serif"],
-            outfit: ["Outfit", "sans-serif"],
-          },
-          colors: {
-            accent: "#e8874a",
-            accentDeep: "#c0451a",
-            ink: "#0c0c0c",
-            panel: "#141414",
-            panelEdge: "#1f1f1f",
-            panelAlt: "#1a1a1a",
-            copy: "#e2d9cf",
-            muted: "#6b6460",
-            mist: "#faf3e8",
-          },
-          boxShadow: {
-            float: "0 24px 60px rgba(31, 55, 110, 0.18)",
-            soft: "0 18px 40px rgba(15, 23, 42, 0.08)",
-          },
-        },
-      },
-    };
-  </script>
   <style>
+    .font-fraunces {
+      font-family: "Fraunces", serif;
+    }
+
+    .font-syne {
+      font-family: "Syne", sans-serif;
+    }
+
+    .font-outfit {
+      font-family: "Outfit", sans-serif;
+    }
+
     html {
       scroll-behavior: smooth;
     }
@@ -97,14 +84,13 @@
       <div class="mx-auto flex max-w-7xl items-center justify-between gap-4">
         <div class="flex items-center gap-3 md:gap-4">
           <a href="index.html" class="flex items-center gap-3">
-            <img src="imgs/imgNoBg.png" alt="iMAGE logo" class="h-11 w-11 object-contain md:h-12 md:w-12" />
+            <img src="../imgs/imgNoBg.png" alt="iMAGE logo" class="h-11 w-11 object-contain md:h-12 md:w-12" />
             <div>
               <p class="font-syne text-2xl font-bold tracking-[-0.04em] md:text-3xl"><span
                   class="text-[#e8874a]">i</span><span class="text-white">MAGE</span></p>
             </div>
           </a>
         </div>
-
       </div>
     </header>
 
@@ -120,8 +106,7 @@
           </h1>
           <p class="mx-auto mt-6 max-w-2xl text-lg leading-8 text-[#8b8b8b] md:text-[2rem] md:leading-[1.45]">
             Experience the creative works of iMAGE in a digital archive built to preserve, present, and
-            celebrate our
-            artists.
+            celebrate our artists.
           </p>
           <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row md:mt-10">
             <a href="dashboard.html"
@@ -135,27 +120,22 @@
           </div>
         </div>
 
-        <!-- COLLAGE -->
         <div class="mt-16 md:mt-20 mb-16" id="collage-outer" style="width:100%; position:relative;">
-          <!-- This wrapper grows/shrinks to match the scaled height so no clipping or gap -->
           <div id="collage-sizer" style="width:100%; position:relative; overflow:visible;">
             <div id="collage-inner"
               style="width:700px; height:420px; transform-origin:top left; position:absolute; top:0; left:0;">
               <div class="hero-media-glow relative h-[420px] w-[700px]">
-
-                <!-- card A: lit card -->
                 <article
                   class="absolute top-[60px] left-[80px] z-[5] w-[270px] h-[216px] rounded-[1.8rem] border border-[#2a2a2a] bg-[#141414] p-3 shadow-float overflow-hidden">
                   <div class="overflow-hidden rounded-[1.3rem] bg-[#1e1e1e] h-full">
-                    <img src="imgs/img_lit.jpg" alt="Literature artwork" class="h-full w-full object-cover" />
+                    <img src="../imgs/img_lit.jpg" alt="Literature artwork" class="h-full w-full object-cover" />
                   </div>
                 </article>
 
-                <!-- CARD B: silakbo card -->
                 <article
                   class="absolute top-[10px] left-[360px] z-[8] w-[240px] rounded-[2rem] border border-[#2a2a2a] bg-[#141414] p-3 shadow-float overflow-hidden">
                   <div class="relative overflow-hidden rounded-[1.5rem] bg-[#1a0e08]">
-                    <img src="imgs/img_silakbo.jpg" alt="Silakbo artwork" class="w-full h-full object-cover" />
+                    <img src="../imgs/img_silakbo.jpg" alt="Silakbo artwork" class="w-full h-full object-cover" />
                     <div
                       class="absolute inset-0 bg-[linear-gradient(180deg,rgba(23,20,17,0.04)_0%,rgba(23,20,17,0.22)_100%)]">
                     </div>
@@ -167,28 +147,27 @@
                   </div>
                 </article>
 
-                <!-- ureta circle -->
                 <div
                   class="absolute top-[220px] left-[40px] z-[10] h-[170px] w-[170px] overflow-hidden rounded-full border-[2px] border-[#e8874a] bg-[#141414] p-1.5 shadow-float">
-                  <img src="imgs/image_ureta.jpg" alt="Featured artist"
+                  <img src="../imgs/image_ureta.jpg" alt="Featured artist"
                     class="h-full w-full rounded-full object-cover" />
                 </div>
 
-                <!-- CARD C: ureta work -->
                 <article
                   class="absolute top-[220px] left-[180px] z-[20] w-[220px] rounded-[1.8rem] border border-[#2a2a2a] bg-[#141414] p-2 shadow-float overflow-hidden">
                   <div class="mb-2.5 flex items-center gap-2 px-1">
-                    <img src="imgs/image_logo.jpg" alt="iMAGE logo" class="h-6 w-6 rounded-xl object-cover shrink-0" />
+                    <img src="../imgs/image_logo.jpg" alt="iMAGE logo"
+                      class="h-6 w-6 rounded-xl object-cover shrink-0" />
                     <p class="truncate font-syne text-[11px] font-bold text-[#ece5db]">
-                      image_cvsucarmona</p>
+                      image_cvsucarmona
+                    </p>
                   </div>
-                  <img src="imgs/img_halloween.jpg" alt="Featured artwork"
+                  <img src="../imgs/img_halloween.jpg" alt="Featured artwork"
                     class="h-full w-full rounded-[0.6rem] object-cover" />
                   <div class="my-2 h-px w-full bg-white/10"></div>
                   <div class="flex items-center justify-between">
                     <span class="font-syne text-[10px] font-bold uppercase tracking-[0.08em] text-[#e8874a]">See
-                      Full
-                      Content</span>
+                      Full Content</span>
                     <span
                       class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#e8874a] text-[#1a0903]">
                       <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none"
@@ -201,47 +180,19 @@
                   </div>
                 </article>
 
-                <!-- Small circle: silakbo logo -->
                 <div
                   class="absolute top-[340px] left-[360px] z-[30] h-[140px] w-[140px] overflow-hidden rounded-full border-[4px] border-[#b3261e] bg-[#141414] p-1 shadow-float">
-                  <img src="imgs/img_silakbologo.jpg" alt="Silakbo logo"
+                  <img src="../imgs/img_silakbologo.jpg" alt="Silakbo logo"
                     class="h-full w-full rounded-full object-cover" />
                 </div>
-
               </div>
-            </div><!-- /collage-inner -->
-          </div><!-- /collage-sizer -->
-        </div><!-- /collage-outer -->
-
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   </main>
-  <script>
-    // Responsive collage: scale the fixed 700×420 canvas to always fit its container.
-    // Layout/positions of cards are never touched — only the outer scale changes.
-    (function () {
-      const COLLAGE_W = 700;
-      const COLLAGE_H = 420;
-
-      const outer = document.getElementById('collage-outer');
-      const sizer = document.getElementById('collage-sizer');
-      const inner = document.getElementById('collage-inner');
-
-      function rescale() {
-        const availW = outer.clientWidth;
-        const scale = Math.min(availW / COLLAGE_W, 1); // never upscale beyond natural size
-        const scaledH = COLLAGE_H * scale;
-        const offsetX = (availW - COLLAGE_W * scale) / 2; // center horizontally
-
-        inner.style.transform = `translateX(${offsetX}px) scale(${scale})`;
-        sizer.style.height = scaledH + 'px'; // make the parent grow/shrink to match
-      }
-
-      rescale();
-      const ro = new ResizeObserver(rescale);
-      ro.observe(outer);
-    })();
-  </script>
+  <script type="module" src="../js/features/collage.js"></script>
 </body>
 
 </html>

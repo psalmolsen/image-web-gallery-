@@ -1,0 +1,25 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /artworks/{docId} {
+      allow read: true;
+      allow write: if isAuthorizedPublisher();
+    }
+
+    match /categories/{docId} {
+      allow read: true;
+      allow write: if isAuthorizedPublisher();
+    }
+
+    match /publishers/{docId} {
+      allow read: true;
+      allow write: false;
+    }
+
+    function isAuthorizedPublisher() {
+      return request.auth != null &&
+        exists(/databases/$(database)/documents/publishers/$(request.auth.token.email));
+    }
+  }
+}
