@@ -17,7 +17,7 @@ const artistRowClass =
 const artistInputClass =
   "flex-1 bg-transparent outline-none py-2.5 text-sm text-[#e2d9cf] placeholder-[#6b6460] font-outfit";
 const filePreviewClass =
-  "relative flex items-center gap-2 rounded-xl border border-[#2a2a2a] bg-[#171717] px-4 py-3 text-sm font-outfit text-[#c4b4a5]";
+  "flex items-center gap-2 rounded-xl border border-[#2a2a2a] bg-[#171717] px-3 py-2 text-sm font-outfit text-[#c4b4a5]";
 
 const fileInput = document.getElementById("FileInput");
 const dropzoneDefault = document.getElementById("dropzoneDefault");
@@ -39,15 +39,15 @@ let selectedFiles = [];
 function appendFilePreview(name, index) {
   const preview = document.createElement("div");
   preview.className = filePreviewClass;
-  preview.dataset.index = index;
 
   const label = document.createElement("span");
   label.textContent = name;
+  label.className = "truncate max-w-[160px]";
 
   const removeBtn = document.createElement("button");
   removeBtn.type = "button";
-  removeBtn.textContent = "×";
-  removeBtn.className = "ml-1 text-[#9a8f8a] hover:text-[#e8874a] font-bold text-base leading-none transition-colors duration-200";
+  removeBtn.innerHTML = "&times;";
+  removeBtn.className = "flex-shrink-0 w-5 h-5 flex items-center justify-center rounded-full bg-[#2a2a2a] text-[#e8874a] hover:bg-[#e8874a] hover:text-[#1a0903] text-xs font-bold transition-all duration-200";
   removeBtn.addEventListener("click", (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -210,11 +210,15 @@ function clearForm() {
 
 function showExistingFiles(urls) {
   if (!urls?.length) return;
-
   dropzoneDefault.classList.add("hidden");
   urls.forEach((url) => {
     const fileName = url.split("/").pop().split("?")[0];
-    appendFilePreview(fileName);
+    const preview = document.createElement("div");
+    preview.className = filePreviewClass;
+    const label = document.createElement("span");
+    label.textContent = fileName;
+    preview.appendChild(label);
+    filePreviewContainer.appendChild(preview);
   });
 }
 
