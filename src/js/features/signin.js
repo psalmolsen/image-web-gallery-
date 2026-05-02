@@ -64,8 +64,8 @@ async function handleSignIn() {
     return;
   }
 
-  if (!/^[^\s@]+@gmail\.com$/i.test(email)) {
-    showError("Only Gmail addresses are accepted.");
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/i.test(email)) {
+    showError("Please enter a valid email address.");
     emailInput.focus();
     return;
   }
